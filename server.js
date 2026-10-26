@@ -21,44 +21,80 @@ function b32e(buf){let b='',o='';for(const x of buf)b+=x.toString(2).padStart(8,
 function b32d(s){let b='';for(const c of s)b+=b32.indexOf(c).toString(2).padStart(5,'0');const o=[];for(let i=0;i+8<=b.length;i+=8)o.push(parseInt(b.slice(i,i+8),2));return Buffer.from(o)}
 function totp(sec,t=Date.now()){const c=Buffer.alloc(8);c.writeBigUInt64BE(BigInt(Math.floor(t/30000)));const h=crypto.createHmac('sha1',b32d(sec)).update(c).digest(),o=h[19]&15;return String((h.readUInt32BE(o)&0x7fffffff)%1e6).padStart(6,'0')}
 const chk=(sec,code)=>[-1,0,1].some(d=>totp(sec,Date.now()+d*3e4)===String(code||'').trim());
-/* telegram */
+/* telegram: панель на кнопках */
 const tg=(m,b)=>fetch(`https://api.telegram.org/bot${TOKEN}/${m}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(r=>r.json());
-const OS={new:'новая',accepted:'принята, hold 7 дней',credited:'зачислена на баланс',rejected:'отклонена'},PS={pending:'ожидает',done:'выполнено',rejected:'отклонено'};
+const esc=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const OS={new:'🆕 новая',accepted:'⏳ принята, hold 7 дней',credited:'✅ зачислена',rejected:'❌ отклонена'},PS={pending:'⏳ ожидает',done:'✅ выполнено',rejected:'❌ отклонено'};
 const pr=s=>Math.max(.01,+(s.p*(1+(db.cfg.adj||0)/100)).toFixed(2));
 const usd=c=>'$'+(c/100).toFixed(2);
-const fmtO=o=>`Продажа #${o.id} (${OS[o.status]})\n${o.skin}\n${usd(Math.round(o.price*100))}\nПользователь: ${o.user}\n${o.tl}`;
-const fmtP=p=>`${p.type=='dep'?'Пополнение':'Вывод'} #${p.id} (${PS[p.status]})\n${usd(p.cents)}${p.method?' · '+p.method+': '+p.details:''}\nПользователь: ${p.user}`;
-const kbO=o=>({inline_keyboard:o.status=='new'?[[{text:'Принять',callback_data:'o:accepted:'+o.id},{text:'Отклонить',callback_data:'o:rejected:'+o.id}]]:[]});
-const kbP=p=>({inline_keyboard:p.status=='pending'&&p.type=='wd'?[[{text:'Выплачено',callback_data:'p:done:'+p.id},{text:'Отклонить',callback_data:'p:rejected:'+p.id}]]:[]});
-const note=(t,k)=>{if(TOKEN&&ADMIN)tg('sendMessage',{chat_id:ADMIN,text:t,reply_markup:k}).catch(()=>{})};
-async function adminCmd(c,a,chat){const say=t=>tg('sendMessage',{chat_id:chat,text:t}),U=l=>db.users[String(l||'').toLowerCase()],sum=(l,f)=>l.reduce((t,x)=>t+f(x),0);
- if(c=='/price'){if(a[0]===undefined)return say('Корректировка цен сейчас: '+(db.cfg.adj>0?'+':'')+db.cfg.adj+'%\n/price -10 понизить все цены на 10%\n/price 5 повысить на 5% (максимум +15)\n/price 0 вернуть рыночные цены');
-  const v=parseFloat(String(a[0]).replace(',','.'));if(isNaN(v)||v<-90||v>15)return say('Допустимо от -90 до +15');db.cfg.adj=v;save();
-  return say('Готово. Цены на сайте: '+(v>0?'+':'')+v+'% к рынку. Действует на новые заявки, на сайте показан баннер.')}
- if(c=='/stats'){const cnt=s=>db.orders.filter(o=>o.status==s).length,pend=t=>db.ops.filter(o=>o.type==t&&o.status=='pending');
-  return say(`Пользователей: ${Object.keys(db.users).length}\nСкинов в каталоге: ${skins.length}\nЗаявки: новые ${cnt('new')}, на hold ${cnt('accepted')}, зачислено ${cnt('credited')}, отклонено ${cnt('rejected')}\nСумма на балансах: ${usd(sum(Object.values(db.users),x=>x.bal||0))}\nВыводы в ожидании: ${pend('wd').length} на ${usd(sum(pend('wd'),o=>o.cents))}\nПополнения в ожидании: ${pend('dep').length} на ${usd(sum(pend('dep'),o=>o.cents))}\nКорректировка цен: ${db.cfg.adj}%`)}
- if(c=='/pending'){const O=db.orders.filter(o=>o.status=='new').slice(0,10),P=db.ops.filter(o=>o.type=='wd'&&o.status=='pending').slice(0,10);if(!O.length&&!P.length)return say('Ожидающих заявок нет');
-  for(const o of O)await tg('sendMessage',{chat_id:chat,text:fmtO(o),reply_markup:kbO(o)});for(const p of P)await tg('sendMessage',{chat_id:chat,text:fmtP(p),reply_markup:kbP(p)});return}
- if(c=='/user'){const x=U(a[0]);if(!x)return say('Пользователь не найден');const l=a[0].toLowerCase();
-  return say(`${l}${x.ban?' (заблокирован)':''}\nБаланс: ${usd(x.bal||0)}\n2FA: ${x.totp?'включена':'нет'}\nТрейд-ссылка: ${x.tl||'не указана'}\nЗаявок на скины: ${db.orders.filter(o=>o.user==l).length}\nОпераций кошелька: ${db.ops.filter(o=>o.user==l).length}`)}
- if(c=='/addbal'){const x=U(a[0]),v=Math.round(parseFloat(String(a[1]).replace(',','.'))*100);if(!x||!v)return say('Формат: /addbal логин 10.5 (можно с минусом)');x.bal=(x.bal||0)+v;
-  db.ops.push({id:db.ops.length+1,user:a[0].toLowerCase(),type:v>0?'dep':'wd',cents:Math.abs(v),method:'Корректировка',details:'admin',status:'done',t:Date.now()});save();return say('Баланс '+a[0]+': '+usd(x.bal))}
- if(c=='/ban'||c=='/unban'){const x=U(a[0]);if(!x)return say('Пользователь не найден');x.ban=c=='/ban';save();return say(a[0]+(x.ban?' заблокирован':' разблокирован'))}
- if(c=='/notice'){const t=a.join(' ');db.cfg.notice=t=='off'?'':t;save();return say(db.cfg.notice?'Объявление на сайте: '+db.cfg.notice:'Объявление убрано')}
- if(c=='/help'||c=='/menu')return say('Команды:\n/stats статистика\n/pending заявки в ожидании\n/price -10 | 5 | 0 акция: изменить цены всех скинов в процентах\n/user логин данные пользователя\n/addbal логин сумма изменить баланс\n/ban логин и /unban логин\n/notice текст объявление на сайте, /notice off убрать')}
-let off=0;(async()=>{if(!TOKEN)return console.log('BOT_TOKEN не задан: бот выключен');for(;;){try{
- if(!off)tg('setMyCommands',{commands:[{command:'stats',description:'Статистика'},{command:'pending',description:'Заявки в ожидании'},{command:'price',description:'Акция: цены в процентах'},{command:'user',description:'Данные пользователя'},{command:'addbal',description:'Изменить баланс'},{command:'ban',description:'Заблокировать'},{command:'unban',description:'Разблокировать'},{command:'notice',description:'Объявление на сайте'},{command:'help',description:'Список команд'}]}).catch(()=>{});
- const r=await tg('getUpdates',{offset:off,timeout:30});
- for(const u of r.result||[]){off=u.update_id+1;
-  const m=u.message;if(m&&m.text&&m.text.startsWith('/start'))await tg('sendMessage',{chat_id:m.chat.id,text:'ID этого чата: '+m.chat.id+'\nУкажи его в ADMIN_CHAT_ID.'});
-  if(m&&m.text&&m.text[0]=='/'&&String(m.chat.id)===String(ADMIN)){const[cm,...ar]=m.text.trim().split(/\s+/);try{await adminCmd(cm.split('@')[0].toLowerCase(),ar,m.chat.id)}catch(e){console.log(e)}}
-  const c=u.callback_query;
-  if(c&&String(c.message.chat.id)===String(ADMIN)){const[k,a,i]=c.data.split(':'),id=+i;let txt,kb;
-   if(k=='o'){const o=db.orders.find(x=>x.id==id);if(o&&o.status=='new'){o.status=a;if(a=='accepted')o.hold=Date.now()+7*864e5;save()}if(o){txt=fmtO(o);kb=kbO(o)}}
-   if(k=='p'){const p=db.ops.find(x=>x.id==id);if(p&&p.status=='pending'){p.status=a;const us=db.users[p.user];if((a=='done'&&p.type=='dep')||(a=='rejected'&&p.type=='wd'))us.bal=(us.bal||0)+p.cents;save()}if(p){txt=fmtP(p);kb=kbP(p)}}
-   if(txt)await tg('editMessageText',{chat_id:ADMIN,message_id:c.message.message_id,text:txt,reply_markup:kb});
-   await tg('answerCallbackQuery',{callback_query_id:c.id})}}
-}catch(e){await new Promise(r=>setTimeout(r,5000))}}})();
+const adjTxt=()=>db.cfg.adj?(db.cfg.adj>0?'+':'')+db.cfg.adj+'% к рынку':'рыночные';
+const uBtn=l=>[{text:'👤 '+l,callback_data:'u:'+l}];
+const fmtO=o=>`📦 <b>Продажа #${o.id}</b> · ${OS[o.status]}\n${esc(o.skin)}\n💵 <b>${usd(Math.round(o.price*100))}</b>\n👤 ${esc(o.user)}\n🔗 ${esc(o.tl)}`;
+const fmtP=p=>`${p.type=='dep'?'📥 <b>Пополнение':'📤 <b>Вывод'} #${p.id}</b> · ${PS[p.status]}\n💵 <b>${usd(p.cents)}</b>${p.method?'\n'+esc(p.method)+(p.details?': <code>'+esc(p.details)+'</code>':''):''}\n👤 ${esc(p.user)}`;
+const kbO=o=>({inline_keyboard:[...(o.status=='new'?[[{text:'✅ Принять',callback_data:'o:accepted:'+o.id},{text:'❌ Отклонить',callback_data:'o:rejected:'+o.id}]]:[]),uBtn(o.user)]});
+const kbP=p=>({inline_keyboard:[...(p.status=='pending'&&p.type=='wd'?[[{text:'💸 Выплачено',callback_data:'p:done:'+p.id},{text:'❌ Отклонить',callback_data:'p:rejected:'+p.id}]]:[]),uBtn(p.user)]});
+const note=(t,k)=>{if(TOKEN&&ADMIN)tg('sendMessage',{chat_id:ADMIN,text:t,parse_mode:'HTML',link_preview_options:{is_disabled:true},reply_markup:k}).catch(()=>{})};
+const kb=r=>({inline_keyboard:r}),BACK=[{text:'◀ В меню',callback_data:'m:main'}],CANCEL=kb([[{text:'✖ Отмена',callback_data:'m:main'}]]),MENU='☰ Меню',wait={};
+async function screen(chat,mid,text,k){const b={chat_id:chat,text,parse_mode:'HTML',link_preview_options:{is_disabled:true},reply_markup:k||kb([BACK])};
+ if(mid){const r=await tg('editMessageText',{...b,message_id:mid}).catch(()=>({}));if(r.ok||/not modified/.test(r.description||''))return r}
+ return tg('sendMessage',b)}
+const cnt=(k)=>db.orders.filter(o=>o.status==k).length,pendP=()=>db.ops.filter(o=>o.type=='wd'&&o.status=='pending');
+function mainScr(){const n=cnt('new'),w=pendP().length;
+ return{t:`🎮 <b>cs2pay · панель</b>\n\n🆕 Новых заявок: <b>${n}</b>\n💸 Выводов в ожидании: <b>${w}</b>\n💱 Цены: <b>${adjTxt()}</b>\n\nВыбери раздел:`,k:kb([[{text:'⏳ Заявки'+(n+w?` (${n+w})`:''),callback_data:'m:pend'},{text:'📊 Статистика',callback_data:'m:stats'}],[{text:'👥 Пользователи',callback_data:'m:users:0'},{text:'🔎 Найти',callback_data:'m:find'}],[{text:'💱 Цены',callback_data:'m:price'},{text:'📢 Объявление',callback_data:'m:notice'}]])}}
+function statsScr(){const sum=(l,f)=>l.reduce((t,x)=>t+f(x),0),W=pendP(),D=db.ops.filter(o=>o.type=='dep'&&o.status=='pending');
+ return{t:`📊 <b>Статистика</b>\n\n👥 Пользователей: <b>${Object.keys(db.users).length}</b>\n🎯 Скинов в каталоге: <b>${skins.length}</b>\n\n📦 Заявки: новые ${cnt('new')} · hold ${cnt('accepted')} · зачислено ${cnt('credited')} · отклонено ${cnt('rejected')}\n💰 На балансах: <b>${usd(sum(Object.values(db.users),x=>x.bal||0))}</b>\n📤 Выводы: ${W.length} на ${usd(sum(W,o=>o.cents))}\n📥 Пополнения: ${D.length} на ${usd(sum(D,o=>o.cents))}\n💱 Цены: ${adjTxt()}`,k:kb([[{text:'🔄 Обновить',callback_data:'m:stats'}],BACK])}}
+function usersScr(pg){const L=Object.entries(db.users).sort((a,b)=>(b[1].created||0)-(a[1].created||0)),per=8,N=Math.max(1,Math.ceil(L.length/per));pg=Math.min(Math.max(0,pg),N-1);
+ const nav=[];if(pg>0)nav.push({text:'◀',callback_data:'m:users:'+(pg-1)});nav.push({text:`${pg+1}/${N}`,callback_data:'noop'});if(pg<N-1)nav.push({text:'▶',callback_data:'m:users:'+(pg+1)});
+ return{t:`👥 <b>Пользователи</b> · всего ${L.length}\nСначала новые. Нажми, чтобы открыть:`,k:kb([...L.slice(pg*per,pg*per+per).map(([l,x])=>[{text:`${x.ban?'🚫 ':''}${l} · ${usd(x.bal||0)}`,callback_data:'u:'+l}]),nav,BACK])}}
+function userScr(l){const x=db.users[l];if(!x)return{t:'Пользователь не найден',k:kb([BACK])};
+ return{t:`👤 <b>${esc(l)}</b>${x.ban?' · 🚫 заблокирован':''}\n\n💰 Баланс: <b>${usd(x.bal||0)}</b>\n🔐 2FA: ${x.totp?'включена':'нет'}\n🔗 Трейд-ссылка: ${x.tl?esc(x.tl):'не указана'}\n📦 Заявок: ${db.orders.filter(o=>o.user==l).length} · 💳 операций: ${db.ops.filter(o=>o.user==l).length}`,k:kb([[{text:'💰 Изменить баланс',callback_data:'ab:'+l}],[{text:x.ban?'✅ Разблокировать':'🚫 Заблокировать',callback_data:'ban:'+l}],[{text:'◀ Пользователи',callback_data:'m:users:0'},...BACK]])}}
+function balScr(l){const B=a=>a.map(v=>({text:(v>0?'+':'−')+Math.abs(v)+'$',callback_data:`ad:${l}:${v}`}));
+ return{t:`💰 <b>Баланс ${esc(l)}</b>: ${usd((db.users[l]||{}).bal||0)}\nВыбери сумму или введи свою:`,k:kb([B([1,5,10,50]),B([-1,-5,-10,-50]),[{text:'✏️ Своя сумма',callback_data:'ac:'+l}],[{text:'◀ К пользователю',callback_data:'u:'+l}]])}}
+function priceScr(m){const B=a=>a.map(v=>({text:(v>0?'+':'')+v+'%',callback_data:'pr:'+v}));
+ return{t:`💱 <b>Цены выкупа</b>: ${adjTxt()}${m?'\n\n'+m:''}\nПрименяется к новым заявкам, на сайте появится баннер.`,k:kb([B([-50,-20,-10,-5]),[{text:'♻️ Рыночные (0%)',callback_data:'pr:0'}],B([5,10,15]),[{text:'✏️ Свой процент',callback_data:'pr:c'}],BACK])}}
+function noticeScr(){return{t:`📢 <b>Объявление на сайте</b>\n\n${db.cfg.notice?esc(db.cfg.notice):'<i>сейчас пусто</i>'}`,k:kb([[{text:'✏️ Изменить',callback_data:'n:e'},{text:'🗑 Убрать',callback_data:'n:off'}],BACK])}}
+function setBal(l,v,al){const x=db.users[l];if(!x||!v)return;if((x.bal||0)+v*100<0){al.t='Баланс не может уйти в минус';return}
+ x.bal=(x.bal||0)+Math.round(v*100);db.ops.push({id:db.ops.length+1,user:l,type:v>0?'dep':'wd',cents:Math.round(Math.abs(v)*100),method:'Корректировка',details:'admin',status:'done',t:Date.now()});save()}
+async function pending(chat,mid){const O=db.orders.filter(o=>o.status=='new').slice(0,10),P=pendP().slice(0,10);
+ if(!O.length&&!P.length)return screen(chat,mid,'✅ <b>Ожидающих заявок нет</b>',kb([[{text:'🔄 Обновить',callback_data:'m:pend'}],BACK]));
+ await screen(chat,mid,`⏳ <b>Ждут решения</b>: заявок ${O.length}, выводов ${P.length}`,kb([BACK]));
+ for(const o of O)await tg('sendMessage',{chat_id:chat,text:fmtO(o),parse_mode:'HTML',link_preview_options:{is_disabled:true},reply_markup:kbO(o)});
+ for(const p of P)await tg('sendMessage',{chat_id:chat,text:fmtP(p),parse_mode:'HTML',reply_markup:kbP(p)});
+ return screen(chat,0,'Это всё на сейчас.',kb([[{text:'🔄 Обновить',callback_data:'m:pend'}],BACK]))}
+const show=(chat,mid,s)=>screen(chat,mid,s.t,s.k);
+async function onInput(chat,w,t){
+ if(w.k=='find'){const l=t.toLowerCase();return show(chat,0,userScr(l))}
+ const v=parseFloat(t.replace(',','.'));
+ if(isNaN(v)){wait[chat]=w;return screen(chat,0,'Не похоже на число. Попробуй ещё раз, например 12.5',CANCEL)}
+ if(w.k=='addbal'){const al={};setBal(w.l,v,al);return show(chat,0,balScr(w.l))}
+ if(w.k=='price'){if(v<-90||v>15){wait[chat]=w;return screen(chat,0,'Допустимо от -90 до +15',CANCEL)}db.cfg.adj=v;save();return show(chat,0,priceScr('✅ Готово'))}}
+async function onUpdate(u){const m=u.message,c=u.callback_query;
+ if(m&&m.text){const chat=m.chat.id,t=m.text.trim();
+  if(String(chat)!==String(ADMIN)){if(t.startsWith('/start'))await tg('sendMessage',{chat_id:chat,text:'ID этого чата: '+chat+'\nУкажи его в ADMIN_CHAT_ID.'});return}
+  const w=wait[chat];delete wait[chat];
+  if(w&&t[0]!='/'&&t!=MENU){if(w.k=='notice'){db.cfg.notice=t.slice(0,300);save();return show(chat,0,noticeScr())}return onInput(chat,w,t)}
+  if(t.startsWith('/start'))await tg('sendMessage',{chat_id:chat,text:'Панель включена. Кнопка «'+MENU+'» внизу всегда под рукой.',reply_markup:{keyboard:[[{text:MENU}]],resize_keyboard:true,is_persistent:true}});
+  return show(chat,0,mainScr())}
+ if(!c||String(c.message.chat.id)!==String(ADMIN))return;
+ const chat=c.message.chat.id,mid=c.message.message_id,p=(c.data||'').split(':'),k=p[0],al={};
+ if(k!='o'&&k!='p'&&k!='noop')delete wait[chat];
+ if(k=='m'){const s=p[1];if(s=='main')await show(chat,mid,mainScr());else if(s=='stats')await show(chat,mid,statsScr());else if(s=='pend')await pending(chat,mid);else if(s=='users')await show(chat,mid,usersScr(+p[2]||0));else if(s=='price')await show(chat,mid,priceScr());else if(s=='notice')await show(chat,mid,noticeScr());
+  else if(s=='find'){wait[chat]={k:'find'};await screen(chat,mid,'🔎 Отправь логин пользователя сообщением',CANCEL)}}
+ else if(k=='u')await show(chat,mid,userScr(p[1]));
+ else if(k=='ban'){const x=db.users[p[1]];if(x){x.ban=!x.ban;save()}await show(chat,mid,userScr(p[1]))}
+ else if(k=='ab')await show(chat,mid,balScr(p[1]));
+ else if(k=='ad'){setBal(p[1],+p[2],al);await show(chat,mid,balScr(p[1]))}
+ else if(k=='ac'){wait[chat]={k:'addbal',l:p[1]};await screen(chat,mid,'✏️ Отправь сумму в $, например 12.5 или -3',CANCEL)}
+ else if(k=='pr'){if(p[1]=='c'){wait[chat]={k:'price'};await screen(chat,mid,'✏️ Отправь процент от -90 до 15, например -7',CANCEL)}else{db.cfg.adj=+p[1];save();await show(chat,mid,priceScr('✅ Готово'))}}
+ else if(k=='n'){if(p[1]=='e'){wait[chat]={k:'notice'};await screen(chat,mid,'✏️ Отправь текст объявления сообщением',CANCEL)}else{db.cfg.notice='';save();await show(chat,mid,noticeScr())}}
+ else if(k=='o'||k=='p'){const id=+p[2];let txt,kk;
+  if(k=='o'){const o=db.orders.find(x=>x.id==id);if(o&&o.status=='new'){o.status=p[1];if(p[1]=='accepted')o.hold=Date.now()+7*864e5;save()}if(o){txt=fmtO(o);kk=kbO(o)}}
+  else{const q=db.ops.find(x=>x.id==id);if(q&&q.status=='pending'){q.status=p[1];const us=db.users[q.user];if(us&&((p[1]=='done'&&q.type=='dep')||(p[1]=='rejected'&&q.type=='wd')))us.bal=(us.bal||0)+q.cents;save()}if(q){txt=fmtP(q);kk=kbP(q)}}
+  if(txt)await tg('editMessageText',{chat_id:chat,message_id:mid,text:txt,parse_mode:'HTML',link_preview_options:{is_disabled:true},reply_markup:kk})}
+ await tg('answerCallbackQuery',{callback_query_id:c.id,text:al.t,show_alert:!!al.t})}
+let off=0;(async()=>{if(!TOKEN)return console.log('BOT_TOKEN не задан: бот выключен');tg('setMyCommands',{commands:[{command:'menu',description:'Открыть панель управления'}]}).catch(()=>{});
+ for(;;){try{const r=await tg('getUpdates',{offset:off,timeout:30});if(!r.ok){await new Promise(x=>setTimeout(x,5000));continue}
+  for(const u of r.result){off=u.update_id+1;try{await onUpdate(u)}catch(e){console.log('bot:',e.message)}}}catch(e){await new Promise(x=>setTimeout(x,5000))}}})();
 function settle(){let ch=0;for(const o of db.orders)if(o.status=='accepted'&&o.hold<=Date.now()){o.status='credited';const u=db.users[o.user];u.bal=(u.bal||0)+Math.round(o.price*100);ch=1}if(ch)save()}
 setInterval(settle,6e4);
 /* Crypto Pay: пополнение только через Crypto-бот, зачисление автоматически после оплаты счёта */
@@ -69,6 +105,9 @@ async function checkDeps(){if(!CP)return;const P=db.ops.filter(o=>o.type=='dep'&
   if(it.status=='paid'&&Math.round(+it.amount*100)==o.cents){o.status='done';db.users[o.user].bal=(db.users[o.user].bal||0)+o.cents;save();note(`Пополнение #${o.id} оплачено через Crypto-бот\n${o.user}, ${usd(o.cents)}`)}
   else if(it.status=='expired'){o.status='rejected';save()}}}catch(e){console.log('crypto pay:',e.message)}}
 setInterval(checkDeps,2e4);
+/* rates: курсы только для отображения, баланс и выплаты остаются в USD */
+let rates={USD:1,UAH:41.5,EUR:.86,PLN:3.65,GBP:.75,KZT:520,RUB:80},ratesAt=0;
+async function loadRates(){try{const j=await fetch('https://open.er-api.com/v6/latest/USD').then(r=>r.json());if(j.rates){for(const k in rates)if(j.rates[k]>0)rates[k]=j.rates[k];ratesAt=Date.now()}}catch(e){console.log('rates:',e.message)}}
 /* http */
 const hash=(p,s)=>crypto.scryptSync(p,s,32).toString('hex');
 const body=req=>new Promise(r=>{let d='';req.on('data',c=>{d+=c;if(d.length>1e5)req.destroy()});req.on('end',()=>{try{r(JSON.parse(d||'{}'))}catch{r({})}})});
@@ -84,7 +123,7 @@ http.createServer(async(req,res)=>{try{
  if(!p.startsWith('/api/')){const root=path.join(__dirname,'public'),f=path.join(root,p=='/'?'index.html':path.normalize(p));
   if(!f.startsWith(root)||!fs.existsSync(f)||fs.statSync(f).isDirectory()){res.writeHead(404);return res.end('404')}
   res.writeHead(200,{'Content-Type':f.endsWith('.html')?'text/html; charset=utf-8':'application/octet-stream','Cache-Control':'no-cache'});return fs.createReadStream(f).pipe(res)}
- if(p=='/api/config')return send(res,200,{gid:GID||'',cp:!!CP,adj:db.cfg.adj||0,notice:db.cfg.notice||''});
+ if(p=='/api/config')return send(res,200,{gid:GID||'',cp:!!CP,adj:db.cfg.adj||0,notice:db.cfg.notice||'',rates,ratesAt});
  if(p=='/api/health')return send(res,200,{skins:skins.length,loadedAt,lastErr,db:pool?'postgres':'file',users:Object.keys(db.users).length});
  if(p=='/api/market'){const g=k=>u.searchParams.get(k)||'',q=g('q').toLowerCase(),pg=+g('page')||1,mn=+g('min')||0,mx=+g('max')||1e9,so=g('sort');
   let f=skins.filter(s=>(!q||s.n.toLowerCase().includes(q))&&(!g('r')||s.r==g('r'))&&(!g('t')||s.t==g('t'))&&(!g('w')||s.w==g('w'))&&pr(s)>=mn&&pr(s)<=mx&&(!g('st')||s.n.includes('StatTrak')==(g('st')=='1')));
@@ -132,4 +171,4 @@ http.createServer(async(req,res)=>{try{
   x.bal-=c;const o={id:db.ops.length+1,user:n,type:'wd',cents:c,method:b.method,details:d,status:'pending',t:Date.now()};db.ops.push(o);save();note(fmtP(o),kbP(o));return send(res,200,{ok:true})}
  return bad(res,'404',404);
 }catch(e){console.log(e);send(res,500,{error:'Ошибка сервера'})}}).listen(PORT,()=>console.log('http://localhost:'+PORT));
-dbInit().then(()=>{load();setInterval(load,18e5);settle()}).catch(e=>{console.log('DB ERROR',e.message);process.exit(1)});
+dbInit().then(()=>{load();setInterval(load,18e5);loadRates();setInterval(loadRates,36e5);settle()}).catch(e=>{console.log('DB ERROR',e.message);process.exit(1)});
