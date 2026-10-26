@@ -24,50 +24,50 @@ const chk=(sec,code)=>[-1,0,1].some(d=>totp(sec,Date.now()+d*3e4)===String(code|
 /* telegram: панель на кнопках */
 const tg=(m,b)=>fetch(`https://api.telegram.org/bot${TOKEN}/${m}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(r=>r.json());
 const esc=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-const OS={new:'🆕 новая',accepted:'⏳ принята, hold 7 дней',credited:'✅ зачислена',rejected:'❌ отклонена'},PS={pending:'⏳ ожидает',done:'✅ выполнено',rejected:'❌ отклонено'};
+const OS={new:'🆕 новая',accepted:'принята, hold 7 дней',credited:'зачислена',rejected:'отклонена'},PS={pending:'ожидает',done:'выполнено',rejected:'отклонено'};
 const pr=s=>Math.max(.01,+(s.p*(1+(db.cfg.adj||0)/100)).toFixed(2));
 const usd=c=>'$'+(c/100).toFixed(2);
 const adjTxt=()=>db.cfg.adj?(db.cfg.adj>0?'+':'')+db.cfg.adj+'% к рынку':'рыночные';
-const uBtn=l=>[{text:'👤 '+l,callback_data:'u:'+l}];
-const fmtO=o=>`📦 <b>Продажа #${o.id}</b> · ${OS[o.status]}\n${esc(o.skin)}\n💵 <b>${usd(Math.round(o.price*100))}</b>\n👤 ${esc(o.user)}\n🔗 ${esc(o.tl)}`;
-const fmtP=p=>`${p.type=='dep'?'📥 <b>Пополнение':'📤 <b>Вывод'} #${p.id}</b> · ${PS[p.status]}\n💵 <b>${usd(p.cents)}</b>${p.method?'\n'+esc(p.method)+(p.details?': <code>'+esc(p.details)+'</code>':''):''}\n👤 ${esc(p.user)}`;
-const kbO=o=>({inline_keyboard:[...(o.status=='new'?[[{text:'✅ Принять',callback_data:'o:accepted:'+o.id},{text:'❌ Отклонить',callback_data:'o:rejected:'+o.id}]]:[]),uBtn(o.user)]});
-const kbP=p=>({inline_keyboard:[...(p.status=='pending'&&p.type=='wd'?[[{text:'💸 Выплачено',callback_data:'p:done:'+p.id},{text:'❌ Отклонить',callback_data:'p:rejected:'+p.id}]]:[]),uBtn(p.user)]});
-const note=(t,k)=>{if(TOKEN&&ADMIN)tg('sendMessage',{chat_id:ADMIN,text:t,parse_mode:'HTML',link_preview_options:{is_disabled:true},reply_markup:k}).catch(()=>{})};
-const kb=r=>({inline_keyboard:r}),BACK=[{text:'◀ В меню',callback_data:'m:main'}],CANCEL=kb([[{text:'✖ Отмена',callback_data:'m:main'}]]),MENU='☰ Меню',wait={};
+const uBtn=l=>[{text:''+l,callback_data:'u:'+l}];
+const fmtO=o=>`<b>Продажа #${o.id}</b> · ${OS[o.status]}\n${esc(o.skin)}\n<b>${usd(Math.round(o.price*100))}</b>\n${esc(o.user)}\n${esc(o.tl)}`;
+const fmtP=p=>`${p.type=='dep'?'<b>Пополнение':'<b>Вывод'} #${p.id}</b> · ${PS[p.status]}\n<b>${usd(p.cents)}</b>${p.method?'\n'+esc(p.method)+(p.details?': <code>'+esc(p.details)+'</code>':''):''}\n${esc(p.user)}`;
+const kbO=o=>({inline_keyboard:[...(o.status=='new'?[[{text:'Принять',callback_data:'o:accepted:'+o.id},{text:'Отклонить',callback_data:'o:rejected:'+o.id}]]:[]),uBtn(o.user)]});
+const kbP=p=>({inline_keyboard:[...(p.status=='pending'&&p.type=='wd'?[[{text:'Выплачено',callback_data:'p:done:'+p.id},{text:'Отклонить',callback_data:'p:rejected:'+p.id}]]:[]),uBtn(p.user)]});
+const note=async(t,k,img)=>{if(!(TOKEN&&ADMIN))return;const b={chat_id:ADMIN,parse_mode:'HTML',reply_markup:k};try{if(img){const r=await tg('sendPhoto',{...b,photo:img,caption:t});if(r.ok)return}await tg('sendMessage',{...b,text:t,link_preview_options:{is_disabled:true}})}catch(e){}};
+const kb=r=>({inline_keyboard:r}),BACK=[{text:'← В меню',callback_data:'m:main'}],CANCEL=kb([[{text:'Отмена',callback_data:'m:main'}]]),MENU='Меню',wait={};
 async function screen(chat,mid,text,k){const b={chat_id:chat,text,parse_mode:'HTML',link_preview_options:{is_disabled:true},reply_markup:k||kb([BACK])};
  if(mid){const r=await tg('editMessageText',{...b,message_id:mid}).catch(()=>({}));if(r.ok||/not modified/.test(r.description||''))return r}
  return tg('sendMessage',b)}
 const cnt=(k)=>db.orders.filter(o=>o.status==k).length,pendP=()=>db.ops.filter(o=>o.type=='wd'&&o.status=='pending');
 function mainScr(){const n=cnt('new'),w=pendP().length;
- return{t:`🎮 <b>cs2pay · панель</b>\n\n🆕 Новых заявок: <b>${n}</b>\n💸 Выводов в ожидании: <b>${w}</b>\n💱 Цены: <b>${adjTxt()}</b>\n\nВыбери раздел:`,k:kb([[{text:'⏳ Заявки'+(n+w?` (${n+w})`:''),callback_data:'m:pend'},{text:'📊 Статистика',callback_data:'m:stats'}],[{text:'👥 Пользователи',callback_data:'m:users:0'},{text:'🔎 Найти',callback_data:'m:find'}],[{text:'💱 Цены',callback_data:'m:price'},{text:'📢 Объявление',callback_data:'m:notice'}]])}}
+ return{t:`<b>cs2pay · панель</b>\n\n🆕 Новых заявок: <b>${n}</b>\nВыводов в ожидании: <b>${w}</b>\nЦены: <b>${adjTxt()}</b>\n\nВыбери раздел:`,k:kb([[{text:'Заявки'+(n+w?` (${n+w})`:''),callback_data:'m:pend'},{text:'Статистика',callback_data:'m:stats'}],[{text:'Пользователи',callback_data:'m:users:0'},{text:'Найти',callback_data:'m:find'}],[{text:'Цены',callback_data:'m:price'},{text:'Объявление',callback_data:'m:notice'}]])}}
 function statsScr(){const sum=(l,f)=>l.reduce((t,x)=>t+f(x),0),W=pendP(),D=db.ops.filter(o=>o.type=='dep'&&o.status=='pending');
- return{t:`📊 <b>Статистика</b>\n\n👥 Пользователей: <b>${Object.keys(db.users).length}</b>\n🎯 Скинов в каталоге: <b>${skins.length}</b>\n\n📦 Заявки: новые ${cnt('new')} · hold ${cnt('accepted')} · зачислено ${cnt('credited')} · отклонено ${cnt('rejected')}\n💰 На балансах: <b>${usd(sum(Object.values(db.users),x=>x.bal||0))}</b>\n📤 Выводы: ${W.length} на ${usd(sum(W,o=>o.cents))}\n📥 Пополнения: ${D.length} на ${usd(sum(D,o=>o.cents))}\n💱 Цены: ${adjTxt()}`,k:kb([[{text:'🔄 Обновить',callback_data:'m:stats'}],BACK])}}
+ return{t:`<b>Статистика</b>\n\nПользователей: <b>${Object.keys(db.users).length}</b>\nСкинов в каталоге: <b>${skins.length}</b>\n\nЗаявки: новые ${cnt('new')} · hold ${cnt('accepted')} · зачислено ${cnt('credited')} · отклонено ${cnt('rejected')}\nНа балансах: <b>${usd(sum(Object.values(db.users),x=>x.bal||0))}</b>\nВыводы: ${W.length} на ${usd(sum(W,o=>o.cents))}\nПополнения: ${D.length} на ${usd(sum(D,o=>o.cents))}\nЦены: ${adjTxt()}`,k:kb([[{text:'Обновить',callback_data:'m:stats'}],BACK])}}
 function usersScr(pg){const L=Object.entries(db.users).sort((a,b)=>(b[1].created||0)-(a[1].created||0)),per=8,N=Math.max(1,Math.ceil(L.length/per));pg=Math.min(Math.max(0,pg),N-1);
- const nav=[];if(pg>0)nav.push({text:'◀',callback_data:'m:users:'+(pg-1)});nav.push({text:`${pg+1}/${N}`,callback_data:'noop'});if(pg<N-1)nav.push({text:'▶',callback_data:'m:users:'+(pg+1)});
- return{t:`👥 <b>Пользователи</b> · всего ${L.length}\nСначала новые. Нажми, чтобы открыть:`,k:kb([...L.slice(pg*per,pg*per+per).map(([l,x])=>[{text:`${x.ban?'🚫 ':''}${l} · ${usd(x.bal||0)}`,callback_data:'u:'+l}]),nav,BACK])}}
+ const nav=[];if(pg>0)nav.push({text:'←',callback_data:'m:users:'+(pg-1)});nav.push({text:`${pg+1}/${N}`,callback_data:'noop'});if(pg<N-1)nav.push({text:'→',callback_data:'m:users:'+(pg+1)});
+ return{t:`<b>Пользователи</b> · всего ${L.length}\nСначала новые. Нажми, чтобы открыть:`,k:kb([...L.slice(pg*per,pg*per+per).map(([l,x])=>[{text:`${x.ban?'[бан] ':''}${l} · ${usd(x.bal||0)}`,callback_data:'u:'+l}]),nav,BACK])}}
 function userScr(l){const x=db.users[l];if(!x)return{t:'Пользователь не найден',k:kb([BACK])};
- return{t:`👤 <b>${esc(l)}</b>${x.ban?' · 🚫 заблокирован':''}\n\n💰 Баланс: <b>${usd(x.bal||0)}</b>\n🔐 2FA: ${x.totp?'включена':'нет'}\n🔗 Трейд-ссылка: ${x.tl?esc(x.tl):'не указана'}\n📦 Заявок: ${db.orders.filter(o=>o.user==l).length} · 💳 операций: ${db.ops.filter(o=>o.user==l).length}`,k:kb([[{text:'💰 Изменить баланс',callback_data:'ab:'+l}],[{text:x.ban?'✅ Разблокировать':'🚫 Заблокировать',callback_data:'ban:'+l}],[{text:'◀ Пользователи',callback_data:'m:users:0'},...BACK]])}}
+ return{t:`<b>${esc(l)}</b>${x.ban?' · заблокирован':''}\n\nБаланс: <b>${usd(x.bal||0)}</b>\n2FA: ${x.totp?'включена':'нет'}\nТрейд-ссылка: ${x.tl?esc(x.tl):'не указана'}\nЗаявок: ${db.orders.filter(o=>o.user==l).length} · операций: ${db.ops.filter(o=>o.user==l).length}`,k:kb([[{text:'Изменить баланс',callback_data:'ab:'+l}],[{text:x.ban?'Разблокировать':'Заблокировать',callback_data:'ban:'+l}],[{text:'← Пользователи',callback_data:'m:users:0'},...BACK]])}}
 function balScr(l){const B=a=>a.map(v=>({text:(v>0?'+':'−')+Math.abs(v)+'$',callback_data:`ad:${l}:${v}`}));
- return{t:`💰 <b>Баланс ${esc(l)}</b>: ${usd((db.users[l]||{}).bal||0)}\nВыбери сумму или введи свою:`,k:kb([B([1,5,10,50]),B([-1,-5,-10,-50]),[{text:'✏️ Своя сумма',callback_data:'ac:'+l}],[{text:'◀ К пользователю',callback_data:'u:'+l}]])}}
+ return{t:`<b>Баланс ${esc(l)}</b>: ${usd((db.users[l]||{}).bal||0)}\nВыбери сумму или введи свою:`,k:kb([B([1,5,10,50]),B([-1,-5,-10,-50]),[{text:'Своя сумма',callback_data:'ac:'+l}],[{text:'← К пользователю',callback_data:'u:'+l}]])}}
 function priceScr(m){const B=a=>a.map(v=>({text:(v>0?'+':'')+v+'%',callback_data:'pr:'+v}));
- return{t:`💱 <b>Цены выкупа</b>: ${adjTxt()}${m?'\n\n'+m:''}\nПрименяется к новым заявкам, на сайте появится баннер.`,k:kb([B([-50,-20,-10,-5]),[{text:'♻️ Рыночные (0%)',callback_data:'pr:0'}],B([5,10,15]),[{text:'✏️ Свой процент',callback_data:'pr:c'}],BACK])}}
-function noticeScr(){return{t:`📢 <b>Объявление на сайте</b>\n\n${db.cfg.notice?esc(db.cfg.notice):'<i>сейчас пусто</i>'}`,k:kb([[{text:'✏️ Изменить',callback_data:'n:e'},{text:'🗑 Убрать',callback_data:'n:off'}],BACK])}}
+ return{t:`<b>Цены выкупа</b>: ${adjTxt()}${m?'\n\n'+m:''}\nПрименяется к новым заявкам, на сайте появится баннер.`,k:kb([B([-50,-20,-10,-5]),[{text:'Рыночные (0%)',callback_data:'pr:0'}],B([5,10,15]),[{text:'Свой процент',callback_data:'pr:c'}],BACK])}}
+function noticeScr(){return{t:`<b>Объявление на сайте</b>\n\n${db.cfg.notice?esc(db.cfg.notice):'<i>сейчас пусто</i>'}`,k:kb([[{text:'Изменить',callback_data:'n:e'},{text:'Убрать',callback_data:'n:off'}],BACK])}}
 function setBal(l,v,al){const x=db.users[l];if(!x||!v)return;if((x.bal||0)+v*100<0){al.t='Баланс не может уйти в минус';return}
  x.bal=(x.bal||0)+Math.round(v*100);db.ops.push({id:db.ops.length+1,user:l,type:v>0?'dep':'wd',cents:Math.round(Math.abs(v)*100),method:'Корректировка',details:'admin',status:'done',t:Date.now()});save()}
 async function pending(chat,mid){const O=db.orders.filter(o=>o.status=='new').slice(0,10),P=pendP().slice(0,10);
- if(!O.length&&!P.length)return screen(chat,mid,'✅ <b>Ожидающих заявок нет</b>',kb([[{text:'🔄 Обновить',callback_data:'m:pend'}],BACK]));
- await screen(chat,mid,`⏳ <b>Ждут решения</b>: заявок ${O.length}, выводов ${P.length}`,kb([BACK]));
+ if(!O.length&&!P.length)return screen(chat,mid,'<b>Ожидающих заявок нет</b>',kb([[{text:'Обновить',callback_data:'m:pend'}],BACK]));
+ await screen(chat,mid,`<b>Ждут решения</b>: заявок ${O.length}, выводов ${P.length}`,kb([BACK]));
  for(const o of O)await tg('sendMessage',{chat_id:chat,text:fmtO(o),parse_mode:'HTML',link_preview_options:{is_disabled:true},reply_markup:kbO(o)});
  for(const p of P)await tg('sendMessage',{chat_id:chat,text:fmtP(p),parse_mode:'HTML',reply_markup:kbP(p)});
- return screen(chat,0,'Это всё на сейчас.',kb([[{text:'🔄 Обновить',callback_data:'m:pend'}],BACK]))}
+ return screen(chat,0,'Это всё на сейчас.',kb([[{text:'Обновить',callback_data:'m:pend'}],BACK]))}
 const show=(chat,mid,s)=>screen(chat,mid,s.t,s.k);
 async function onInput(chat,w,t){
  if(w.k=='find'){const l=t.toLowerCase();return show(chat,0,userScr(l))}
  const v=parseFloat(t.replace(',','.'));
  if(isNaN(v)){wait[chat]=w;return screen(chat,0,'Не похоже на число. Попробуй ещё раз, например 12.5',CANCEL)}
  if(w.k=='addbal'){const al={};setBal(w.l,v,al);return show(chat,0,balScr(w.l))}
- if(w.k=='price'){if(v<-90||v>15){wait[chat]=w;return screen(chat,0,'Допустимо от -90 до +15',CANCEL)}db.cfg.adj=v;save();return show(chat,0,priceScr('✅ Готово'))}}
+ if(w.k=='price'){if(v<-90||v>15){wait[chat]=w;return screen(chat,0,'Допустимо от -90 до +15',CANCEL)}db.cfg.adj=v;save();return show(chat,0,priceScr('Готово'))}}
 async function onUpdate(u){const m=u.message,c=u.callback_query;
  if(m&&m.text){const chat=m.chat.id,t=m.text.trim();
   if(String(chat)!==String(ADMIN)){if(t.startsWith('/start'))await tg('sendMessage',{chat_id:chat,text:'ID этого чата: '+chat+'\nУкажи его в ADMIN_CHAT_ID.'});return}
@@ -79,30 +79,30 @@ async function onUpdate(u){const m=u.message,c=u.callback_query;
  const chat=c.message.chat.id,mid=c.message.message_id,p=(c.data||'').split(':'),k=p[0],al={};
  if(k!='o'&&k!='p'&&k!='noop')delete wait[chat];
  if(k=='m'){const s=p[1];if(s=='main')await show(chat,mid,mainScr());else if(s=='stats')await show(chat,mid,statsScr());else if(s=='pend')await pending(chat,mid);else if(s=='users')await show(chat,mid,usersScr(+p[2]||0));else if(s=='price')await show(chat,mid,priceScr());else if(s=='notice')await show(chat,mid,noticeScr());
-  else if(s=='find'){wait[chat]={k:'find'};await screen(chat,mid,'🔎 Отправь логин пользователя сообщением',CANCEL)}}
+  else if(s=='find'){wait[chat]={k:'find'};await screen(chat,mid,'Отправь логин пользователя сообщением',CANCEL)}}
  else if(k=='u')await show(chat,mid,userScr(p[1]));
  else if(k=='ban'){const x=db.users[p[1]];if(x){x.ban=!x.ban;save()}await show(chat,mid,userScr(p[1]))}
  else if(k=='ab')await show(chat,mid,balScr(p[1]));
  else if(k=='ad'){setBal(p[1],+p[2],al);await show(chat,mid,balScr(p[1]))}
- else if(k=='ac'){wait[chat]={k:'addbal',l:p[1]};await screen(chat,mid,'✏️ Отправь сумму в $, например 12.5 или -3',CANCEL)}
- else if(k=='pr'){if(p[1]=='c'){wait[chat]={k:'price'};await screen(chat,mid,'✏️ Отправь процент от -90 до 15, например -7',CANCEL)}else{db.cfg.adj=+p[1];save();await show(chat,mid,priceScr('✅ Готово'))}}
- else if(k=='n'){if(p[1]=='e'){wait[chat]={k:'notice'};await screen(chat,mid,'✏️ Отправь текст объявления сообщением',CANCEL)}else{db.cfg.notice='';save();await show(chat,mid,noticeScr())}}
+ else if(k=='ac'){wait[chat]={k:'addbal',l:p[1]};await screen(chat,mid,'Отправь сумму в $, например 12.5 или -3',CANCEL)}
+ else if(k=='pr'){if(p[1]=='c'){wait[chat]={k:'price'};await screen(chat,mid,'Отправь процент от -90 до 15, например -7',CANCEL)}else{db.cfg.adj=+p[1];save();await show(chat,mid,priceScr('Готово'))}}
+ else if(k=='n'){if(p[1]=='e'){wait[chat]={k:'notice'};await screen(chat,mid,'Отправь текст объявления сообщением',CANCEL)}else{db.cfg.notice='';save();await show(chat,mid,noticeScr())}}
  else if(k=='o'||k=='p'){const id=+p[2];let txt,kk;
   if(k=='o'){const o=db.orders.find(x=>x.id==id);if(o&&o.status=='new'){o.status=p[1];if(p[1]=='accepted')o.hold=Date.now()+7*864e5;save()}if(o){txt=fmtO(o);kk=kbO(o)}}
   else{const q=db.ops.find(x=>x.id==id);if(q&&q.status=='pending'){q.status=p[1];const us=db.users[q.user];if(us&&((p[1]=='done'&&q.type=='dep')||(p[1]=='rejected'&&q.type=='wd')))us.bal=(us.bal||0)+q.cents;save()}if(q){txt=fmtP(q);kk=kbP(q)}}
-  if(txt)await tg('editMessageText',{chat_id:chat,message_id:mid,text:txt,parse_mode:'HTML',link_preview_options:{is_disabled:true},reply_markup:kk})}
+  if(txt)await(c.message.photo?tg('editMessageCaption',{chat_id:chat,message_id:mid,caption:txt,parse_mode:'HTML',reply_markup:kk}):tg('editMessageText',{chat_id:chat,message_id:mid,text:txt,parse_mode:'HTML',link_preview_options:{is_disabled:true},reply_markup:kk}))}
  await tg('answerCallbackQuery',{callback_query_id:c.id,text:al.t,show_alert:!!al.t})}
 let off=0;(async()=>{if(!TOKEN)return console.log('BOT_TOKEN не задан: бот выключен');tg('setMyCommands',{commands:[{command:'menu',description:'Открыть панель управления'}]}).catch(()=>{});
  for(;;){try{const r=await tg('getUpdates',{offset:off,timeout:30});if(!r.ok){await new Promise(x=>setTimeout(x,5000));continue}
   for(const u of r.result){off=u.update_id+1;try{await onUpdate(u)}catch(e){console.log('bot:',e.message)}}}catch(e){await new Promise(x=>setTimeout(x,5000))}}})();
-function settle(){let ch=0;for(const o of db.orders)if(o.status=='accepted'&&o.hold<=Date.now()){o.status='credited';const u=db.users[o.user];u.bal=(u.bal||0)+Math.round(o.price*100);ch=1}if(ch)save()}
+function settle(){let ch=0;for(const o of db.orders)if(o.status=='accepted'&&o.hold<=Date.now()){o.status='credited';const u=db.users[o.user];u.bal=(u.bal||0)+Math.round(o.price*100);ch=1;note(`<b>Баланс начислен</b>\n\n${esc(o.skin)}\nНачислено: <b>+${usd(Math.round(o.price*100))}</b>\nПользователь: ${esc(o.user)}\nНовый баланс: <b>${usd(u.bal)}</b>`,null,o.img)}if(ch)save()}
 setInterval(settle,6e4);
 /* Crypto Pay: пополнение только через Crypto-бот, зачисление автоматически после оплаты счёта */
 const cp=(m,b)=>fetch(`https://${CPH}/api/${m}`,{method:'POST',headers:{'Crypto-Pay-API-Token':CP,'Content-Type':'application/json'},body:JSON.stringify(b||{})}).then(r=>r.json());
 async function checkDeps(){if(!CP)return;const P=db.ops.filter(o=>o.type=='dep'&&o.status=='pending'&&o.inv);if(!P.length)return;try{
  const r=await cp('getInvoices',{invoice_ids:P.map(o=>o.inv).join(',')});
  for(const it of(r.result&&r.result.items)||[]){const o=P.find(x=>x.inv==it.invoice_id);if(!o||o.status!='pending')continue;
-  if(it.status=='paid'&&Math.round(+it.amount*100)==o.cents){o.status='done';db.users[o.user].bal=(db.users[o.user].bal||0)+o.cents;save();note(`Пополнение #${o.id} оплачено через Crypto-бот\n${o.user}, ${usd(o.cents)}`)}
+  if(it.status=='paid'&&Math.round(+it.amount*100)==o.cents){o.status='done';db.users[o.user].bal=(db.users[o.user].bal||0)+o.cents;save();note(`<b>Баланс пополнен</b>\n\nПополнение #${o.id} через Crypto-бот\nПользователь: ${esc(o.user)}\nСумма: <b>+${usd(o.cents)}</b>\nНовый баланс: <b>${usd(db.users[o.user].bal)}</b>`)}
   else if(it.status=='expired'){o.status='rejected';save()}}}catch(e){console.log('crypto pay:',e.message)}}
 setInterval(checkDeps,2e4);
 /* rates: курсы только для отображения, баланс и выплаты остаются в USD */
@@ -155,7 +155,7 @@ http.createServer(async(req,res)=>{try{
  if(p=='/api/2fa/disable'){if(!x.totp||!chk(x.totp,b.code))return bad(res,'Неверный код');if(x.h&&x.h!==hash(String(b.password||''),x.s))return bad(res,'Неверный пароль');delete x.totp;save();return send(res,200,{ok:true})}
  if(p=='/api/sell'){const ss=[].concat(b.ids||[]).slice(0,20).map(i=>skins.find(s=>s.id==i)).filter(Boolean);
   if(!ss.length)return bad(res,'Скины не найдены, обнови страницу');if(!TL.test(b.tl||''))return bad(res,'Укажи верную трейд-ссылку Steam');
-  x.tl=b.tl;for(const s of ss){const o={id:db.orders.length+1,user:n,skin:s.id,img:s.img,price:pr(s),tl:b.tl,status:'new',t:Date.now()};db.orders.push(o);note(fmtO(o),kbO(o))}
+  x.tl=b.tl;for(const s of ss){const o={id:db.orders.length+1,user:n,skin:s.id,img:s.img,price:pr(s),tl:b.tl,status:'new',t:Date.now()};db.orders.push(o);note(fmtO(o),kbO(o),o.img)}
   save();return send(res,200,{ok:true,n:ss.length})}
  if(p=='/api/deposit'){if(!CP)return bad(res,'Пополнение через Crypto-бот пока не подключено');const c=Math.round((+b.amount||0)*100);if(c<500||c>1e6)return bad(res,'Сумма от $5 до $10000');
   const r=await cp('createInvoice',{asset:'USDT',amount:(c/100).toFixed(2),description:'Пополнение баланса cs2pay',expires_in:3600}).catch(()=>({}));
