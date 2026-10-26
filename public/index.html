@@ -54,29 +54,52 @@ h3{margin:0 0 12px;font-size:20px;font-weight:900}label{display:block;color:var(
 .fb{display:none}
 @media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:30px}.main{grid-template-columns:1fr}aside{display:none;position:static;max-height:none}aside.o{display:block}.fb{display:inline-block}nav a{padding:8px 9px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-/* v3: slate + amber, инвентарные плитки CS2 */
-:root{--bg:#0d1118;--p:#141b25;--p2:#1c2532;--ln:#273244;--tx:#eaeef5;--mt:#8c99ac;--ac:#f2a93b;--ac2:#6fb1e8;--gd:#f2c14e;color-scheme:dark}
-body{font-family:Onest,system-ui,-apple-system,"Segoe UI",sans-serif}
-body::before{background:radial-gradient(800px 500px at 90% -10%,#f2a93b22,transparent),radial-gradient(600px 420px at 0% 5%,#6fb1e826,transparent)}
-header{background:#0d1118d9}.logo,h1,h2,h3,.big,.pr{font-family:Unbounded,Onest,system-ui,sans-serif}
-h1{letter-spacing:-1.5px;font-weight:800}h2{font-weight:700;letter-spacing:-.5px}.pr{font-size:15px;font-weight:700}.big{font-size:32px}
-.logo b,.gr{background:linear-gradient(90deg,var(--ac),#ffd98a);-webkit-background-clip:text;background-clip:text;color:transparent}
-.btn{background:linear-gradient(180deg,#f7b94f,#e8962b);color:#1d1305;box-shadow:0 6px 18px -8px #f2a93b}.btn.g{background:var(--p2);color:var(--tx);box-shadow:none;border:1px solid var(--ln)}
-.chip{color:var(--ac)}.c.on{background:var(--ac);color:#1d1305}.pb i{background:linear-gradient(90deg,var(--ac),#ffd98a)}
-#cur{width:auto;padding:8px 10px;font-weight:700;cursor:pointer}#snd{padding:10px 12px}
-.card{border-radius:14px;background:linear-gradient(180deg,var(--p),#10161f)}.card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--c)}
-.wb{display:flex;gap:2px;margin:0 0 9px}.wb i{flex:1;min-width:6px;height:4px;border-radius:2px;background:var(--ln)}.wb i.on{background:var(--c)}
+/* v4: чисто и ровно, без градиентов и свечения */
+:root{--bg:#0e1116;--p:#151a22;--p2:#1b212b;--ln:#262e3b;--tx:#e8ebf0;--mt:#8791a1;--ac:#f2a93b;--ac2:#7db4e6;--gd:#f2a93b;color-scheme:dark}
+body{font-family:Onest,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px}body::before{display:none}
+header{background:var(--bg);backdrop-filter:none}.logo{font-family:Unbounded,Onest,sans-serif;font-size:20px;letter-spacing:-.5px}
+.logo b,.gr{background:none;-webkit-background-clip:initial;background-clip:initial;color:var(--ac)}
+h1{font-weight:800;letter-spacing:-1.5px}h2{font-weight:800;letter-spacing:-.5px}h3{font-weight:800}
+nav a.on,nav a:hover{background:var(--p2)}
+.btn{background:var(--ac);color:#1a1204;border-radius:10px;box-shadow:none;font-weight:700}.btn:hover{filter:brightness(1.08)}.btn.g{background:var(--p2);color:var(--tx);border:1px solid var(--ln)}.btn.g:hover{border-color:#3a4556;filter:none}
+.chip{color:var(--ac);border-radius:10px}.bdg{background:var(--ac);color:#1a1204}
+input,select{border-radius:10px;background:var(--p2)}input:focus,select:focus{border-color:var(--ac)}
+#cur{width:auto;padding:9px 10px;font-weight:700;cursor:pointer}#snd{padding:10px 12px}
+aside,.box,.step,.adv,.stat,details{background:var(--p);border-radius:14px}
+aside h4{text-transform:none;letter-spacing:0;font-size:13px;color:var(--tx);font-weight:700}
+.c{border-radius:8px;background:var(--p2);padding:6px 10px}.c.on{background:var(--ac);color:#1a1204}
+.grid{gap:14px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.card{background:var(--p);border:1px solid var(--ln);border-radius:12px;transition:border-color .15s}.card:hover{transform:none;box-shadow:none;border-color:#3a4556}.card.in{border-color:var(--ac)}
+.card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--c)}
+.art{height:140px;background:var(--p2)}.art img{filter:none}.card:hover .art img{transform:none}
+.bd{background:var(--bg);border-radius:6px}.nm{min-height:36px}.rr{margin:2px 0 8px}
+.pr{font-family:Onest,sans-serif;font-weight:800;font-size:17px;color:var(--tx);font-variant-numeric:tabular-nums}.big{font-family:Onest,sans-serif;font-weight:800;font-size:34px;color:var(--tx)}
+.wb{display:flex;gap:2px;margin:0 0 10px}.wb i{flex:1;min-width:6px;height:4px;border-radius:2px;background:var(--ln)}.wb i.on{background:var(--c)}
 .hint{color:var(--mt);font-size:12px;min-height:16px;margin-top:4px}
+.pb i{background:var(--ac)}.bn{background:var(--p2);border-color:var(--ln)}.step i{color:var(--ac)}
 .md.au{max-width:760px;padding:0;display:grid;grid-template-columns:1fr 1.1fr;overflow:hidden}
-.ls{padding:30px 26px;background:linear-gradient(160deg,#f2a93b26,#6fb1e81a 60%,transparent),var(--p2);display:flex;flex-direction:column;gap:14px;justify-content:center}
-.ls .logo{font-size:28px;margin:0}.ls p{margin:0;color:var(--mt);font-size:14px}.ls b{color:var(--tx)}
+.ls{padding:30px 26px;background:var(--p2);display:flex;flex-direction:column;gap:14px;justify-content:center}.ls .logo{font-size:26px;margin:0}.ls p{margin:0;color:var(--mt);font-size:14px}.ls b{color:var(--tx)}
 .rs{padding:28px 26px}.pw{position:relative}.pw button{position:absolute;right:6px;top:5px;background:none;border:0;color:var(--mt);cursor:pointer;font:600 12px Onest,sans-serif;padding:8px}
-#lc{text-align:center;letter-spacing:10px;font:700 22px Unbounded,monospace}
+#lc{text-align:center;letter-spacing:10px;font:700 22px Onest,monospace}
 @media(max-width:700px){.md.au{grid-template-columns:1fr}.ls{display:none}}
+
+.cb .row{flex-direction:column;align-items:stretch}.cb .row .btn{width:100%}.pr{font-size:17px}
+.md.cr{text-align:center;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:6px}.md.cr h3{margin:8px 0 0}.md.cr p{color:var(--mt);margin:0 0 10px}.md.cr .big{color:var(--ac)}
+.tb2{display:none}#snd svg,#cartb svg{vertical-align:-4px}
+@media(max-width:700px){
+body{padding-bottom:72px;font-size:14px}.w{padding:0 12px}nav:not(.tb2){display:none}.bar{height:54px;gap:6px}.logo{font-size:17px;margin-right:0}
+#cartb .tx,#balc{display:none}#cartb,#snd{padding:9px 10px}#cur{padding:8px 6px}#lg{max-width:96px;overflow:hidden;text-overflow:ellipsis}
+.tb2{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--bg);border-top:1px solid var(--ln);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+.tb2 a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border-radius:10px;color:var(--mt);font-size:11px;font-weight:700}.tb2 a.on{color:var(--ac);background:var(--p2)}
+.hero{padding:22px 0 8px}.hero p{font-size:15px}.show{grid-template-columns:1fr 1fr}.stat{flex:1 1 90px;padding:9px 12px}
+.grid{grid-template-columns:1fr 1fr;gap:10px}.art{height:112px}.nm{font-size:12.5px;min-height:32px}.cb{padding:10px}.pr{font-size:15px}
+.tb{flex-wrap:wrap}.tb input{flex:1 1 100%}.tb select{min-width:0;flex:1}.fb{flex:1}
+.pc{grid-template-columns:1fr}.big{font-size:28px}.dr{width:100%}.md{padding:16px}.rs{padding:20px 16px}.tabs a{padding:7px 10px}.sec{padding:22px 0}
+.toast{width:calc(100% - 24px);text-align:center;top:62px}}
 </style></head><body>
 <header><div class="w bar"><a class="logo" href="#/">cs2<b>pay</b></a><nav><a href="#/">Главная</a><a href="#/market">Маркет</a></nav><div class="sp"></div>
-<a class="chip" id="balc" href="#/profile/wallet" hidden></a><select id="cur" aria-label="Валюта"><option>USD</option><option>UAH</option><option>EUR</option><option>PLN</option><option>GBP</option><option>KZT</option><option>RUB</option></select><button class="btn g" id="cartb">Корзина<i class="bdg" id="cc" hidden>0</i></button>
-<button class="btn g" id="snd" aria-label="Звук">🔊</button><button class="btn" id="lg">Войти</button></div></header>
+<a class="chip" id="balc" href="#/profile/wallet" hidden></a><select id="cur" aria-label="Валюта"><option>USD</option><option>UAH</option><option>EUR</option><option>PLN</option><option>GBP</option><option>KZT</option><option>RUB</option></select><button class="btn g" id="cartb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.4a1 1 0 001 .8h9.2a1 1 0 001-.8L21 7H6"/></svg><span class="tx"> Корзина</span><i class="bdg" id="cc" hidden>0</i></button>
+<button class="btn g" id="snd" aria-label="Звук"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg></button><button class="btn" id="lg">Войти</button></div></header>
 <div id="bn" class="bn" hidden></div>
 <main class="w">
 <section id="v-home"><div class="hero"><div><h1>Продай скины CS2 <span class="gr">и выводи деньги</span></h1><p>Выбери скины, укажи трейд-ссылку и получи деньги на баланс через 7 дней. Выводи на USDT TRC20, в Crypto-бот или на карту.</p>
@@ -110,13 +133,17 @@ h1{letter-spacing:-1.5px;font-weight:800}h2{font-weight:700;letter-spacing:-.5px
 <input id="lu" placeholder="Логин" autocomplete="username"><div style="height:8px"></div><div class="pw"><input id="lp" type="password" placeholder="Пароль (от 6 символов)" autocomplete="current-password"><button id="sp" type="button">Показать</button></div>
 <div id="lcw" hidden style="margin-top:8px"><input id="lc" inputmode="numeric" maxlength="6" placeholder="······"><div class="hint">Код из Google Authenticator</div></div><div class="err" id="le"></div>
 <div class="row"><button class="btn g" style="flex:1" id="am">Регистрация</button><button class="btn" style="flex:2" id="ago">Войти</button></div></div></div></div>
+<div class="ov" id="cr"><div class="md cr"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="none" stroke="#f2a93b" stroke-width="3"/><path d="M19 33l9 9 17-19" fill="none" stroke="#f2a93b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg><h3>Баланс пополнен</h3><div class="big" id="cra"></div><p>Деньги уже на балансе, можно выводить.</p><button class="btn bl" onclick="closeAll()">Отлично</button></div></div>
+<nav class="tb2"><a href="#/"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg>Главная</a><a href="#/market"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Маркет</a><a href="#/profile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Профиль</a></nav>
 <div class="toast" id="t"></div>
 <script>
 var $=function(i){return document.getElementById(i)},S={me:null,cart:{},items:{}},F={t:"",r:"",w:"",st:""},page=1,loaded=0,fl=0,snd=true,ac,M,D,NB,tm,qt,mode="login",WS={"Factory New":"FN","Minimal Wear":"MW","Field-Tested":"FT","Well-Worn":"WW","Battle-Scarred":"BS"};
 try{S.cart=JSON.parse(localStorage.getItem("cart")||"{}")}catch(e){}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+var LB=null;function bc(b){if(LB!=null&&b>LB){$("cra").textContent="+"+mo(b-LB);$("cr").classList.add("s");sOk();clearTimeout(window.ct);window.ct=setTimeout(closeAll,6e3)}LB=b}
 var CUR="USD",R={USD:1};
-function fm(u){var v=u*(R[CUR]||1);try{return new Intl.NumberFormat(CUR=="USD"?"en-US":"ru-RU",{style:"currency",currency:CUR,maximumFractionDigits:CUR=="KZT"?0:2}).format(v)}catch(e){return"$"+u.toFixed(2)}}
+var SY={USD:"$",UAH:"₴",EUR:"€",PLN:"zł",GBP:"£",KZT:"₸",RUB:"₽"};
+function fm(u){var v=u*(R[CUR]||1),d=CUR=="KZT"||v>=10000?0:2,n=v.toLocaleString(CUR=="USD"?"en-US":"ru-RU",{minimumFractionDigits:d,maximumFractionDigits:d});return CUR=="USD"||CUR=="GBP"?SY[CUR]+n:n+"\u00a0"+SY[CUR]}
 function mo(c){return fm(c/100)}
 function hint(i,id){$(id).textContent=CUR=="USD"||!i.value?"":"≈ "+fm(+i.value)}
 function cu(){$("ph").textContent="Цена, "+({USD:"$",UAH:"₴",EUR:"€",PLN:"zł",GBP:"£",KZT:"₸",RUB:"₽"})[CUR];cartUp();if(loaded)load(true);home();if(S.me){$("balc").textContent=mo(S.me.bal);if(!$("v-profile").hidden)prof(tab)}}
@@ -125,12 +152,13 @@ function wb(w){var T={"Factory New":.07,"Minimal Wear":.08,"Field-Tested":.23,"W
 function api(u,b){return api0(u,b).catch(function(e){if(!e.d)e.message="Нет связи с сервером. Открывай сайт по адресу на Render, а не как файл";throw e})}
 function api0(u,b){return fetch(u,b!==undefined?{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}:{}).then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok){var e=new Error(j.error||"Ошибка");e.d=j;throw e}return j})})}
 /* sound: мягкие колокольчики с реверберацией */
+var IO='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg>',IF='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>';function SI(){$("snd").innerHTML=snd?IO:IF}
 function A(){if(!ac){ac=new(window.AudioContext||window.webkitAudioContext)();M=ac.createGain();M.gain.value=.55;var cv=ac.createConvolver(),n=ac.sampleRate*1.6,b=ac.createBuffer(2,n,ac.sampleRate);for(var c=0;c<2;c++){var a=b.getChannelData(c);for(var i=0;i<n;i++)a[i]=(Math.random()*2-1)*Math.pow(1-i/n,3)}cv.buffer=b;D=ac.createGain();D.gain.value=.4;D.connect(cv);cv.connect(M);M.connect(ac.destination)}if(ac.state=="suspended")ac.resume();return ac}
 function nt(f,t,d,v){if(!snd)return;try{var c=A(),n=c.currentTime+t,g=c.createGain();g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(v,n+.008);g.gain.exponentialRampToValueAtTime(.0001,n+d);g.connect(M);g.connect(D);[[1,1],[2,.18],[3.01,.06]].forEach(function(h){var o=c.createOscillator(),k=c.createGain();o.frequency.value=f*h[0];k.gain.value=h[1];o.connect(k);k.connect(g);o.start(n);o.stop(n+d+.05)})}catch(e){}}
 function sTap(){nt(1568,0,.07,.03)}function sPop(){nt(784,0,.35,.1);nt(1175,.07,.45,.09)}function sOpen(){nt(660,0,.25,.07)}function sErr(){nt(330,0,.3,.08);nt(262,.11,.4,.08)}
 function sOk(){[523,659,784,1047].forEach(function(f,i){nt(f,i*.09,.8,.09)})}
-try{snd=localStorage.snd!="0"}catch(e){}$("snd").textContent=snd?"🔊":"🔇";
-$("snd").onclick=function(){snd=!snd;try{localStorage.snd=snd?1:0}catch(e){}this.textContent=snd?"🔊":"🔇";sTap()};
+try{snd=localStorage.snd!="0"}catch(e){}SI();
+$("snd").onclick=function(){snd=!snd;try{localStorage.snd=snd?1:0}catch(e){}SI();sTap()};
 document.addEventListener("click",function(e){if(e.target.closest&&e.target.closest("button,.btn,.c"))sTap()},true);
 $("sp").onclick=function(){var p=$("lp"),h=p.type=="password";p.type=h?"text":"password";this.textContent=h?"Скрыть":"Показать"};
 function toast(x,b){var e=$("t");e.textContent=x;e.style.background=b?"var(--bad)":"var(--ok)";e.classList.add("s");clearTimeout(tm);tm=setTimeout(function(){e.classList.remove("s")},2800)}
@@ -139,7 +167,7 @@ document.querySelectorAll(".ov").forEach(function(o){o.onmousedown=function(e){i
 /* routing */
 function route(){var h=(location.hash||"#/").slice(2).split("/"),v=h[0]||"home";if(["home","market","profile"].indexOf(v)<0)v="home";
 ["home","market","profile"].forEach(function(x){$("v-"+x).hidden=x!=v});
-document.querySelectorAll("nav a").forEach(function(a){a.classList.toggle("on",a.getAttribute("href")=="#/"+(v=="home"?"":v))});
+document.querySelectorAll("nav a,.tb2 a").forEach(function(a){a.classList.toggle("on",a.getAttribute("href")=="#/"+(v=="home"?"":v))});
 if(v=="market"&&!loaded){loaded=1;load(true)}if(v=="profile")prof(h[1]||"overview");scrollTo(0,0)}
 addEventListener("hashchange",route);
 /* market */
@@ -175,11 +203,11 @@ function setMode(m){mode=m;$("at").textContent=m=="login"?"Вход в cs2pay":"
 $("am").onclick=function(){setMode(mode=="login"?"reg":"login")};
 $("ago").onclick=function(){api(mode=="login"?"/api/login":"/api/register",{login:$("lu").value,password:$("lp").value,code:$("lc").value}).then(function(){closeAll();sOk();toast("Добро пожаловать!");me()}).catch(function(e){if(e.d&&e.d.need2fa)$("lcw").hidden=false;$("le").textContent=e.message;sErr()})};
 $("lg").onclick=function(){S.me?(location.hash="#/profile"):openAuth()};
-function me(){return api("/api/me").then(function(d){S.me=d.name?d:null;$("lg").textContent=S.me?S.me.name:"Войти";$("balc").hidden=!S.me;if(S.me)$("balc").textContent=mo(S.me.bal);if(!$("v-profile").hidden)prof(tab)})}
+function me(){return api("/api/me").then(function(d){S.me=d.name?d:null;if(S.me)bc(S.me.bal);$("lg").textContent=S.me?S.me.name:"Войти";$("balc").hidden=!S.me;if(S.me)$("balc").textContent=mo(S.me.bal);if(!$("v-profile").hidden)prof(tab)})}
 /* profile */
 var tab="overview";
 function prof(t){tab=t;if(!S.me){$("pt").innerHTML="";$("pc").innerHTML='<div class="box" style="max-width:420px"><h3>Нужен вход</h3><p style="color:var(--mt)">Войди или зарегистрируйся, чтобы видеть профиль, баланс и историю.</p><button class="btn" onclick="openAuth()">Войти</button></div>';return}
-api("/api/me").then(function(d){S.me=d;$("balc").textContent=mo(d.bal);$("lg").textContent=d.name;
+api("/api/me").then(function(d){S.me=d;bc(d.bal);$("balc").textContent=mo(d.bal);$("lg").textContent=d.name;
 var T=[["overview","Обзор"],["wallet","Кошелёк"],["history","История"],["settings","Настройки"]];
 $("pt").innerHTML='<div class="tabs">'+T.map(function(x){return'<a href="#/profile/'+x[0]+'" class="'+(x[0]==t?"on":"")+'">'+x[1]+'</a>'}).join("")+'</div>';
 var pend=0,sold=0;d.orders.forEach(function(o){var c=Math.round(o.price*100);if(o.status=="new"||o.status=="accepted")pend+=c;if(o.status=="credited")sold+=c});
@@ -204,7 +232,7 @@ function f2(on){api(on?"/api/2fa/enable":"/api/2fa/disable",{code:$(on?"fc2":"dc
 function out(){api("/api/logout",{}).then(function(){S.me=null;$("lg").textContent="Войти";$("balc").hidden=true;location.hash="#/";sTap()})}
 /* init */
 cartUp();me();route();
-setInterval(function(){if(S.me)api("/api/me").then(function(d){if(d.name){S.me.bal=d.bal;$("balc").textContent=mo(d.bal)}}).catch(function(){})},15000);
+setInterval(function(){if(S.me)api("/api/me").then(function(d){if(d.name){bc(d.bal);S.me.bal=d.bal;$("balc").textContent=mo(d.bal)}}).catch(function(){})},15000);
 function home(){api("/api/market?page=1").then(function(d){$("all").textContent=d.all.toLocaleString("ru");$("showc").innerHTML=d.items.slice(0,4).map(card).join("")}).catch(function(){})}home();
 function banner(c){var b=$("bn"),t=[];if(location.protocol=="file:"){b.className="bn r";b.textContent="Сайт открыт как файл, поэтому вход и маркет не работают. Открой адрес своего сайта на Render.";b.hidden=false;return}
 if(c&&c.adj)t.push(c.adj>0?"Акция: цены выкупа выше рыночных на "+c.adj+"%":"Цены выкупа ниже рыночных на "+Math.abs(c.adj)+"%");if(c&&c.notice)t.push(c.notice);b.hidden=!t.length;b.textContent=t.join(" · ")}
