@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>cs2pay — выкуп скинов CS2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;600;800&family=Unbounded:wght@600;800&display=swap&subset=cyrillic" rel="stylesheet">
 <style>
 :root{--bg:#000;--p:#0b0b10;--p2:#15151d;--ln:#22222c;--tx:#f3f3f8;--mt:#8a8a9d;--ac:#7c5cff;--ac2:#22d3ee;--gd:#ffd166;--bad:#ff5c7a;--ok:#4ade80}
 *{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -53,10 +54,29 @@ h3{margin:0 0 12px;font-size:20px;font-weight:900}label{display:block;color:var(
 .fb{display:none}
 @media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:30px}.main{grid-template-columns:1fr}aside{display:none;position:static;max-height:none}aside.o{display:block}.fb{display:inline-block}nav a{padding:8px 9px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* v3: slate + amber, инвентарные плитки CS2 */
+:root{--bg:#0d1118;--p:#141b25;--p2:#1c2532;--ln:#273244;--tx:#eaeef5;--mt:#8c99ac;--ac:#f2a93b;--ac2:#6fb1e8;--gd:#f2c14e;color-scheme:dark}
+body{font-family:Onest,system-ui,-apple-system,"Segoe UI",sans-serif}
+body::before{background:radial-gradient(800px 500px at 90% -10%,#f2a93b22,transparent),radial-gradient(600px 420px at 0% 5%,#6fb1e826,transparent)}
+header{background:#0d1118d9}.logo,h1,h2,h3,.big,.pr{font-family:Unbounded,Onest,system-ui,sans-serif}
+h1{letter-spacing:-1.5px;font-weight:800}h2{font-weight:700;letter-spacing:-.5px}.pr{font-size:15px;font-weight:700}.big{font-size:32px}
+.logo b,.gr{background:linear-gradient(90deg,var(--ac),#ffd98a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{background:linear-gradient(180deg,#f7b94f,#e8962b);color:#1d1305;box-shadow:0 6px 18px -8px #f2a93b}.btn.g{background:var(--p2);color:var(--tx);box-shadow:none;border:1px solid var(--ln)}
+.chip{color:var(--ac)}.c.on{background:var(--ac);color:#1d1305}.pb i{background:linear-gradient(90deg,var(--ac),#ffd98a)}
+#cur{width:auto;padding:8px 10px;font-weight:700;cursor:pointer}#snd{padding:10px 12px}
+.card{border-radius:14px;background:linear-gradient(180deg,var(--p),#10161f)}.card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--c)}
+.wb{display:flex;gap:2px;margin:0 0 9px}.wb i{flex:1;min-width:6px;height:4px;border-radius:2px;background:var(--ln)}.wb i.on{background:var(--c)}
+.hint{color:var(--mt);font-size:12px;min-height:16px;margin-top:4px}
+.md.au{max-width:760px;padding:0;display:grid;grid-template-columns:1fr 1.1fr;overflow:hidden}
+.ls{padding:30px 26px;background:linear-gradient(160deg,#f2a93b26,#6fb1e81a 60%,transparent),var(--p2);display:flex;flex-direction:column;gap:14px;justify-content:center}
+.ls .logo{font-size:28px;margin:0}.ls p{margin:0;color:var(--mt);font-size:14px}.ls b{color:var(--tx)}
+.rs{padding:28px 26px}.pw{position:relative}.pw button{position:absolute;right:6px;top:5px;background:none;border:0;color:var(--mt);cursor:pointer;font:600 12px Onest,sans-serif;padding:8px}
+#lc{text-align:center;letter-spacing:10px;font:700 22px Unbounded,monospace}
+@media(max-width:700px){.md.au{grid-template-columns:1fr}.ls{display:none}}
 </style></head><body>
 <header><div class="w bar"><a class="logo" href="#/">cs2<b>pay</b></a><nav><a href="#/">Главная</a><a href="#/market">Маркет</a></nav><div class="sp"></div>
-<a class="chip" id="balc" href="#/profile/wallet" hidden></a><button class="btn g" id="cartb">Корзина<i class="bdg" id="cc" hidden>0</i></button>
-<button class="btn g" id="snd">Звук: вкл</button><button class="btn" id="lg">Войти</button></div></header>
+<a class="chip" id="balc" href="#/profile/wallet" hidden></a><select id="cur" aria-label="Валюта"><option>USD</option><option>UAH</option><option>EUR</option><option>PLN</option><option>GBP</option><option>KZT</option><option>RUB</option></select><button class="btn g" id="cartb">Корзина<i class="bdg" id="cc" hidden>0</i></button>
+<button class="btn g" id="snd" aria-label="Звук">🔊</button><button class="btn" id="lg">Войти</button></div></header>
 <div id="bn" class="bn" hidden></div>
 <main class="w">
 <section id="v-home"><div class="hero"><div><h1>Продай скины CS2 <span class="gr">и выводи деньги</span></h1><p>Выбери скины, укажи трейд-ссылку и получи деньги на баланс через 7 дней. Выводи на USDT TRC20, в Crypto-бот или на карту.</p>
@@ -75,7 +95,7 @@ h3{margin:0 0 12px;font-size:20px;font-weight:900}label{display:block;color:var(
 <details><summary>Что делать, если возникла проблема?</summary><p>Напишите в поддержку в Telegram @cs2pay или на почту cs2pay@gmail.com и укажите номер заявки из истории профиля.</p></details></div></section>
 <section id="v-market" hidden><div class="main"><aside id="as"><h4>Категория</h4><div class="ch" id="fc"></div><h4>Редкость</h4><div class="ch" id="fr"></div><h4>Износ</h4><div class="ch" id="fw"></div>
 <h4>Тип</h4><select id="st"><option value="">Все</option><option value="1">StatTrak™</option><option value="0">Без StatTrak</option></select>
-<h4>Цена, $</h4><div class="two"><input id="mn" type="number" min="0" placeholder="от"><input id="mx" type="number" min="0" placeholder="до"></div><button class="btn g bl" style="margin-top:14px" id="rs">Сбросить фильтры</button></aside>
+<h4 id="ph">Цена, $</h4><div class="two"><input id="mn" type="number" min="0" placeholder="от"><input id="mx" type="number" min="0" placeholder="до"></div><button class="btn g bl" style="margin-top:14px" id="rs">Сбросить фильтры</button></aside>
 <div><div class="tb"><button class="btn g fb" id="fbt">Фильтры</button><input id="q" placeholder="Поиск: AK-47 Redline, Karambit, Howl…" aria-label="Поиск"><select id="so" aria-label="Сортировка"><option value="">Дороже</option><option value="asc">Дешевле</option><option value="name">По названию</option></select></div>
 <div class="grid" id="gr"></div><button class="btn g more" id="mo" hidden>Показать ещё</button></div></div></section>
 <section id="v-profile" hidden style="padding:26px 0 50px"><div id="pt"></div><div id="pc"></div></section>
@@ -85,26 +105,34 @@ h3{margin:0 0 12px;font-size:20px;font-weight:900}label{display:block;color:var(
 <div class="row" style="margin:12px 0 4px"><span style="color:var(--mt)">Итого к зачислению</span><span class="pr" id="ct"></span></div>
 <label>Твоя трейд-ссылка Steam</label><input id="ctl" placeholder="https://steamcommunity.com/tradeoffer/new/?partner=…&token=…"><div class="err" id="ce"></div>
 <div class="row"><button class="btn g" id="cclr">Очистить</button><button class="btn" style="flex:1" id="cgo">Продать</button></div><div class="note">Сумма зачислится на баланс через 7 дней после проверки скинов.</div></div>
-<div class="ov" id="ol"><div class="md"><h3 id="at">Вход в cs2pay</h3><div id="gb" style="margin-bottom:10px"></div>
-<input id="lu" placeholder="Логин" autocomplete="username"><div style="height:8px"></div><input id="lp" type="password" placeholder="Пароль (от 6 символов)" autocomplete="current-password">
-<div id="lcw" hidden style="margin-top:8px"><input id="lc" inputmode="numeric" maxlength="6" placeholder="Код 2FA из приложения"></div><div class="err" id="le"></div>
-<div class="row"><button class="btn g" style="flex:1" id="am">Регистрация</button><button class="btn" style="flex:2" id="ago">Войти</button></div></div></div>
+<div class="ov" id="ol"><div class="md au"><div class="ls"><div class="logo">cs2<b>pay</b></div><p><b>Продай скины</b> и получи деньги на баланс через 7 дней.</p><p><b>2FA</b> защищает вход и вывод.</p><p><b>Вывод</b> на TRC20, Crypto-бот или карту.</p></div>
+<div class="rs"><h3 id="at">Вход в cs2pay</h3><div id="gb" style="margin-bottom:10px"></div>
+<input id="lu" placeholder="Логин" autocomplete="username"><div style="height:8px"></div><div class="pw"><input id="lp" type="password" placeholder="Пароль (от 6 символов)" autocomplete="current-password"><button id="sp" type="button">Показать</button></div>
+<div id="lcw" hidden style="margin-top:8px"><input id="lc" inputmode="numeric" maxlength="6" placeholder="······"><div class="hint">Код из Google Authenticator</div></div><div class="err" id="le"></div>
+<div class="row"><button class="btn g" style="flex:1" id="am">Регистрация</button><button class="btn" style="flex:2" id="ago">Войти</button></div></div></div></div>
 <div class="toast" id="t"></div>
 <script>
 var $=function(i){return document.getElementById(i)},S={me:null,cart:{},items:{}},F={t:"",r:"",w:"",st:""},page=1,loaded=0,fl=0,snd=true,ac,M,D,NB,tm,qt,mode="login",WS={"Factory New":"FN","Minimal Wear":"MW","Field-Tested":"FT","Well-Worn":"WW","Battle-Scarred":"BS"};
 try{S.cart=JSON.parse(localStorage.getItem("cart")||"{}")}catch(e){}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
-function mo(c){return"$"+(c/100).toFixed(2)}
+var CUR="USD",R={USD:1};
+function fm(u){var v=u*(R[CUR]||1);try{return new Intl.NumberFormat(CUR=="USD"?"en-US":"ru-RU",{style:"currency",currency:CUR,maximumFractionDigits:CUR=="KZT"?0:2}).format(v)}catch(e){return"$"+u.toFixed(2)}}
+function mo(c){return fm(c/100)}
+function hint(i,id){$(id).textContent=CUR=="USD"||!i.value?"":"≈ "+fm(+i.value)}
+function cu(){$("ph").textContent="Цена, "+({USD:"$",UAH:"₴",EUR:"€",PLN:"zł",GBP:"£",KZT:"₸",RUB:"₽"})[CUR];cartUp();if(loaded)load(true);home();if(S.me){$("balc").textContent=mo(S.me.bal);if(!$("v-profile").hidden)prof(tab)}}
+$("cur").onchange=function(){CUR=this.value;try{localStorage.cur=CUR}catch(e){}cu();sOpen()};
+function wb(w){var T={"Factory New":.07,"Minimal Wear":.08,"Field-Tested":.23,"Well-Worn":.07,"Battle-Scarred":.55};if(!T[w])return"";return'<div class="wb">'+Object.keys(T).map(function(k){return'<i style="flex:'+T[k]+'"'+(k==w?' class="on"':"")+'></i>'}).join("")+'</div>'}
 function api(u,b){return api0(u,b).catch(function(e){if(!e.d)e.message="Нет связи с сервером. Открывай сайт по адресу на Render, а не как файл";throw e})}
 function api0(u,b){return fetch(u,b!==undefined?{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}:{}).then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok){var e=new Error(j.error||"Ошибка");e.d=j;throw e}return j})})}
-/* sound: мягкие тона с огибающей и эхом */
-function A(){if(!ac){ac=new(window.AudioContext||window.webkitAudioContext)();M=ac.createGain();M.gain.value=.85;var d=ac.createDelay();d.delayTime.value=.16;var fb=ac.createGain();fb.gain.value=.28,lp=ac.createBiquadFilter();lp.frequency.value=1700;d.connect(lp);lp.connect(fb);fb.connect(d);D=ac.createGain();D.gain.value=.3;D.connect(d);d.connect(M);M.connect(ac.destination);var n=ac.createBuffer(1,ac.sampleRate*.05,ac.sampleRate),a=n.getChannelData(0);for(var i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*Math.pow(1-i/a.length,3);NB=n}if(ac.state=="suspended")ac.resume();return ac}
-function nt(f,t,d,v,to){if(!snd)return;try{var c=A(),n=c.currentTime+t,o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.setValueAtTime(f,n);if(to)o.frequency.exponentialRampToValueAtTime(to,n+d*.7);g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(v,n+.012);g.gain.exponentialRampToValueAtTime(.0001,n+d);o.connect(g);g.connect(M);g.connect(D);o.start(n);o.stop(n+d+.05)}catch(e){}}
-function sTap(){if(!snd)return;try{var c=A(),s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=NB;f.type="bandpass";f.frequency.value=1800;g.gain.value=1.4;s.connect(f);f.connect(g);g.connect(M);s.start();nt(900,0,.05,.12,420)}catch(e){}}
-function sPop(){nt(420,0,.14,.16,820)}function sOpen(){nt(500,0,.12,.07,700)}function sErr(){nt(170,0,.28,.22,85)}
-function sOk(){[523,659,784,1047].forEach(function(f,i){nt(f,i*.075,.55,.12)})}
-$("snd").onclick=function(){snd=!snd;this.textContent=snd?"Звук: вкл":"Звук: выкл";sTap()};
-document.addEventListener("click",function(){sTap()},true);
+/* sound: мягкие колокольчики с реверберацией */
+function A(){if(!ac){ac=new(window.AudioContext||window.webkitAudioContext)();M=ac.createGain();M.gain.value=.55;var cv=ac.createConvolver(),n=ac.sampleRate*1.6,b=ac.createBuffer(2,n,ac.sampleRate);for(var c=0;c<2;c++){var a=b.getChannelData(c);for(var i=0;i<n;i++)a[i]=(Math.random()*2-1)*Math.pow(1-i/n,3)}cv.buffer=b;D=ac.createGain();D.gain.value=.4;D.connect(cv);cv.connect(M);M.connect(ac.destination)}if(ac.state=="suspended")ac.resume();return ac}
+function nt(f,t,d,v){if(!snd)return;try{var c=A(),n=c.currentTime+t,g=c.createGain();g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(v,n+.008);g.gain.exponentialRampToValueAtTime(.0001,n+d);g.connect(M);g.connect(D);[[1,1],[2,.18],[3.01,.06]].forEach(function(h){var o=c.createOscillator(),k=c.createGain();o.frequency.value=f*h[0];k.gain.value=h[1];o.connect(k);k.connect(g);o.start(n);o.stop(n+d+.05)})}catch(e){}}
+function sTap(){nt(1568,0,.07,.03)}function sPop(){nt(784,0,.35,.1);nt(1175,.07,.45,.09)}function sOpen(){nt(660,0,.25,.07)}function sErr(){nt(330,0,.3,.08);nt(262,.11,.4,.08)}
+function sOk(){[523,659,784,1047].forEach(function(f,i){nt(f,i*.09,.8,.09)})}
+try{snd=localStorage.snd!="0"}catch(e){}$("snd").textContent=snd?"🔊":"🔇";
+$("snd").onclick=function(){snd=!snd;try{localStorage.snd=snd?1:0}catch(e){}this.textContent=snd?"🔊":"🔇";sTap()};
+document.addEventListener("click",function(e){if(e.target.closest&&e.target.closest("button,.btn,.c"))sTap()},true);
+$("sp").onclick=function(){var p=$("lp"),h=p.type=="password";p.type=h?"text":"password";this.textContent=h?"Скрыть":"Показать"};
 function toast(x,b){var e=$("t");e.textContent=x;e.style.background=b?"var(--bad)":"var(--ok)";e.classList.add("s");clearTimeout(tm);tm=setTimeout(function(){e.classList.remove("s")},2800)}
 function closeAll(){document.querySelectorAll(".ov").forEach(function(o){o.classList.remove("s")});$("dr").classList.remove("s")}
 document.querySelectorAll(".ov").forEach(function(o){o.onmousedown=function(e){if(e.target===o)closeAll()}});document.onkeydown=function(e){if(e.key=="Escape")closeAll()};
@@ -115,8 +143,8 @@ document.querySelectorAll("nav a").forEach(function(a){a.classList.toggle("on",a
 if(v=="market"&&!loaded){loaded=1;load(true)}if(v=="profile")prof(h[1]||"overview");scrollTo(0,0)}
 addEventListener("hashchange",route);
 /* market */
-function card(s){S.items[s.id]=s;var w=WS[s.w]||s.w,i=S.cart[s.id];return'<div class="card'+(i?" in":"")+'" data-id="'+esc(s.id)+'" style="--c:'+esc(s.c)+'">'+(w?'<div class="bd">'+esc(w)+'</div>':"")+'<div class="art"><img loading="lazy" src="'+esc(s.img)+'" alt="'+esc(s.n)+'"></div><div class="cb"><div class="nm">'+esc(s.n)+'</div><div class="rr">'+esc(s.r)+'</div><div class="row"><div class="pr">$'+s.p.toFixed(2)+'</div><button class="btn sm'+(i?" g":"")+'" data-a="1">'+(i?"Убрать":"В корзину")+'</button></div></div></div>'}
-function url(){return"/api/market?page="+page+"&q="+encodeURIComponent($("q").value)+"&sort="+$("so").value+"&min="+($("mn").value||0)+"&max="+($("mx").value||"")+"&t="+encodeURIComponent(F.t)+"&r="+encodeURIComponent(F.r)+"&w="+encodeURIComponent(F.w)+"&st="+$("st").value}
+function card(s){S.items[s.id]=s;var w=WS[s.w]||s.w,i=S.cart[s.id];return'<div class="card'+(i?" in":"")+'" data-id="'+esc(s.id)+'" style="--c:'+esc(s.c)+'">'+(w?'<div class="bd">'+esc(w)+'</div>':"")+'<div class="art"><img loading="lazy" src="'+esc(s.img)+'" alt="'+esc(s.n)+'"></div><div class="cb"><div class="nm">'+esc(s.n)+'</div><div class="rr">'+esc(s.r)+'</div>'+wb(s.w)+'<div class="row"><div class="pr">'+fm(s.p)+'</div><button class="btn sm'+(i?" g":"")+'" data-a="1">'+(i?"Убрать":"В корзину")+'</button></div></div></div>'}
+function url(){return"/api/market?page="+page+"&q="+encodeURIComponent($("q").value)+"&sort="+$("so").value+"&min="+(+($("mn").value||0)/(R[CUR]||1))+"&max="+($("mx").value?$("mx").value/(R[CUR]||1):"")+"&t="+encodeURIComponent(F.t)+"&r="+encodeURIComponent(F.r)+"&w="+encodeURIComponent(F.w)+"&st="+$("st").value}
 function load(reset){if(reset){page=1;$("gr").innerHTML=new Array(12).join('<div class="sk"></div>')}
 api(url()).then(function(d){$("all").textContent=d.all.toLocaleString("ru");
 if(!fl&&d.all){fl=1;[["fc","t",d.cats],["fr","r",d.rarities],["fw","w",d.wears]].forEach(function(a){$(a[0]).innerHTML=['<button class="c on" data-k="'+a[1]+'" data-v="">Все</button>'].concat(a[2].map(function(v){return'<button class="c" data-k="'+a[1]+'" data-v="'+esc(v)+'">'+esc(v)+'</button>'})).join("")})}
@@ -135,7 +163,7 @@ $("gr").onclick=grid;$("showc").onclick=grid;
 function cartUp(){try{localStorage.setItem("cart",JSON.stringify(S.cart))}catch(e){}var ids=Object.keys(S.cart),t=0;
 document.querySelectorAll(".card").forEach(function(c){var i=!!S.cart[c.dataset.id],b=c.querySelector("[data-a]");c.classList.toggle("in",i);b.textContent=i?"Убрать":"В корзину";b.classList.toggle("g",i)});
 ids.forEach(function(i){t+=Math.round(S.cart[i].p*100)});$("cc").textContent=ids.length;$("cc").hidden=!ids.length;$("ct").textContent=mo(t);
-$("dl").innerHTML=ids.length?ids.map(function(i){var s=S.cart[i];return'<div class="li"><img src="'+esc(s.img)+'" alt=""><div class="nm">'+esc(s.n)+'</div><b class="pr" style="font-size:14px">$'+s.p.toFixed(2)+'</b><button class="x" data-x="'+esc(i)+'" aria-label="Убрать">×</button></div>'}).join(""):'<div class="em">Корзина пуста. Добавь скины на маркете.</div>'}
+$("dl").innerHTML=ids.length?ids.map(function(i){var s=S.cart[i];return'<div class="li"><img src="'+esc(s.img)+'" alt=""><div class="nm">'+esc(s.n)+'</div><b class="pr" style="font-size:13px">'+fm(s.p)+'</b><button class="x" data-x="'+esc(i)+'" aria-label="Убрать">×</button></div>'}).join(""):'<div class="em">Корзина пуста. Добавь скины на маркете.</div>'}
 $("dl").onclick=function(e){var i=e.target.dataset.x;if(i){delete S.cart[i];cartUp()}};
 $("cartb").onclick=function(){sOpen();$("ctl").value=(S.me&&S.me.tl)||$("ctl").value;$("ce").textContent="";$("dr").classList.add("s")};
 $("dx").onclick=closeAll;$("cclr").onclick=function(){S.cart={};cartUp()};
@@ -155,10 +183,10 @@ api("/api/me").then(function(d){S.me=d;$("balc").textContent=mo(d.bal);$("lg").t
 var T=[["overview","Обзор"],["wallet","Кошелёк"],["history","История"],["settings","Настройки"]];
 $("pt").innerHTML='<div class="tabs">'+T.map(function(x){return'<a href="#/profile/'+x[0]+'" class="'+(x[0]==t?"on":"")+'">'+x[1]+'</a>'}).join("")+'</div>';
 var pend=0,sold=0;d.orders.forEach(function(o){var c=Math.round(o.price*100);if(o.status=="new"||o.status=="accepted")pend+=c;if(o.status=="credited")sold+=c});
-if(t=="wallet"){$("pc").innerHTML='<div class="pc"><div class="box"><h3>Вывод средств</h3><div style="color:var(--mt)">Доступно</div><div class="big">'+mo(d.bal)+'</div><label>Сумма, $ (минимум 5)</label><input id="wa" type="number" min="5" step="0.01"><label>Способ</label><select id="wm"><option>TRC20</option><option>Crypto-бот</option><option>Карта</option></select><label>Реквизиты</label><input id="wd" placeholder="Адрес TRC20, начинается с T"><div id="wcw" '+(d.tfa?"":"hidden")+'><label>Код 2FA</label><input id="wc" inputmode="numeric" maxlength="6"></div><div class="err" id="we"></div><button class="btn bl" onclick="wd()">Вывести</button></div>'+
-'<div class="box"><h3>Пополнение</h3><p style="color:var(--mt);margin-top:0">Пополнение только через Crypto-бот. Баланс пополнится автоматически сразу после оплаты счёта.</p><label>Сумма, $</label><input id="da" type="number" min="5" step="0.01"><div class="err" id="de"></div><button class="btn bl" onclick="dep()">Создать счёт</button><div id="dres"></div></div></div>';
+if(t=="wallet"){$("pc").innerHTML='<div class="pc"><div class="box"><h3>Вывод средств</h3><div style="color:var(--mt)">Доступно · баланс и выплаты в USD</div><div class="big">'+mo(d.bal)+'</div><label>Сумма, $ (минимум 5)</label><input id="wa" type="number" min="5" step="0.01" oninput="hint(this,\'wh\')"><div class="hint" id="wh"></div><label>Способ</label><select id="wm"><option>TRC20</option><option>Crypto-бот</option><option>Карта</option></select><label>Реквизиты</label><input id="wd" placeholder="Адрес TRC20, начинается с T"><div id="wcw" '+(d.tfa?"":"hidden")+'><label>Код 2FA</label><input id="wc" inputmode="numeric" maxlength="6"></div><div class="err" id="we"></div><button class="btn bl" onclick="wd()">Вывести</button></div>'+
+'<div class="box"><h3>Пополнение</h3><p style="color:var(--mt);margin-top:0">Пополнение только через Crypto-бот. Баланс пополнится автоматически сразу после оплаты счёта.</p><label>Сумма, $</label><input id="da" type="number" min="5" step="0.01" oninput="hint(this,\'dh\')"><div class="hint" id="dh"></div><div class="err" id="de"></div><button class="btn bl" onclick="dep()">Создать счёт</button><div id="dres"></div></div></div>';
 $("wm").onchange=function(){$("wd").placeholder=this.value=="TRC20"?"Адрес TRC20, начинается с T":this.value=="Карта"?"Номер карты":"@username в Telegram"}}
-else if(t=="history"){var L=d.orders.map(function(o){return{t:o.t,h:'<div class="ord"><div class="row"><div class="row" style="justify-content:flex-start;gap:10px"><img src="'+esc(o.img)+'" alt="" style="width:52px;height:38px;object-fit:contain"><div><div class="nm" style="min-height:0">'+esc(o.skin)+'</div><div class="st">'+({new:"Продажа · на проверке",accepted:"Продажа · зачисление через "+Math.max(0,Math.ceil((o.hold-Date.now())/864e5))+" дн.",credited:"Продажа · зачислено",rejected:"Продажа · отклонена"})[o.status]+'</div></div></div><div class="pr">+$'+o.price.toFixed(2)+'</div></div>'+(o.status=="accepted"?'<div class="pb"><i style="width:'+Math.min(100,100-(o.hold-Date.now())/6048e3)+'%"></i></div>':"")+'</div>'}}).concat(d.ops.map(function(o){return{t:o.t,h:'<div class="ord"><div class="row"><div><div class="nm" style="min-height:0">'+(o.type=="dep"?"Пополнение"+(o.method?" · "+esc(o.method):""):"Вывод · "+esc(o.method))+'</div><div class="st">'+({pending:"Ожидает",done:"Выполнено",rejected:"Отклонено"})[o.status]+(o.type=="dep"&&o.status=="pending"&&o.url?' · <a class="lk" href="'+esc(o.url)+'" target="_blank" rel="noopener">Оплатить</a>':"")+'</div></div><div class="pr">'+(o.type=="dep"?"+":"−")+mo(o.cents)+'</div></div></div>'}}));
+else if(t=="history"){var L=d.orders.map(function(o){return{t:o.t,h:'<div class="ord"><div class="row"><div class="row" style="justify-content:flex-start;gap:10px"><img src="'+esc(o.img)+'" alt="" style="width:52px;height:38px;object-fit:contain"><div><div class="nm" style="min-height:0">'+esc(o.skin)+'</div><div class="st">'+({new:"Продажа · на проверке",accepted:"Продажа · зачисление через "+Math.max(0,Math.ceil((o.hold-Date.now())/864e5))+" дн.",credited:"Продажа · зачислено",rejected:"Продажа · отклонена"})[o.status]+'</div></div></div><div class="pr">+'+fm(o.price)+'</div></div>'+(o.status=="accepted"?'<div class="pb"><i style="width:'+Math.min(100,100-(o.hold-Date.now())/6048e3)+'%"></i></div>':"")+'</div>'}}).concat(d.ops.map(function(o){return{t:o.t,h:'<div class="ord"><div class="row"><div><div class="nm" style="min-height:0">'+(o.type=="dep"?"Пополнение"+(o.method?" · "+esc(o.method):""):"Вывод · "+esc(o.method))+'</div><div class="st">'+({pending:"Ожидает",done:"Выполнено",rejected:"Отклонено"})[o.status]+(o.type=="dep"&&o.status=="pending"&&o.url?' · <a class="lk" href="'+esc(o.url)+'" target="_blank" rel="noopener">Оплатить</a>':"")+'</div></div><div class="pr">'+(o.type=="dep"?"+":"−")+mo(o.cents)+'</div></div></div>'}}));
 L.sort(function(a,b){return b.t-a.t});$("pc").innerHTML='<div class="box">'+(L.length?L.map(function(x){return x.h}).join(""):'<div class="em">История пуста. Добавь скины в корзину на маркете.</div>')+'</div>'}
 else if(t=="settings"){$("pc").innerHTML='<div class="pc"><div class="box"><h3>Трейд-ссылка Steam</h3><input id="stl" value="'+esc(d.tl)+'" placeholder="https://steamcommunity.com/tradeoffer/new/?partner=…&token=…"><div class="err" id="tle"></div><button class="btn" onclick="stl()">Сохранить</button><div class="note">Найти ссылку: Steam → Инвентарь → Предложения обмена → Кто может отправлять мне предложения обмена.</div></div>'+
 '<div class="box"><h3>Двухэтапная защита (2FA)</h3>'+(d.tfa?'<p style="color:var(--ok);margin-top:0">Включена. Код нужен при входе и выводе.</p><label>Код из приложения</label><input id="dc" inputmode="numeric" maxlength="6">'+(d.google?"":'<label>Пароль</label><input id="dp" type="password">')+'<div class="err" id="fe"></div><button class="btn g" onclick="f2(0)">Отключить 2FA</button>':'<p style="color:var(--mt);margin-top:0">Подключи Google Authenticator или любое TOTP-приложение.</p><div id="fa"><button class="btn" onclick="f2s()">Включить 2FA</button></div>')+'</div>'+
@@ -177,9 +205,9 @@ function out(){api("/api/logout",{}).then(function(){S.me=null;$("lg").textConte
 /* init */
 cartUp();me();route();
 setInterval(function(){if(S.me)api("/api/me").then(function(d){if(d.name){S.me.bal=d.bal;$("balc").textContent=mo(d.bal)}}).catch(function(){})},15000);
-api("/api/market?page=1").then(function(d){$("all").textContent=d.all.toLocaleString("ru");$("showc").innerHTML=d.items.slice(0,4).map(card).join("")}).catch(function(){});
+function home(){api("/api/market?page=1").then(function(d){$("all").textContent=d.all.toLocaleString("ru");$("showc").innerHTML=d.items.slice(0,4).map(card).join("")}).catch(function(){})}home();
 function banner(c){var b=$("bn"),t=[];if(location.protocol=="file:"){b.className="bn r";b.textContent="Сайт открыт как файл, поэтому вход и маркет не работают. Открой адрес своего сайта на Render.";b.hidden=false;return}
 if(c&&c.adj)t.push(c.adj>0?"Акция: цены выкупа выше рыночных на "+c.adj+"%":"Цены выкупа ниже рыночных на "+Math.abs(c.adj)+"%");if(c&&c.notice)t.push(c.notice);b.hidden=!t.length;b.textContent=t.join(" · ")}
 if(location.protocol=="file:")banner();
-api("/api/config").then(function(c){banner(c);if(!c.gid)return;var s=document.createElement("script");s.src="https://accounts.google.com/gsi/client";s.onload=function(){google.accounts.id.initialize({client_id:c.gid,callback:function(r){api("/api/google",{credential:r.credential}).then(function(){closeAll();sOk();me()}).catch(function(e){$("le").textContent=e.message})}});google.accounts.id.renderButton($("gb"),{theme:"filled_black",size:"large",text:"signin_with",width:320})};document.head.appendChild(s)});
+api("/api/config").then(function(c){banner(c);if(c.rates){R=c.rates;try{var v=localStorage.cur;if(v&&R[v]){CUR=v;$("cur").value=v;cu()}}catch(e){}}if(!c.gid)return;var s=document.createElement("script");s.src="https://accounts.google.com/gsi/client";s.onload=function(){google.accounts.id.initialize({client_id:c.gid,callback:function(r){api("/api/google",{credential:r.credential}).then(function(){closeAll();sOk();me()}).catch(function(e){$("le").textContent=e.message})}});google.accounts.id.renderButton($("gb"),{theme:"filled_black",size:"large",text:"signin_with",width:320})};document.head.appendChild(s)});
 </script></body></html>
