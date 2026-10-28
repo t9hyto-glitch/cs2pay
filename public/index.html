@@ -98,9 +98,9 @@ body{padding-bottom:72px;font-size:14px}.w{padding:0 12px}nav:not(.tb2){display:
 .toast{width:calc(100% - 24px);text-align:center;top:62px}}
 
 .seg{display:flex;background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:3px}.seg button{border:0;background:none;color:var(--mt);padding:8px 16px;border-radius:8px;font:700 14px Onest,sans-serif;cursor:pointer}.seg button.on{background:var(--ac);color:#1a1204}
-.on2{display:inline-flex;align-items:center;gap:6px;margin-left:14px;color:var(--mt);font-size:13px;font-weight:600}.on2 i{width:8px;height:8px;border-radius:50%;background:#3ccf7a}
+.on2{display:inline-flex;align-items:center;gap:6px;margin-left:10px;color:var(--mt);font-size:13px;font-weight:600;white-space:nowrap}.on2 i{width:8px;height:8px;border-radius:50%;background:#3ccf7a}
 .md.cr input{width:100%}
-@media(max-width:700px){.on2{display:none}.seg{flex:1 1 100%}.seg button{flex:1}}
+@media(max-width:700px){.on2{margin-left:4px;font-size:12px}.seg{flex:1 1 100%}.seg button{flex:1}}
 </style></head><body>
 <header><div class="w bar"><a class="logo" href="#/">cs2<b>pay</b></a><span class="on2" id="onl" hidden></span><nav><a href="#/">Главная</a><a href="#/market">Маркет</a></nav><div class="sp"></div>
 <a class="chip" id="balc" href="#/profile/wallet" hidden></a><select id="cur" aria-label="Валюта"><option>USD</option><option>UAH</option><option>EUR</option><option>PLN</option><option>GBP</option><option>KZT</option><option>RUB</option></select><button class="btn g" id="cartb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.4a1 1 0 001 .8h9.2a1 1 0 001-.8L21 7H6"/></svg><span class="tx"> Корзина</span><i class="bdg" id="cc" hidden>0</i></button>
@@ -241,7 +241,7 @@ function buyOpen(id){var s=S.items[id];if(!s)return;if(!S.me){openAuth("Войд
 $("bgo").onclick=function(){var s=S.bi;if(!s)return;api("/api/buy",{id:s.id,tl:$("btl").value.trim()}).then(function(){closeAll();sOk();toast("Покупка оплачена. Скин отправим трейдом, статус в профиле");me()}).catch(function(e){$("be").textContent=e.message;sErr()})};
 $("seg").onclick=function(e){var m=e.target.dataset.m;if(m==null)return;S.buy=m=="1";this.querySelectorAll("button").forEach(function(b){b.classList.toggle("on",b===e.target)});load(true)};
 var VID;try{VID=localStorage.vid||(localStorage.vid=Math.random().toString(36).slice(2)+Date.now().toString(36))}catch(e){VID=Math.random().toString(36).slice(2)}
-function pingOn(){if(document.hidden)return;api("/api/ping?v="+VID).then(function(d){$("onl").innerHTML="<i></i>"+d.n+" онлайн";$("onl").hidden=false}).catch(function(){})}pingOn();setInterval(pingOn,3e4);
+function pingOn(){if(document.hidden)return;api("/api/ping?v="+VID).then(function(d){$("onl").innerHTML="<i></i>"+d.n+" онлайн";$("onl").hidden=false}).catch(function(){})}pingOn();setInterval(pingOn,4000);
 cartUp();me();route();
 setInterval(function(){if(S.me)api("/api/me").then(function(d){if(d.name){bc(d.bal);S.me.bal=d.bal;$("balc").textContent=mo(d.bal)}}).catch(function(){})},15000);
 function home(){api("/api/market?page=1").then(function(d){$("all").textContent=d.all.toLocaleString("ru");$("showc").innerHTML=d.items.slice(0,4).map(card).join("")}).catch(function(){})}home();
