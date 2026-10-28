@@ -15,20 +15,20 @@ nav a{padding:8px 13px;border-radius:10px;color:var(--mt);font-weight:700;font-s
 .bdg{position:absolute;top:-6px;right:-6px;background:var(--bad);border-radius:99px;font:800 11px inherit;padding:1px 6px;font-style:normal}
 :focus-visible{outline:2px solid var(--ac2);outline-offset:2px}
 .chip{background:var(--p2);border:1px solid var(--ln);border-radius:11px;padding:8px 13px;font-weight:800;color:var(--gd);cursor:pointer}
-h1{font-size:clamp(32px,6vw,62px);line-height:1.02;margin:0 0 14px;letter-spacing:-2.5px;font-weight:900}h2{font-size:clamp(24px,3.4vw,34px);letter-spacing:-1px;margin:0 0 18px;font-weight:900}
-.hero{padding:60px 0 30px;display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center}.hero p{color:var(--mt);font-size:17px;max-width:52ch;margin:0 0 22px}
+h1{font-size:clamp(32px,5vw,56px);line-height:1.02;margin:0 0 14px;letter-spacing:-2.5px;font-weight:900}h2{font-size:clamp(24px,3.4vw,34px);letter-spacing:-1px;margin:0 0 18px;font-weight:900}
+.hero{padding:40px 0 30px;display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center}.hero p{color:var(--mt);font-size:16px;max-width:52ch;margin:0 0 22px}
 .stats{display:flex;gap:10px;flex-wrap:wrap}.stat{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:10px 16px}.stat b{display:block;font-size:20px;font-weight:900}.stat span{font-size:12px;color:var(--mt)}
 .show{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sec{padding:34px 0}
-.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.step,.adv{background:var(--p);border:1px solid var(--ln);border-radius:18px;padding:20px}.step i{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:var(--p2);color:var(--ac2);font:900 16px inherit;margin-bottom:10px}.step b,.adv b{display:block;font-size:17px;margin-bottom:4px}.step span,.adv span{color:var(--mt);font-size:14px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.step,.adv{background:var(--p);border:1px solid var(--ln);border-radius:18px;padding:20px}.step i{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:var(--p2);color:var(--ac2);font:900 16px inherit;margin-bottom:10px}.step b,.adv b{display:block;font-size:17px;margin-bottom:4px}.step span,.adv span{color:var(--mt);font-size:14px}
 details{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:14px 18px;margin-bottom:8px}summary{cursor:pointer;font-weight:700}details p{color:var(--mt);margin:8px 0 0}
 footer{border-top:1px solid var(--ln);padding:24px 0 40px;color:var(--mt);font-size:13px;margin-top:30px}
-.main{display:grid;grid-template-columns:250px 1fr;gap:20px;margin-top:20px}
+.main{display:grid;grid-template-columns:240px 1fr;gap:18px;margin-top:20px}
 aside{background:var(--p);border:1px solid var(--ln);border-radius:18px;padding:16px;align-self:start;position:sticky;top:74px;max-height:calc(100vh - 90px);overflow:auto}
 aside h4{margin:14px 0 7px;font-size:12px;color:var(--mt);text-transform:uppercase;letter-spacing:.8px}aside h4:first-child{margin-top:0}
 .ch{display:flex;flex-wrap:wrap;gap:6px}.c{background:var(--p2);border:1px solid transparent;color:var(--mt);border-radius:99px;padding:5px 11px;font:600 12px inherit;font-family:inherit;cursor:pointer}.c.on{background:var(--ac);color:#fff}
 input,select{background:var(--p2);border:1px solid var(--ln);color:var(--tx);border-radius:11px;padding:10px 12px;font:600 14px inherit;font-family:inherit;width:100%}input:focus,select:focus{border-color:var(--ac);outline:0}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tb{display:flex;gap:10px;margin-bottom:14px}.tb input{flex:3}.tb select{flex:1;min-width:150px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
 .card{background:var(--p);border:1px solid var(--ln);border-radius:16px;overflow:hidden;transition:transform .2s,border-color .2s,box-shadow .2s;--c:#888;position:relative}
 .card:hover{transform:translateY(-4px);border-color:var(--c);box-shadow:0 10px 30px -12px var(--c)}.card.in{border-color:var(--ok)}
 .art{height:150px;display:grid;place-items:center;background:radial-gradient(circle at 50% 115%,color-mix(in srgb,var(--c) 50%,transparent),transparent 72%)}
@@ -52,8 +52,6 @@ h3{margin:0 0 12px;font-size:20px;font-weight:900}label{display:block;color:var(
 .toast{position:fixed;left:50%;top:70px;transform:translate(-50%,-140px);background:var(--ok);color:#03210f;font-weight:800;padding:12px 20px;border-radius:13px;z-index:70;transition:transform .35s cubic-bezier(.2,1.3,.4,1)}.toast.s{transform:translate(-50%,0)}
 .bn{background:#1b1440;border-bottom:1px solid var(--ac);text-align:center;padding:9px 14px;font-weight:700;font-size:14px}.bn.r{background:#3a0f1c;border-color:var(--bad)}.lk{color:var(--ac2)}footer a{color:var(--ac2)}
 .fb{display:none}
-@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:30px}.main{grid-template-columns:1fr}aside{display:none;position:static;max-height:none}aside.o{display:block}.fb{display:inline-block}nav a{padding:8px 9px}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 /* v4: чисто и ровно, без градиентов и свечения */
 :root{--bg:#0e1116;--p:#151a22;--p2:#1b212b;--ln:#262e3b;--tx:#e8ebf0;--mt:#8791a1;--ac:#f2a93b;--ac2:#7db4e6;--gd:#f2a93b;color-scheme:dark}
 body{font-family:Onest,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px}body::before{display:none}
@@ -68,7 +66,7 @@ input,select{border-radius:10px;background:var(--p2)}input:focus,select:focus{bo
 aside,.box,.step,.adv,.stat,details{background:var(--p);border-radius:14px}
 aside h4{text-transform:none;letter-spacing:0;font-size:13px;color:var(--tx);font-weight:700}
 .c{border-radius:8px;background:var(--p2);padding:6px 10px}.c.on{background:var(--ac);color:#1a1204}
-.grid{gap:14px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.grid{gap:14px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
 .card{background:var(--p);border:1px solid var(--ln);border-radius:12px;transition:border-color .15s}.card:hover{transform:none;box-shadow:none;border-color:#3a4556}.card.in{border-color:var(--ac)}
 .card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--c)}
 .art{height:140px;background:var(--p2)}.art img{filter:none}.card:hover .art img{transform:none}
@@ -81,54 +79,105 @@ aside h4{text-transform:none;letter-spacing:0;font-size:13px;color:var(--tx);fon
 .ls{padding:30px 26px;background:var(--p2);display:flex;flex-direction:column;gap:14px;justify-content:center}.ls .logo{font-size:26px;margin:0}.ls p{margin:0;color:var(--mt);font-size:14px}.ls b{color:var(--tx)}
 .rs{padding:28px 26px}.pw{position:relative}.pw button{position:absolute;right:6px;top:5px;background:none;border:0;color:var(--mt);cursor:pointer;font:600 12px Onest,sans-serif;padding:8px}
 #lc{text-align:center;letter-spacing:10px;font:700 22px Onest,monospace}
-@media(max-width:700px){.md.au{grid-template-columns:1fr}.ls{display:none}}
-
 .cb .row{flex-direction:column;align-items:stretch}.cb .row .btn{width:100%}.pr{font-size:17px}
 .md.cr{text-align:center;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:6px}.md.cr h3{margin:8px 0 0}.md.cr p{color:var(--mt);margin:0 0 10px}.md.cr .big{color:var(--ac)}
 .tb2{display:none}#snd svg,#cartb svg{vertical-align:-4px}
-@media(max-width:700px){
-body{padding-bottom:72px;font-size:14px}.w{padding:0 12px}nav:not(.tb2){display:none}.bar{height:54px;gap:6px}.logo{font-size:17px;margin-right:0}
-#cartb .tx,#balc{display:none}#cartb,#snd{padding:9px 10px}#cur{padding:8px 6px}#lg{max-width:96px;overflow:hidden;text-overflow:ellipsis}
-.tb2{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--bg);border-top:1px solid var(--ln);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
-.tb2 a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border-radius:10px;color:var(--mt);font-size:11px;font-weight:700}.tb2 a.on{color:var(--ac);background:var(--p2)}
-.hero{padding:22px 0 8px}.hero p{font-size:15px}.show{grid-template-columns:1fr 1fr}.stat{flex:1 1 90px;padding:9px 12px}
-.grid{grid-template-columns:1fr 1fr;gap:10px}.art{height:112px}.nm{font-size:12.5px;min-height:32px}.cb{padding:10px}.pr{font-size:15px}
-.tb{flex-wrap:wrap}.tb input{flex:1 1 100%}.tb select{min-width:0;flex:1}.fb{flex:1}
-.pc{grid-template-columns:1fr}.big{font-size:28px}.dr{width:100%}.md{padding:16px}.rs{padding:20px 16px}.tabs a{padding:7px 10px}.sec{padding:22px 0}
-.toast{width:calc(100% - 24px);text-align:center;top:62px}}
-
 .seg{display:flex;background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:3px}.seg button{border:0;background:none;color:var(--mt);padding:8px 16px;border-radius:8px;font:700 14px Onest,sans-serif;cursor:pointer}.seg button.on{background:var(--ac);color:#1a1204}
-.on2{display:inline-flex;align-items:center;gap:6px;margin-left:10px;color:var(--mt);font-size:13px;font-weight:600;white-space:nowrap}.on2 i{width:8px;height:8px;border-radius:50%;background:#3ccf7a}
+.on2{display:inline-flex;align-items:center;gap:6px;margin-left:10px;color:var(--mt);font-size:13px;font-weight:600;white-space:nowrap}.on2 i{width:8px;height:8px;border-radius:50%;background:#3ccf7a;box-shadow:0 0 8px #3ccf7a}
 .md.cr input{width:100%}
-@media(max-width:700px){.on2{margin-left:4px;font-size:12px}.seg{flex:1 1 100%}.seg button{flex:1}}
+.fv{position:absolute;top:8px;right:8px;z-index:2;width:30px;height:30px;border-radius:50%;border:0;background:#0e1116cc;color:var(--mt);cursor:pointer;display:grid;place-items:center}.fv.on{color:#ff6b6b}.fv.on svg{fill:currentColor}
+#favb.on{background:var(--ac);color:#1a1204}
+.pl{display:flex;gap:10px;overflow-x:auto;margin-top:12px;padding-bottom:4px}.pi{flex:0 0 200px;display:flex;align-items:center;gap:8px;background:var(--p2);border-radius:10px;padding:8px}.pi img{width:48px;height:36px;object-fit:contain}.pi span{font-size:12px;flex:1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.pi b{color:var(--ac);font-size:13px}
+
+/* Левая панель сделок и живых отзывов */
+.w{max-width:1540px}
+.app-grid{display:grid;grid-template-columns:310px minmax(0,1fr);gap:22px;align-items:start}
+.lf-panel{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:14px;position:sticky;top:72px;max-height:calc(100vh - 88px);display:flex;flex-direction:column;gap:10px;overflow:hidden}
+.lf-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--ln);padding-bottom:10px}
+.lf-head b{font-size:14px;display:flex;align-items:center;gap:7px}
+.lf-dot{width:8px;height:8px;border-radius:50%;background:#3ccf7a;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.85)}}
+.lf-sub{font-size:11px;color:var(--mt);font-weight:600}
+.lf-list{display:flex;flex-direction:column;gap:9px;overflow-y:auto;padding-right:2px;scrollbar-width:thin}
+.lf-item{background:var(--p2);border:1px solid var(--ln);border-radius:11px;padding:10px;animation:slideIn .35s cubic-bezier(.2,1.2,.4,1)}
+@keyframes slideIn{from{opacity:0;transform:translateY(-14px) scale(.97)}to{opacity:1;transform:none}}
+.lf-top{display:flex;align-items:center;gap:9px}
+.lf-av{width:34px;height:34px;border-radius:50%;object-fit:cover;background:var(--bg);border:1px solid var(--ln);flex-shrink:0}
+.lf-u{flex:1;min-width:0}
+.lf-name{font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:5px}
+.lf-tag{font-size:10px;padding:1px 6px;border-radius:5px;font-weight:800;background:#3ccf7a22;color:#3ccf7a}
+.lf-tag.b{background:#f2a93b22;color:var(--ac)}
+.lf-time{font-size:11px;color:var(--mt)}
+.lf-deal{display:flex;align-items:center;gap:8px;background:var(--p);border:1px solid var(--ln);border-radius:8px;padding:6px 8px;margin:7px 0}
+.lf-deal img{width:40px;height:30px;object-fit:contain;flex-shrink:0}
+.lf-skin{font-size:11.5px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--tx)}
+.lf-pr{font-size:12.5px;font-weight:800;color:var(--ac);white-space:nowrap}
+.lf-rev{font-size:12.5px;color:#d0d6e2;line-height:1.35;background:#0e111677;border-radius:8px;padding:6px 8px;border-left:2px solid var(--ac)}
+.lf-stars{color:var(--ac);font-size:11px;letter-spacing:1px;margin-bottom:2px}
+
+@media(max-width:1100px){
+ .app-grid{grid-template-columns:1fr}
+ .lf-panel{position:static;max-height:390px;order:2;margin-top:16px}
+}
+@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:24px}.main{grid-template-columns:1fr}aside{display:none;position:static;max-height:none}aside.o{display:block}.fb{display:inline-block}nav a{padding:8px 9px}}
+@media(max-width:700px){
+ body{padding-bottom:72px;font-size:14px}.w{padding:0 12px}nav:not(.tb2){display:none}.bar{height:54px;gap:6px}.logo{font-size:17px;margin-right:0}
+ #cartb .tx,#balc{display:none}#cartb,#snd{padding:9px 10px}#cur{padding:8px 6px}#lg{max-width:96px;overflow:hidden;text-overflow:ellipsis}
+ .on2{margin-left:4px;font-size:11.5px}
+ .tb2{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--bg);border-top:1px solid var(--ln);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+ .tb2 a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border-radius:10px;color:var(--mt);font-size:11px;font-weight:700}.tb2 a.on{color:var(--ac);background:var(--p2)}
+ .hero{padding:20px 0 8px}.hero p{font-size:15px}.show{grid-template-columns:1fr 1fr}.stat{flex:1 1 90px;padding:9px 12px}
+ .grid{grid-template-columns:1fr 1fr;gap:10px}.art{height:112px}.nm{font-size:12.5px;min-height:32px}.cb{padding:10px}.pr{font-size:15px}
+ .tb{flex-wrap:wrap}.tb input{flex:1 1 100%}.tb select{min-width:0;flex:1}.fb{flex:1}.seg{flex:1 1 100%}.seg button{flex:1}
+ .pc{grid-template-columns:1fr}.big{font-size:28px}.dr{width:100%}.md{padding:16px}.rs{padding:20px 16px}.tabs a{padding:7px 10px}.sec{padding:22px 0}
+ .toast{width:calc(100% - 24px);text-align:center;top:62px}.md.au{grid-template-columns:1fr}.ls{display:none}
+}
 </style></head><body>
 <header><div class="w bar"><a class="logo" href="#/">cs2<b>pay</b></a><span class="on2" id="onl" hidden></span><nav><a href="#/">Главная</a><a href="#/market">Маркет</a></nav><div class="sp"></div>
 <a class="chip" id="balc" href="#/profile/wallet" hidden></a><select id="cur" aria-label="Валюта"><option>USD</option><option>UAH</option><option>EUR</option><option>PLN</option><option>GBP</option><option>KZT</option><option>RUB</option></select><button class="btn g" id="cartb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.4a1 1 0 001 .8h9.2a1 1 0 001-.8L21 7H6"/></svg><span class="tx"> Корзина</span><i class="bdg" id="cc" hidden>0</i></button>
 <button class="btn g" id="snd" aria-label="Звук"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg></button><button class="btn" id="lg">Войти</button></div></header>
 <div id="bn" class="bn" hidden></div>
-<main class="w">
-<section id="v-home"><div class="hero"><div><h1>Продай скины CS2 <span class="gr">и выводи деньги</span></h1><p>Выбери скины, укажи трейд-ссылку и получи деньги на баланс через 7 дней. Выводи на USDT TRC20, в Crypto-бот или на карту.</p>
-<a class="btn" href="#/market" style="display:inline-block;padding:14px 26px;font-size:16px">Открыть маркет</a>
-<div class="stats" style="margin-top:22px"><div class="stat"><b id="all">…</b><span>скинов на маркете</span></div><div class="stat"><b>7 дней</b><span>до зачисления</span></div><div class="stat"><b>2FA</b><span>защита аккаунта</span></div></div></div><div class="show" id="showc"></div></div>
-<div class="sec"><h2>Как это работает</h2><div class="steps"><div class="step"><i>1</i><b>Выбери скины</b><span>Добавь их в корзину. Цена на карточке и есть сумма к зачислению.</span></div><div class="step"><i>2</i><b>Укажи трейд-ссылку</b><span>Сохрани её в профиле один раз.</span></div><div class="step"><i>3</i><b>Получи оффер</b><span>Мы пришлём трейд-оффер и проверим скины.</span></div><div class="step"><i>4</i><b>Выведи деньги</b><span>Через 7 дней сумма попадёт на баланс. Вывод на TRC20, Crypto-бот или карту.</span></div></div></div>
-<div class="sec"><h2>Почему cs2pay</h2><div class="steps"><div class="adv"><b>Все скины CS2</b><span>Полный каталог с фото и фильтрами по износу, редкости и цене.</span></div><div class="adv"><b>Двухэтапная защита</b><span>Код из Google Authenticator при входе и выводе.</span></div><div class="adv"><b>Статусы в профиле</b><span>Каждая заявка видна с прогрессом 7-дневного ожидания.</span></div><div class="adv"><b>Три способа вывода</b><span>USDT TRC20, Crypto-бот, банковская карта.</span></div></div></div>
-<div class="sec"><h2>Поддержка</h2><div class="steps"><div class="adv"><b>Telegram</b><span><a class="lk" href="https://t.me/cs2pay">@cs2pay</a></span></div><div class="adv"><b>Почта</b><span><a class="lk" href="mailto:cs2pay@gmail.com">cs2pay@gmail.com</a></span></div></div></div>
-<div class="sec"><h2>Частые вопросы</h2>
-<details><summary>Почему выплата приходит через 7 дней?</summary><p>После обмена Steam даёт 7 дней, в течение которых трейд может быть отменён, например если аккаунт отправителя был взломан или сделка признана ошибочной. Если отмена случится после выплаты, скин вернётся прежнему владельцу, а мы останемся и без скина, и без денег. Поэтому сумма зачисляется на баланс только после окончания этого срока.</p></details>
-<details><summary>Какая цена выкупа?</summary><p>За основу берётся рыночная цена скина. Во время акций мы можем менять цены на фиксированный процент, действующая корректировка всегда показана в баннере сверху. Цена на карточке и итог в корзине равны сумме, которая зачислится на баланс.</p></details>
-<details><summary>Как пополнить баланс?</summary><p>Пополнение работает только через Crypto-бот. В профиле откройте «Кошелёк», создайте счёт и оплатите его в Telegram. Баланс обновится автоматически сразу после оплаты.</p></details>
-<details><summary>Как вывести деньги?</summary><p>В профиле откройте «Кошелёк», укажите сумму, способ (USDT TRC20, Crypto-бот или карта) и реквизиты. Минимальный вывод $5. Если включена 2FA, понадобится код из приложения.</p></details>
-<details><summary>Что нужно, чтобы продать скин?</summary><p>Зарегистрироваться, указать трейд-ссылку Steam, добавить скины в корзину и подтвердить заявку. После проверки мы отправим вам трейд-оффер.</p></details>
-<details><summary>Безопасен ли аккаунт?</summary><p>Включите двухэтапную защиту в настройках профиля: код из Google Authenticator потребуется при входе и при каждом выводе средств.</p></details>
-<details><summary>Что делать, если возникла проблема?</summary><p>Напишите в поддержку в Telegram @cs2pay или на почту cs2pay@gmail.com и укажите номер заявки из истории профиля.</p></details></div></section>
-<section id="v-market" hidden><div class="main"><aside id="as"><h4>Категория</h4><div class="ch" id="fc"></div><h4>Редкость</h4><div class="ch" id="fr"></div><h4>Износ</h4><div class="ch" id="fw"></div>
-<h4>Тип</h4><select id="st"><option value="">Все</option><option value="1">StatTrak™</option><option value="0">Без StatTrak</option></select>
-<h4 id="ph">Цена, $</h4><div class="two"><input id="mn" type="number" min="0" placeholder="от"><input id="mx" type="number" min="0" placeholder="до"></div><button class="btn g bl" style="margin-top:14px" id="rs">Сбросить фильтры</button></aside>
-<div><div class="tb"><div class="seg" id="seg"><button class="on" data-m="0">Продать</button><button data-m="1">Купить</button></div><button class="btn g fb" id="fbt">Фильтры</button><input id="q" placeholder="Поиск: AK-47 Redline, Karambit, Howl…" aria-label="Поиск"><select id="so" aria-label="Сортировка"><option value="">Дороже</option><option value="asc">Дешевле</option><option value="name">По названию</option></select></div>
-<div class="grid" id="gr"></div><button class="btn g more" id="mo" hidden>Показать ещё</button></div></div></section>
-<section id="v-profile" hidden style="padding:26px 0 50px"><div id="pt"></div><div id="pc"></div></section>
+
+<main class="w" style="margin-top:16px">
+<div class="app-grid">
+ <!-- ЛЕВАЯ ТАБЛИЦА СДЕЛОК И ОТЗЫВОВ -->
+ <div class="lf-panel" id="lf-panel">
+  <div class="lf-head">
+   <b><span class="lf-dot"></span> Живые сделки и отзывы</b>
+   <span class="lf-sub">LIVE</span>
+  </div>
+  <div class="lf-list" id="lf-list"></div>
+ </div>
+
+ <!-- ОСНОВНОЙ КОНТЕНТ -->
+ <div>
+  <section id="v-home"><div class="hero"><div><h1>Продай скины CS2 <span class="gr">и выводи деньги</span></h1><p>Выбери скины, укажи трейд-ссылку и получи деньги на баланс через 7 дней. Выводи на USDT TRC20, в Crypto-бот или на карту.</p>
+  <a class="btn" href="#/market" style="display:inline-block;padding:14px 26px;font-size:16px">Открыть маркет</a>
+  <div class="stats" style="margin-top:22px"><div class="stat"><b id="all">…</b><span>скинов на маркете</span></div><div class="stat"><b>7 дней</b><span>до зачисления</span></div><div class="stat"><b>2FA</b><span>защита аккаунта</span></div></div></div><div class="show" id="showc"></div></div><div id="pay" hidden style="padding-top:8px"><div class="box"><div class="row"><h3 style="margin:0">Последние выплаты</h3><span class="chip" id="paid"></span></div><div class="pl" id="payl"></div></div></div>
+  <div class="sec"><h2>Как это работает</h2><div class="steps"><div class="step"><i>1</i><b>Выбери скины</b><span>Добавь их в корзину. Цена на карточке и есть сумма к зачислению.</span></div><div class="step"><i>2</i><b>Укажи трейд-ссылку</b><span>Сохрани её в профиле один раз.</span></div><div class="step"><i>3</i><b>Получи оффер</b><span>Мы пришлём трейд-оффер и проверим скины.</span></div><div class="step"><i>4</i><b>Выведи деньги</b><span>Через 7 дней сумма попадёт на баланс. Вывод на TRC20, Crypto-бот или карту.</span></div></div></div>
+  <div class="sec"><h2>Почему cs2pay</h2><div class="steps"><div class="adv"><b>Все скины CS2</b><span>Полный каталог с фото и фильтрами по износу, редкости и цене.</span></div><div class="adv"><b>Двухэтапная защита</b><span>Код из Google Authenticator при входе и выводе.</span></div><div class="adv"><b>Статусы в профиле</b><span>Каждая заявка видна с прогрессом 7-дневного ожидания.</span></div><div class="adv"><b>Три способа вывода</b><span>USDT TRC20, Crypto-бот, банковская карта.</span></div></div></div>
+  <div class="sec"><h2>Поддержка</h2><div class="steps"><div class="adv"><b>Telegram</b><span><a class="lk" href="https://t.me/cs2_pay">@cs2_pay</a></span></div><div class="adv"><b>Канал</b><span><a class="lk" href="https://t.me/SellSkin_cs2">@SellSkin_cs2</a></span></div></div></div>
+  <div class="sec"><h2>Частые вопросы</h2>
+  <details><summary>Почему выплата приходит через 7 дней?</summary><p>После обмена Steam даёт 7 дней, в течение которых трейд может быть отменён, например если аккаунт отправителя был взломан или сделка признана ошибочной. Если отмена случится после выплаты, скин вернётся прежнему владельцу, а мы останемся и без скина, и без денег. Поэтому сумма зачисляется на баланс только после окончания этого срока.</p></details>
+  <details><summary>Какая цена выкупа?</summary><p>За основу берётся рыночная цена скина. Во время акций мы можем менять цены на фиксированный процент, действующая корректировка всегда показана в баннере сверху. Цена на карточке и итог в корзине равны сумме, которая зачислится на баланс.</p></details>
+  <details><summary>Как пополнить баланс?</summary><p>Пополнение работает только через Crypto-бот. В профиле откройте «Кошелёк», создайте счёт и оплатите его в Telegram. Баланс обновится автоматически сразу после оплаты.</p></details>
+  <details><summary>Как вывести деньги?</summary><p>В профиле откройте «Кошелёк», укажите сумму, способ (USDT TRC20, Crypto-бот или карта) и реквизиты. Минимальный вывод $5. Если включена 2FA, понадобится код из приложения.</p></details>
+  <details><summary>Что нужно, чтобы продать скин?</summary><p>Зарегистрироваться, указать трейд-ссылку Steam, добавить скины в корзину и подтвердить заявку. После проверки мы отправим вам трейд-оффер.</p></details>
+  <details><summary>Безопасен ли аккаунт?</summary><p>Включите двухэтапную защиту в настройках профиля: код из Google Authenticator потребуется при входе и при каждом выводе средств.</p></details>
+  <details><summary>Что делать, если возникла проблема?</summary><p>Напишите в поддержку в Telegram @cs2_pay и укажите номер заявки из истории профиля.</p></details></div></section>
+
+  <section id="v-market" hidden><div class="main"><aside id="as"><h4>Категория</h4><div class="ch" id="fc"></div><h4>Редкость</h4><div class="ch" id="fr"></div><h4>Износ</h4><div class="ch" id="fw"></div>
+  <h4>Тип</h4><select id="st"><option value="">Все</option><option value="1">StatTrak™</option><option value="0">Без StatTrak</option></select>
+  <h4 id="ph">Цена, $</h4><div class="two"><input id="mn" type="number" min="0" placeholder="от"><input id="mx" type="number" min="0" placeholder="до"></div><button class="btn g bl" style="margin-top:14px" id="rs">Сбросить фильтры</button></aside>
+  <div><div class="tb"><div class="seg" id="seg"><button class="on" data-m="0">Продать</button><button data-m="1">Купить</button></div><button class="btn g" id="favb">Избранное</button><button class="btn g fb" id="fbt">Фильтры</button><input id="q" placeholder="Поиск: AK-47 Redline, Karambit, Howl…" aria-label="Поиск"><select id="so" aria-label="Сортировка"><option value="">Дороже</option><option value="asc">Дешевле</option><option value="name">По названию</option></select></div>
+  <div class="grid" id="gr"></div><button class="btn g more" id="mo" hidden>Показать ещё</button></div></div></section>
+
+  <section id="v-profile" hidden style="padding:10px 0 50px"><div id="pt"></div><div id="pc"></div></section>
+ </div>
+</div>
 </main>
-<footer><div class="w"><div>cs2pay · Поддержка: <a href="https://t.me/cs2pay">@cs2pay</a> · <a href="mailto:cs2pay@gmail.com">cs2pay@gmail.com</a></div><div style="margin-top:6px">Не связан с Valve. Counter-Strike 2 и Steam — торговые марки Valve Corporation.</div></div></footer>
+
+<footer><div class="w"><div>cs2pay · Поддержка: <a href="https://t.me/cs2_pay">@cs2_pay</a> · Канал: <a href="https://t.me/SellSkin_cs2">@SellSkin_cs2</a></div><div style="margin-top:6px">Не связан с Valve. Counter-Strike 2 и Steam — торговые марки Valve Corporation.</div></div></footer>
 <div class="dr" id="dr"><div class="row"><h3 style="margin:0">Корзина</h3><button class="x" id="dx" aria-label="Закрыть">×</button></div><div class="dl" id="dl"></div>
 <div class="row" style="margin:12px 0 4px"><span style="color:var(--mt)">Итого к зачислению</span><span class="pr" id="ct"></span></div>
 <label>Твоя трейд-ссылка Steam</label><input id="ctl" placeholder="https://steamcommunity.com/tradeoffer/new/?partner=…&token=…"><div class="err" id="ce"></div>
@@ -143,10 +192,10 @@ body{padding-bottom:72px;font-size:14px}.w{padding:0 12px}nav:not(.tb2){display:
 <nav class="tb2"><a href="#/"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg>Главная</a><a href="#/market"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Маркет</a><a href="#/profile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Профиль</a></nav>
 <div class="toast" id="t"></div>
 <script>
-var $=function(i){return document.getElementById(i)},S={me:null,cart:{},items:{}},F={t:"",r:"",w:"",st:""},page=1,loaded=0,fl=0,snd=true,ac,M,D,NB,tm,qt,mode="login",WS={"Factory New":"FN","Minimal Wear":"MW","Field-Tested":"FT","Well-Worn":"WW","Battle-Scarred":"BS"};
+var $=function(i){return document.getElementById(i)},S={me:null,cart:{},items:{},fav:{},favOn:0},F={t:"",r:"",w:"",st:""},page=1,loaded=0,fl=0,snd=true,ac,M,D,NB,tm,qt,mode="login",WS={"Factory New":"FN","Minimal Wear":"MW","Field-Tested":"FT","Well-Worn":"WW","Battle-Scarred":"BS"};
 try{S.cart=JSON.parse(localStorage.getItem("cart")||"{}")}catch(e){}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
-var LB=null;function bc(b){if(LB!=null&&b>LB){$("cra").textContent="+"+mo(b-LB);$("cr").classList.add("s");sOk();clearTimeout(window.ct);window.ct=setTimeout(closeAll,6e3)}LB=b}
+var LB=null;function bc(b){if(LB!=null&&b>LB){$("cra").textContent="+"+mo(b-LB);$("cr").classList.add("s");sOk();confetti();clearTimeout(window.ct);window.ct=setTimeout(closeAll,6e3)}LB=b}
 var CUR="USD",R={USD:1};
 var SY={USD:"$",UAH:"₴",EUR:"€",PLN:"zł",GBP:"£",KZT:"₸",RUB:"₽"};
 function fm(u){var v=u*(R[CUR]||1),d=CUR=="KZT"||v>=10000?0:2,n=v.toLocaleString(CUR=="USD"?"en-US":"ru-RU",{minimumFractionDigits:d,maximumFractionDigits:d});return CUR=="USD"||CUR=="GBP"?SY[CUR]+n:n+"\u00a0"+SY[CUR]}
@@ -157,7 +206,7 @@ $("cur").onchange=function(){CUR=this.value;try{localStorage.cur=CUR}catch(e){}c
 function wb(w){var T={"Factory New":.07,"Minimal Wear":.08,"Field-Tested":.23,"Well-Worn":.07,"Battle-Scarred":.55};if(!T[w])return"";return'<div class="wb">'+Object.keys(T).map(function(k){return'<i style="flex:'+T[k]+'"'+(k==w?' class="on"':"")+'></i>'}).join("")+'</div>'}
 function api(u,b){return api0(u,b).catch(function(e){if(!e.d)e.message="Нет связи с сервером. Открывай сайт по адресу на Render, а не как файл";throw e})}
 function api0(u,b){return fetch(u,b!==undefined?{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}:{}).then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok){var e=new Error(j.error||"Ошибка");e.d=j;throw e}return j})})}
-/* sound: мягкие колокольчики с реверберацией */
+/* sound */
 var IO='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg>',IF='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>';function SI(){$("snd").innerHTML=snd?IO:IF}
 function A(){if(!ac){ac=new(window.AudioContext||window.webkitAudioContext)();M=ac.createGain();M.gain.value=.55;var cv=ac.createConvolver(),n=ac.sampleRate*1.6,b=ac.createBuffer(2,n,ac.sampleRate);for(var c=0;c<2;c++){var a=b.getChannelData(c);for(var i=0;i<n;i++)a[i]=(Math.random()*2-1)*Math.pow(1-i/n,3)}cv.buffer=b;D=ac.createGain();D.gain.value=.4;D.connect(cv);cv.connect(M);M.connect(ac.destination)}if(ac.state=="suspended")ac.resume();return ac}
 function nt(f,t,d,v){if(!snd)return;try{var c=A(),n=c.currentTime+t,g=c.createGain();g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(v,n+.008);g.gain.exponentialRampToValueAtTime(.0001,n+d);g.connect(M);g.connect(D);[[1,1],[2,.18],[3.01,.06]].forEach(function(h){var o=c.createOscillator(),k=c.createGain();o.frequency.value=f*h[0];k.gain.value=h[1];o.connect(k);k.connect(g);o.start(n);o.stop(n+d+.05)})}catch(e){}}
@@ -177,8 +226,8 @@ document.querySelectorAll("nav a,.tb2 a").forEach(function(a){a.classList.toggle
 if(v=="market"&&!loaded){loaded=1;load(true)}if(v=="profile")prof(h[1]||"overview");scrollTo(0,0)}
 addEventListener("hashchange",route);
 /* market */
-function card(s){S.items[s.id]=s;var w=WS[s.w]||s.w,i=S.cart[s.id];return'<div class="card'+(i&&!S.buy?" in":"")+'" data-id="'+esc(s.id)+'" style="--c:'+esc(s.c)+'">'+(w?'<div class="bd">'+esc(w)+'</div>':"")+'<div class="art"><img loading="lazy" src="'+esc(s.img)+'" alt="'+esc(s.n)+'"></div><div class="cb"><div class="nm">'+esc(s.n)+'</div><div class="rr">'+esc(s.r)+'</div>'+wb(s.w)+'<div class="row"><div class="pr">'+fm(S.buy?s.b:s.p)+'</div><button class="btn sm'+(i&&!S.buy?" g":"")+'" data-a="1">'+(S.buy?"Купить":i?"Убрать":"В корзину")+'</button></div></div></div>'}
-function url(){return"/api/market?page="+page+"&q="+encodeURIComponent($("q").value)+"&sort="+$("so").value+"&min="+(+($("mn").value||0)/(R[CUR]||1))+"&max="+($("mx").value?$("mx").value/(R[CUR]||1):"")+(S.buy?"&buy=1":"")+"&t="+encodeURIComponent(F.t)+"&r="+encodeURIComponent(F.r)+"&w="+encodeURIComponent(F.w)+"&st="+$("st").value}
+function card(s){S.items[s.id]=s;var w=WS[s.w]||s.w,i=S.cart[s.id];return'<div class="card'+(i&&!S.buy?" in":"")+'" data-id="'+esc(s.id)+'" style="--c:'+esc(s.c)+'"><button class="fv'+(S.fav[s.id]?" on":"")+'" data-f="1" aria-label="В избранное"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.8-8 11-8 11z"/></svg></button>'+(w?'<div class="bd">'+esc(w)+'</div>':"")+'<div class="art"><img loading="lazy" src="'+esc(s.img)+'" alt="'+esc(s.n)+'"></div><div class="cb"><div class="nm">'+esc(s.n)+'</div><div class="rr">'+esc(s.r)+'</div>'+wb(s.w)+'<div class="row"><div class="pr">'+fm(S.buy?s.b:s.p)+'</div><button class="btn sm'+(i&&!S.buy?" g":"")+'" data-a="1">'+(S.buy?"Купить":i?"Убрать":"В корзину")+'</button></div></div></div>'}
+function url(){return"/api/market?page="+page+"&q="+encodeURIComponent($("q").value)+"&sort="+$("so").value+"&min="+(+($("mn").value||0)/(R[CUR]||1))+"&max="+($("mx").value?$("mx").value/(R[CUR]||1):"")+(S.buy?"&buy=1":"")+(S.favOn?"&ids="+(Object.keys(S.fav).join(",")||"none"):"")+"&t="+encodeURIComponent(F.t)+"&r="+encodeURIComponent(F.r)+"&w="+encodeURIComponent(F.w)+"&st="+$("st").value}
 function load(reset){if(reset){page=1;$("gr").innerHTML=new Array(12).join('<div class="sk"></div>')}
 api(url()).then(function(d){$("all").textContent=d.all.toLocaleString("ru");
 if(!fl&&d.all){fl=1;[["fc","t",d.cats],["fr","r",d.rarities],["fw","w",d.wears]].forEach(function(a){$(a[0]).innerHTML=['<button class="c on" data-k="'+a[1]+'" data-v="">Все</button>'].concat(a[2].map(function(v){return'<button class="c" data-k="'+a[1]+'" data-v="'+esc(v)+'">'+esc(v)+'</button>'})).join("")})}
@@ -190,7 +239,7 @@ function ld(){clearTimeout(qt);qt=setTimeout(function(){load(true)},300)}
 $("fbt").onclick=function(){$("as").classList.toggle("o")};
 $("as").onclick=function(e){var k=e.target.dataset.k;if(k==null)return;F[k]=e.target.dataset.v;e.target.parentNode.querySelectorAll(".c").forEach(function(b){b.classList.toggle("on",b===e.target)});load(true)};
 $("rs").onclick=function(){F={t:"",r:"",w:"",st:""};["q","mn","mx"].forEach(function(i){$(i).value=""});$("st").value="";document.querySelectorAll("aside .c").forEach(function(b){b.classList.toggle("on",!b.dataset.v)});load(true)};
-function grid(e){var b=e.target.closest("[data-a]");if(!b)return;var id=b.closest(".card").dataset.id,s=S.items[id];if(!s)return;if(S.buy){buyOpen(id);return}
+function grid(e){var fv=e.target.closest("[data-f]");if(fv){var fid=fv.closest(".card").dataset.id;if(S.fav[fid])delete S.fav[fid];else S.fav[fid]=1;try{localStorage.fav=JSON.stringify(S.fav)}catch(x){}fv.classList.toggle("on",!!S.fav[fid]);sTap();if(S.favOn)load(true);return}var b=e.target.closest("[data-a]");if(!b)return;var id=b.closest(".card").dataset.id,s=S.items[id];if(!s)return;if(S.buy){buyOpen(id);return}
 if(S.cart[id]){delete S.cart[id]}else{if(Object.keys(S.cart).length>=20){toast("Максимум 20 скинов за раз",1);sErr();return}S.cart[id]=s;sPop()}cartUp()}
 $("gr").onclick=grid;$("showc").onclick=grid;
 /* cart */
@@ -202,7 +251,7 @@ $("dl").onclick=function(e){var i=e.target.dataset.x;if(i){delete S.cart[i];cart
 $("cartb").onclick=function(){sOpen();$("ctl").value=(S.me&&S.me.tl)||$("ctl").value;$("ce").textContent="";$("dr").classList.add("s")};
 $("dx").onclick=closeAll;$("cclr").onclick=function(){S.cart={};cartUp()};
 $("cgo").onclick=function(){var ids=Object.keys(S.cart);if(!ids.length){$("ce").textContent="Корзина пуста";sErr();return}if(!S.me){closeAll();openAuth("Войди, чтобы продать скины");return}
-api("/api/sell",{ids:ids,tl:$("ctl").value.trim()}).then(function(d){S.cart={};cartUp();closeAll();sOk();toast("Заявок создано: "+d.n+". Следи за статусом в профиле");me()}).catch(function(e){$("ce").textContent=e.message;sErr()})};
+api("/api/sell",{ids:ids,tl:$("ctl").value.trim()}).then(function(d){S.cart={};cartUp();closeAll();sOk();confetti();toast("Заявок создано: "+d.n+". Следи за статусом в профиле");me()}).catch(function(e){$("ce").textContent=e.message;sErr()})};
 /* auth */
 function openAuth(m){sOpen();$("le").textContent=m||"";$("lcw").hidden=true;setMode("login");$("ol").classList.add("s")}
 function setMode(m){mode=m;$("at").textContent=m=="login"?"Вход в cs2pay":"Регистрация";$("ago").textContent=m=="login"?"Войти":"Создать аккаунт";$("am").textContent=m=="login"?"Регистрация":"Уже есть аккаунт"}
@@ -238,13 +287,99 @@ function f2(on){api(on?"/api/2fa/enable":"/api/2fa/disable",{code:$(on?"fc2":"dc
 function out(){api("/api/logout",{}).then(function(){S.me=null;$("lg").textContent="Войти";$("balc").hidden=true;location.hash="#/";sTap()})}
 /* init */
 function buyOpen(id){var s=S.items[id];if(!s)return;if(!S.me){openAuth("Войди, чтобы купить скин");return}S.bi=s;$("bi").src=s.img;$("bn2").textContent=s.n;$("bpz").textContent=fm(s.b);$("btl").value=S.me.tl||"";var lack=S.me.bal<Math.round(s.b*100);$("bh").textContent="На балансе: "+mo(S.me.bal)+(lack?". Не хватает, пополни баланс в кошельке":"");$("be").textContent="";$("ob").classList.add("s");sOpen()}
-$("bgo").onclick=function(){var s=S.bi;if(!s)return;api("/api/buy",{id:s.id,tl:$("btl").value.trim()}).then(function(){closeAll();sOk();toast("Покупка оплачена. Скин отправим трейдом, статус в профиле");me()}).catch(function(e){$("be").textContent=e.message;sErr()})};
+$("bgo").onclick=function(){var s=S.bi;if(!s)return;api("/api/buy",{id:s.id,tl:$("btl").value.trim()}).then(function(){closeAll();sOk();confetti();toast("Покупка оплачена. Скин отправим трейдом, статус в профиле");me()}).catch(function(e){$("be").textContent=e.message;sErr()})};
 $("seg").onclick=function(e){var m=e.target.dataset.m;if(m==null)return;S.buy=m=="1";this.querySelectorAll("button").forEach(function(b){b.classList.toggle("on",b===e.target)});load(true)};
+
+/* ОНЛАЙН 667 - 1214 (обновление каждые 3.5 сек) */
 var VID;try{VID=localStorage.vid||(localStorage.vid=Math.random().toString(36).slice(2)+Date.now().toString(36))}catch(e){VID=Math.random().toString(36).slice(2)}
-function pingOn(){if(document.hidden)return;api("/api/ping?v="+VID).then(function(d){$("onl").innerHTML="<i></i>"+d.n+" онлайн";$("onl").hidden=false}).catch(function(){})}pingOn();setInterval(pingOn,4000);
+function pingOn(){if(document.hidden)return;api("/api/ping?v="+VID).then(function(d){$("onl").innerHTML="<i></i>"+d.n+" онлайн";$("onl").hidden=!!d.h}).catch(function(){})}pingOn();setInterval(pingOn,3500);
+
+/* ГЕНЕРАТОР ЖИВЫХ СДЕЛОК И УНИКАЛЬНЫХ ОТЗЫВОВ БОТОВ (2 отзыва каждые 10 сек = 1 каждые 5 сек) */
+var botPool=[],usedNicks=new Set(),usedRevs=new Set(),botCount=0;
+var N1=["s1mple","m0NESY","donk","b1t","ZywOo","NiKo","ropz","rain","electronic","Perfecto","flamie","Boombl4","sh1ro","Ax1Le"," Jame","fame","n0rb3r7"," Patsi","w0nderful","iM","jL","Aleksib"," Twistzz","karrigan","broky","frozen"," EliGE","malbsMd","Snax","huNter","nexa","device","stavn","jabbi"," blameF","XANTARES","woxic"," Calyx","MAJ3R","tabseN","syrsoN","Krimbo"," Brollan","torzsi","siuhy","xertioN","Jimpphat","Spinx","apEX","mezii","flameZ","Seneka","Krad","Forester","Lack1","NickelBack","deko","TRAVIS","glowiing","tN1R","Senzu","bLitz","Techno4K","910","mzinho","insani","biguzera","skullz","yuurih","KSCERATO","FalleN","chelo","Vini"," Imperial","fnx","fer","coldzera","olof","JW","flusha","kennyS","shox","ScreaM","NBK","Happy","f0rest","GeT_RiGhT","friberg","Xizt","allu","GuardiaN","Edward","Zeus","seized","starix","markeloff","Dosia","AdreN","mou","HObbit"," Buster","Qikert","SANJI","YEKINDAR","interz","nafany","Cloud","zorte"," Jerry","forze","xsepower","almazer","facecrack"," Bogdan"," Vovan","Dima","Sanya","Maksim","Artem","Nikita","Kirill","Vlad","Taras","Nazar","Denys","Bohdan","Oleh","Andriy","Yaroslav","Matviy","Tymofiy","Illia","Danylo","Roman","Ruslan","Gleb","Egor","Timur","Arthur","Marat"," Renat","Stas"," Zhenya","Pasha","Kostya"," Lesha"," Igor","Slava","Vadim"," Anton"," Viktor","Sergey"];
+var N2=["_cs2","_trade","_awp","_peek","_clutch","_aim","_god","_pro","_ua","_top","_king","_boss","_ez","_777","_666","_999","_1337","_420","_x","_z","_off","_real","_main","_skin","_drop","_lucky","_fast","_rich","_tap","_headshot","_ace","_mvp","_leet","_global","_faceit10","_lvl10","_premier","_bhop","_surf","_kz","_katowice","_major","_navi","_spirit","_faze","_g2","_vitality","_mouz","_heroic","_astralis","_fnatic","_nip","_cloud9","_liquid","_eternal","_mongolz","_vp","_bet","_win","_cash","_crypto","_usdt","_trc20","2006","2007","2008","2009","2010","77","88","99","01","07","11","13","21","24","69","100","300","500","1000","X","Z","Q","W","V","K"];
+
+var R_START=[
+ "Слил свой ","Продал тут ","Забрал с маркета ","Только что сдал ","Отправил в трейд ","Быстро скинул ","Купил себе ","Обменял ","Вывел бабки за ","Приняли мой ","Закинул в скупку ","Урвал по кайфу ","Оформил сделку на ","Сдал ненужный ","Продал старый ","Купил по сочной цене ","Слил через сайт ","Прилетел трейд на ","Оценили норм мой ","Выкупили моментально "
+];
+var R_MID=[
+ "выплата пришла на карту за пару минут","бабки на USDT TRC20 упали очень быстро","через CryptoBot забрал выплату моментально","прайс реально выше чем на других скупках","всё четко, без обмана и скрытых комиссий","поддержка в тг ответила за 10 секунд","лучший сервис по скинам, респект админу","сначала сомневался, но выплатили всё до копейки","трейд прилетел мгновенно после заявки","цены просто пушка, буду сливать только тут","вывел на монобанк без всяких проблем","вывод на приват прилетел быстрее чем ожидал","курс огонь, нигде такой процент не давали","удобный сайт, всё понятно и без лагов","продал уже третий скин за неделю, все четко","взял нож о котором давно мечтал, кайф","зачисление ровно как написано, 10 из 10","админ красавчик, помог разобраться с трейд-ссылкой","самый честный маркет, проверено лично","деньги уже на кошельке, рекомендую всем кентам","никаких задержек, всё на высшем уровне","процент выкупа приятно удивил, топчик","сделка прошла гладко, даже не ожидал такой скорости","уже второй раз вывожу на крипту, всё супер"
+];
+var R_END=[
+ "🔥","👍","💸","⚡️","❤️","🙌","💯","🚀","🤝","👑","😎","🎯","✅","💪","🔝","✨","💎","🥳","😉","👏",
+ " Буду заходить ещё!"," Однозначно +rep!"," Лучшие в своем деле!"," Всем советую!"," Респект проекту!"," Топ за свои деньги!"," Теперь только сюда!"," Просто имба!"," От души!"," Работаем дальше!"
+];
+
+var DEF_SKINS=[
+ {n:"★ Нож-бабочка | Поверхностная закалка",p:840.5,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_knife_butterfly_aq_oiled_light_png.png"},
+ {n:"AK-47 | Азимов (После полевых)",p:42.8,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_ak47_cu_ak47_asiimov_light_png.png"},
+ {n:"AWP | Скоростной зверь",p:38.2,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_awp_cu_awp_hyper_beast_light_png.png"},
+ {n:"★ Керамбит | Гамма-волны",p:1120,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_knife_karambit_am_gamma_doppler_phase1_light_png.png"},
+ {n:"M4A1-S | Поток информации",p:54.9,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_m4a1_silencer_cu_m4a1s_printstream_light_png.png"},
+ {n:"★ Нож «Бродяга» | Ночная полоса",p:118.4,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_knife_outdoor_so_night_light_png.png"}
+];
+
+function genUniqueNick(){
+ for(var i=0;i<50;i++){
+  var a=N1[Math.floor(Math.random()*N1.length)].trim();
+  var b=N2[Math.floor(Math.random()*N2.length)];
+  var extra=Math.random()>.5?String(Math.floor(Math.random()*999)):"";
+  var nick=a+b+extra;
+  if(!usedNicks.has(nick)){usedNicks.add(nick);return nick}
+ }
+ return "player_"+(++botCount)+"_"+Math.floor(Math.random()*9999);
+}
+
+function genUniqueAvatar(seed){
+ var styles=["adventurer","avataaars","bottts","fun-emoji","lorelei","micah","miniavs","open-peeps","personas","pixel-art"];
+ var st=styles[botCount%styles.length];
+ var bg=["1b212b","151a22","262e3b","2a1b3d","1b3a2b","3a251b"][botCount%6];
+ return "https://api.dicebear.com/7.x/"+st+"/svg?seed="+encodeURIComponent(seed)+"&backgroundColor="+bg;
+}
+
+function genUniqueRev(skinName){
+ var shortSkin=skinName.replace(/^★\s*/,"").split("(")[0].trim();
+ for(var i=0;i<50;i++){
+  var s=R_START[Math.floor(Math.random()*R_START.length)];
+  var m=R_MID[Math.floor(Math.random()*R_MID.length)];
+  var e=R_END[Math.floor(Math.random()*R_END.length)];
+  var txt=s+"«"+shortSkin+"» — "+m+"! "+e;
+  if(!usedRevs.has(txt)){usedRevs.add(txt);return txt}
+ }
+ return "Продал «"+shortSkin+"», деньги пришли моментально, сервис топ! 🔥 #"+(++botCount);
+}
+
+function addLiveDeal(){
+ botCount++;
+ var pool=Object.values(S.items);
+ if(!pool.length)pool=DEF_SKINS;
+ var sk=pool[Math.floor(Math.random()*pool.length)]||DEF_SKINS[0];
+ var nick=genUniqueNick();
+ var av=genUniqueAvatar(nick+"_"+botCount+"_"+Date.now());
+ var isBuy=Math.random()>.65;
+ var price=isBuy?(sk.b||sk.p):(sk.p||25);
+ var rev=genUniqueRev(sk.n||"Скин CS2");
+ var box=$("lf-list");
+ if(!box)return;
+ var el=document.createElement("div");
+ el.className="lf-item";
+ el.innerHTML='<div class="lf-top"><img class="lf-av" src="'+esc(av)+'" alt=""><div class="lf-u"><div class="lf-name">'+esc(nick)+' <span class="lf-tag'+(isBuy?" b":"")+'">'+(isBuy?"ПОКУПКА":"ВЫПЛАТА")+'</span></div><div class="lf-time">только что</div></div></div>'+
+  '<div class="lf-deal"><img src="'+esc(sk.img)+'" alt=""><div class="lf-skin">'+esc(sk.n)+'</div><div class="lf-pr">'+(isBuy?"":"+" )+fm(price)+'</div></div>'+
+  '<div class="lf-rev"><div class="lf-stars">★★★★★</div>'+esc(rev)+'</div>';
+ box.insertBefore(el,box.firstChild);
+ while(box.children.length>14)box.removeChild(box.lastChild);
+}
+
+for(var k=0;k<4;k++)addLiveDeal();
+setInterval(addLiveDeal,5000); /* 1 бот каждые 5 сек = 2 бота за 10 сек */
+
+S.fav=(function(){try{return JSON.parse(localStorage.fav||"{}")}catch(e){return{}}})();
+$("favb").onclick=function(){S.favOn=S.favOn?0:1;this.classList.toggle("on",!!S.favOn);load(true)};
+function confetti(){if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;var c=document.createElement("canvas");c.style.cssText="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:99";c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);var x=c.getContext("2d"),cl=["#f2a93b","#7db4e6","#3ccf7a","#e8ebf0","#ff6b6b"],P=[];for(var i=0;i<120;i++)P.push({x:innerWidth/2,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*13-3,r:Math.random()*5+3,c:cl[i%5],a:Math.random()*6});var f=0;(function t(){x.clearRect(0,0,c.width,c.height);P.forEach(function(p){p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.a+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r,-p.r/2,p.r*2,p.r);x.restore()});if(++f<110)requestAnimationFrame(t);else c.remove()})()}
+document.addEventListener("keydown",function(e){if(e.key=="/"&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();location.hash="#/market";setTimeout(function(){$("q").focus()},60)}});
 cartUp();me();route();
 setInterval(function(){if(S.me)api("/api/me").then(function(d){if(d.name){bc(d.bal);S.me.bal=d.bal;$("balc").textContent=mo(d.bal)}}).catch(function(){})},15000);
-function home(){api("/api/market?page=1").then(function(d){$("all").textContent=d.all.toLocaleString("ru");$("showc").innerHTML=d.items.slice(0,4).map(card).join("")}).catch(function(){})}home();
+function home(){api("/api/market?page=1").then(function(d){$("all").textContent=d.all.toLocaleString("ru");$("showc").innerHTML=d.items.slice(0,4).map(card).join("")}).catch(function(){});api("/api/recent").then(function(d){if(!d.n)return;$("paid").textContent="Выплачено: "+fm(d.paid);$("payl").innerHTML=d.items.map(function(i){return'<div class="pi"><img src="'+esc(i.img)+'" alt=""><span>'+esc(i.n)+'</span><b>+'+fm(i.p)+'</b></div>'}).join("");$("pay").hidden=false}).catch(function(){})}home();
 function banner(c){var b=$("bn"),t=[];if(location.protocol=="file:"){b.className="bn r";b.textContent="Сайт открыт как файл, поэтому вход и маркет не работают. Открой адрес своего сайта на Render.";b.hidden=false;return}
 if(c&&c.adj)t.push(c.adj>0?"Акция: цены выкупа выше рыночных на "+c.adj+"%":"Цены выкупа ниже рыночных на "+Math.abs(c.adj)+"%");if(c&&c.notice)t.push(c.notice);b.hidden=!t.length;b.textContent=t.join(" · ")}
 if(location.protocol=="file:")banner();
