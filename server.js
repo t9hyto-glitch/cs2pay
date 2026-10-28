@@ -22,19 +22,19 @@ function b32d(s){let b='';for(const c of s)b+=b32.indexOf(c).toString(2).padStar
 function totp(sec,t=Date.now()){const c=Buffer.alloc(8);c.writeBigUInt64BE(BigInt(Math.floor(t/30000)));const h=crypto.createHmac('sha1',b32d(sec)).update(c).digest(),o=h[19]&15;return String((h.readUInt32BE(o)&0x7fffffff)%1e6).padStart(6,'0')}
 const chk=(sec,code)=>[-1,0,1].some(d=>totp(sec,Date.now()+d*3e4)===String(code||'').trim());
 /* telegram: панель на кнопках */
-const tg=(m,b)=>fetch(`https://api.telegram.org/bot${TOKEN}/${m}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(r.json());
+const tg=(m,b)=>fetch(`https://api.telegram.org/bot${TOKEN}/${m}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(r=>r.json());
 const esc=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const OS={buy:'покупка, ждёт отправки',bought:'отправлено',refunded:'деньги возвращены',new:'новая',accepted:'принята, hold 7 дней',credited:'зачислена',rejected:'отклонена'},PS={pending:'ожидает',done:'выполнено',rejected:'отклонено'};
 const pr=s=>Math.max(.01,+(s.p*(1+(db.cfg.adj||0)/100)).toFixed(2));
 const bp=s=>Math.max(.01,+(s.p*(1+(db.cfg.buyAdj??10)/100)).toFixed(2)),seen=new Map();
-let fakeOnl=890,fakeTarget=1050;
+let fakeOnl=895,fakeTarget=1080;
 setInterval(()=>{
- if(Math.abs(fakeOnl-fakeTarget)<15)fakeTarget=636+Math.floor(Math.random()*(1243-636+1));
+ if(Math.abs(fakeOnl-fakeTarget)<18)fakeTarget=667+Math.floor(Math.random()*(1214-667+1));
  const dir=fakeTarget>fakeOnl?1:-1;
- const step=Math.floor(Math.random()*14)+3;
+ const step=Math.floor(Math.random()*15)+4;
  const noise=Math.floor(Math.random()*9)-4;
- fakeOnl=Math.max(636,Math.min(1243,fakeOnl+dir*step+noise));
-},3000);
+ fakeOnl=Math.max(667,Math.min(1214,fakeOnl+dir*step+noise));
+},2500);
 const buyTxt=()=>{const a=db.cfg.buyAdj??10;return a?(a>0?'+':'')+a+'% к рынку':'рыночные'};
 const usd=c=>'$'+(c/100).toFixed(2);
 const adjTxt=()=>db.cfg.adj?(db.cfg.adj>0?'+':'')+db.cfg.adj+'% к рынку':'рыночные';
@@ -50,7 +50,7 @@ async function screen(chat,mid,text,k){const b={chat_id:chat,text,parse_mode:'HT
  return tg('sendMessage',b)}
 const cnt=(k)=>db.orders.filter(o=>o.status==k).length,pendP=()=>db.ops.filter(o=>o.type=='wd'&&o.status=='pending');
 function mainScr(){const n=cnt('new')+cnt('buy'),w=pendP().length;
- return{t:`<b>cs2pay · панель</b>\n\n🆕 Новых заявок: <b>${n}</b>\nВыводов в ожидании: <b>${w}</b>\nЦены: <b>${adjTxt()}</b>\n\nВыбери раздел:`,k:kb([[{text:'Заявки'+(n+w?` (${n+w})`:''),callback_data:'m:pend'},{text:'Статистика',callback_data:'m:stats'}],[{text:'Пользователи',callback_data:'m:users:0'},{text:'Найти',callback_data:'m:find'}],[{text:'Цены выкупа',callback_data:'m:price'},{text:'Цены продажи',callback_data:'m:buyp'}],[{text:'Объявление',callback_data:'m:notice'}]])}}
+ return{t:`<b>cs2pay · панель</b>\n\n🆕 Новых заявок: <b>${n}</b>\nВыводов в ожидании: <b>${w}</b>\nЦены: <b>${adjTxt()}</b>\n\nВыбери раздел:`,k:kb([[{text:'Заявки'+(n+w?` (${n+w})`:''),callback_data:'m:pend'},{text:'Статистика',callback_data:'m:stats'}],[{text:'Пользователи',callback_data:'m:users:0'},{text:'Найти',callback_data:'m:find'}],[{text:'Цены выкупа',callback_data:'m:price'},{text:'Цены продажи',callback_data:'m:buyp'}],[{text:'Скачать бэкап',callback_data:'m:bk'}],[{text:'Объявление',callback_data:'m:notice'},{text:'Онлайн на сайте: '+(db.cfg.hideOn?'скрыт':'виден'),callback_data:'m:onl'}]])}}
 function statsScr(){const sum=(l,f)=>l.reduce((t,x)=>t+f(x),0),W=pendP(),D=db.ops.filter(o=>o.type=='dep'&&o.status=='pending');
  return{t:`<b>Статистика</b>\n\nПользователей: <b>${Object.keys(db.users).length}</b>\nСкинов в каталоге: <b>${skins.length}</b>\n\nЗаявки: новые ${cnt('new')} · hold ${cnt('accepted')} · зачислено ${cnt('credited')} · отклонено ${cnt('rejected')}\nНа балансах: <b>${usd(sum(Object.values(db.users),x=>x.bal||0))}</b>\nВыводы: ${W.length} на ${usd(sum(W,o=>o.cents))}\nПополнения: ${D.length} на ${usd(sum(D,o=>o.cents))}\nЦены: ${adjTxt()}`,k:kb([[{text:'Обновить',callback_data:'m:stats'}],BACK])}}
 function usersScr(pg){const L=Object.entries(db.users).sort((a,b)=>(b[1].created||0)-(a[1].created||0)),per=8,N=Math.max(1,Math.ceil(L.length/per));pg=Math.min(Math.max(0,pg),N-1);
@@ -81,6 +81,7 @@ async function onInput(chat,w,t){
  if(w.k=='addbal'){const al={};setBal(w.l,v,al);return show(chat,0,balScr(w.l))}
  if(w.k=='buyp'){if(v<-50||v>200){wait[chat]=w;return screen(chat,0,'Допустимо от -50 до 200',CANCEL)}db.cfg.buyAdj=v;save();return show(chat,0,buyScr('Готово'))}
  if(w.k=='price'){if(v<-90||v>50){wait[chat]=w;return screen(chat,0,'Допустимо от -90 до 50',CANCEL)}db.cfg.adj=v;save();return show(chat,0,priceScr('Готово'))}}
+async function backup(chat){const f=new FormData();f.append('chat_id',String(chat));f.append('caption','Резервная копия данных cs2pay');f.append('document',new Blob([JSON.stringify(db)],{type:'application/json'}),'cs2pay-backup-'+new Date().toISOString().slice(0,10)+'.json');return fetch(`https://api.telegram.org/bot${TOKEN}/sendDocument`,{method:'POST',body:f}).then(r=>r.json())}
 async function onUpdate(u){const m=u.message,c=u.callback_query;
  if(m&&m.text){const chat=m.chat.id,t=m.text.trim();
   if(String(chat)!==String(ADMIN)){if(t.startsWith('/start'))await tg('sendMessage',{chat_id:chat,text:'ID этого чата: '+chat+'\nУкажи его в ADMIN_CHAT_ID.'});return}
@@ -91,7 +92,7 @@ async function onUpdate(u){const m=u.message,c=u.callback_query;
  if(!c||String(c.message.chat.id)!==String(ADMIN))return;
  const chat=c.message.chat.id,mid=c.message.message_id,p=(c.data||'').split(':'),k=p[0],al={};
  if(k!='o'&&k!='p'&&k!='noop')delete wait[chat];
- if(k=='m'){const s=p[1];if(s=='main')await show(chat,mid,mainScr());else if(s=='stats')await show(chat,mid,statsScr());else if(s=='pend')await pending(chat,mid);else if(s=='users')await show(chat,mid,usersScr(+p[2]||0));else if(s=='price')await show(chat,mid,priceScr());else if(s=='buyp')await show(chat,mid,buyScr());else if(s=='notice')await show(chat,mid,noticeScr());
+ if(k=='m'){const s=p[1];if(s=='main')await show(chat,mid,mainScr());else if(s=='stats')await show(chat,mid,statsScr());else if(s=='pend')await pending(chat,mid);else if(s=='users')await show(chat,mid,usersScr(+p[2]||0));else if(s=='price')await show(chat,mid,priceScr());else if(s=='buyp')await show(chat,mid,buyScr());else if(s=='bk'){await backup(chat);al.t='Файл отправлен в чат'}else if(s=='onl'){db.cfg.hideOn=!db.cfg.hideOn;save();await show(chat,mid,mainScr())}else if(s=='notice')await show(chat,mid,noticeScr());
   else if(s=='find'){wait[chat]={k:'find'};await screen(chat,mid,'Отправь логин пользователя сообщением',CANCEL)}}
  else if(k=='u')await show(chat,mid,userScr(p[1]));
  else if(k=='ban'){const x=db.users[p[1]];if(x){x.ban=!x.ban;save()}await show(chat,mid,userScr(p[1]))}
@@ -111,7 +112,7 @@ let off=0;(async()=>{if(!TOKEN)return console.log('BOT_TOKEN не задан: б
   for(const u of r.result){off=u.update_id+1;try{await onUpdate(u)}catch(e){console.log('bot:',e.message)}}}catch(e){await new Promise(x=>setTimeout(x,5000))}}})();
 function settle(){let ch=0;for(const o of db.orders)if(o.status=='accepted'&&o.hold<=Date.now()){o.status='credited';const u=db.users[o.user];u.bal=(u.bal||0)+Math.round(o.price*100);ch=1;note(`<b>Баланс начислен</b>\n\n${esc(o.skin)}\nНачислено: <b>+${usd(Math.round(o.price*100))}</b>\nПользователь: ${esc(o.user)}\nНовый баланс: <b>${usd(u.bal)}</b>`,null,o.img)}if(ch)save()}
 setInterval(settle,6e4);
-/* Crypto Pay: пополнение только через Crypto-бот, зачисление автоматически после оплаты счёта */
+/* Crypto Pay */
 const cp=(m,b)=>fetch(`https://${CPH}/api/${m}`,{method:'POST',headers:{'Crypto-Pay-API-Token':CP,'Content-Type':'application/json'},body:JSON.stringify(b||{})}).then(r=>r.json());
 async function checkDeps(){if(!CP)return;const P=db.ops.filter(o=>o.type=='dep'&&o.status=='pending'&&o.inv);if(!P.length)return;try{
  const r=await cp('getInvoices',{invoice_ids:P.map(o=>o.inv).join(',')});
@@ -119,7 +120,7 @@ async function checkDeps(){if(!CP)return;const P=db.ops.filter(o=>o.type=='dep'&
   if(it.status=='paid'&&Math.round(+it.amount*100)==o.cents){o.status='done';db.users[o.user].bal=(db.users[o.user].bal||0)+o.cents;save();note(`<b>Баланс пополнен</b>\n\nПополнение #${o.id} через Crypto-бот\nПользователь: ${esc(o.user)}\nСумма: <b>+${usd(o.cents)}</b>\nНовый баланс: <b>${usd(db.users[o.user].bal)}</b>`)}
   else if(it.status=='expired'){o.status='rejected';save()}}}catch(e){console.log('crypto pay:',e.message)}}
 setInterval(checkDeps,2e4);
-/* rates: курсы только для отображения, баланс и выплаты остаются в USD */
+/* rates */
 let rates={USD:1,UAH:41.5,EUR:.86,PLN:3.65,GBP:.75,KZT:520,RUB:80},ratesAt=0;
 async function loadRates(){try{const j=await fetch('https://open.er-api.com/v6/latest/USD').then(r=>r.json());if(j.rates){for(const k in rates)if(j.rates[k]>0)rates[k]=j.rates[k];ratesAt=Date.now()}}catch(e){console.log('rates:',e.message)}}
 /* http */
@@ -140,7 +141,7 @@ http.createServer(async(req,res)=>{try{
  if(p=='/api/config')return send(res,200,{gid:GID||'',cp:!!CP,adj:db.cfg.adj||0,notice:db.cfg.notice||'',rates,ratesAt});
  if(p=='/api/health')return send(res,200,{skins:skins.length,loadedAt,lastErr,db:pool?'postgres':'file',users:Object.keys(db.users).length});
  if(p=='/api/market'){const g=k=>u.searchParams.get(k)||'',q=g('q').toLowerCase(),pg=+g('page')||1,mn=+g('min')||0,mx=+g('max')||1e9,so=g('sort'),P=g('buy')=='1'?bp:pr;
-  let f=skins.filter(s=>(!q||s.n.toLowerCase().includes(q))&&(!g('r')||s.r==g('r'))&&(!g('t')||s.t==g('t'))&&(!g('w')||s.w==g('w'))&&P(s)>=mn&&P(s)<=mx&&(!g('st')||s.n.includes('StatTrak')==(g('st')=='1')));
+  let f=skins.filter(s=>(!q||s.n.toLowerCase().includes(q))&&(!g('r')||s.r==g('r'))&&(!g('t')||s.t==g('t'))&&(!g('w')||s.w==g('w'))&&P(s)>=mn&&P(s)<=mx&&(!g('ids')||g('ids').split(',').includes(String(s.id)))&&(!g('st')||s.n.includes('StatTrak')==(g('st')=='1')));
   if(so=='asc')f=f.slice().sort((a,b)=>a.p-b.p);else if(so=='name')f=f.slice().sort((a,b)=>a.n.localeCompare(b.n));
   const uq=k=>[...new Set(skins.map(s=>s[k]))].filter(Boolean);
   return send(res,200,{total:f.length,all:skins.length,items:f.slice((pg-1)*48,pg*48).map(s=>({...s,p:pr(s),b:bp(s)})),rarities:uq('r'),cats:uq('t'),wears:uq('w')})}
@@ -159,7 +160,8 @@ http.createServer(async(req,res)=>{try{
   if(!GID||j.aud!==GID||!j.email)return bad(res,'Google-вход не прошёл',401);const l=j.email.toLowerCase();if(!db.users[l]){db.users[l]={google:true,bal:0,created:Date.now()};save()}return start(req,res,l)}
  if(p=='/api/logout'){const sid=(/sid=(\w+)/.exec(req.headers.cookie||'')||[])[1];if(sid){delete db.sess[sid];save()}return send(res,200,{},{'Set-Cookie':'sid=; Max-Age=0; Path=/'})}
  const n=me(req);
- if(p=='/api/ping'){const v=(u.searchParams.get('v')||'').slice(0,40),now=Date.now();if(v)seen.set(v,now);let k=0;for(const[a,t]of seen){if(now-t>9e4)seen.delete(a);else k++}return send(res,200,{n:Math.min(1243,fakeOnl+k)})}
+ if(p=='/api/recent'){const C=db.orders.filter(o=>o.status=='credited'),paid=C.reduce((t,o)=>t+o.price,0);return send(res,200,{paid:+paid.toFixed(2),n:C.length,items:C.slice(-8).reverse().map(o=>({n:o.skin,img:o.img,p:o.price}))})}
+ if(p=='/api/ping'){const v=(u.searchParams.get('v')||'').slice(0,40),now=Date.now();if(v)seen.set(v,now);let k=0;for(const[a,t]of seen){if(now-t>9e4)seen.delete(a);else k++}return send(res,200,{n:Math.min(1214,Math.max(667,fakeOnl)),h:!!db.cfg.hideOn})}
  if(p=='/api/me'){if(!n)return send(res,200,{});settle();return send(res,200,pub(n))}
  if(!n)return bad(res,'Войди в аккаунт',401);
  const x=db.users[n],b=req.method=='POST'?await body(req):{};
@@ -191,6 +193,7 @@ http.createServer(async(req,res)=>{try{
 }catch(e){console.log(e);send(res,500,{error:'Ошибка сервера'})}}).listen(PORT,()=>console.log('http://localhost:'+PORT));
 dbInit().then(()=>{load();setInterval(load,18e5);loadRates();setInterval(loadRates,36e5);settle();if(!DBU&&E.RENDER)note('<b>Внимание:</b> не задан DATABASE_URL. Аккаунты и заявки пропадут при обновлении сайта. Подключи базу PostgreSQL в Render.')}).catch(e=>{console.log('DB ERROR',e.message);process.exit(1)});
 
-/* сохранить данные перед остановкой при обновлении */
 const flushNow=()=>{clearTimeout(st);return Promise.resolve().then(()=>pool?pool.query("insert into kv(k,v) values('db',$1) on conflict(k) do update set v=$1",[JSON.stringify(db)]):fs.writeFileSync('data.json',JSON.stringify(db))).catch(()=>{})};
 process.on('SIGTERM',()=>flushNow().then(()=>process.exit(0)));
+
+if(TOKEN&&ADMIN)setInterval(()=>backup(ADMIN).catch(()=>{}),864e5);
