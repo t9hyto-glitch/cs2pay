@@ -3,134 +3,132 @@
 <title>cs2pay — выкуп скинов CS2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;600;800&family=Unbounded:wght@600;800&display=swap&subset=cyrillic" rel="stylesheet">
 <style>
-:root{--bg:#000;--p:#0b0b10;--p2:#15151d;--ln:#22222c;--tx:#f3f3f8;--mt:#8a8a9d;--ac:#7c5cff;--ac2:#22d3ee;--gd:#ffd166;--bad:#ff5c7a;--ok:#4ade80}
-*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
-body::before{content:"";position:fixed;inset:0;background:radial-gradient(700px 450px at 85% -5%,#7c5cff33,transparent),radial-gradient(500px 380px at 5% 10%,#22d3ee1f,transparent);pointer-events:none;z-index:-1}
-a{color:inherit;text-decoration:none}.w{max-width:1280px;margin:0 auto;padding:0 18px}
-header{position:sticky;top:0;z-index:20;background:#000c;backdrop-filter:blur(12px);border-bottom:1px solid var(--ln)}
-.bar{display:flex;align-items:center;gap:6px;height:58px}.logo{font-weight:900;font-size:22px;letter-spacing:-1px;margin-right:10px}.logo b,.gr{background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
-nav a{padding:8px 13px;border-radius:10px;color:var(--mt);font-weight:700;font-size:14px}nav a.on,nav a:hover{background:var(--p2);color:var(--tx)}
-.sp{flex:1}.btn{border:0;border-radius:11px;padding:10px 16px;font:700 14px inherit;font-family:inherit;cursor:pointer;background:linear-gradient(135deg,var(--ac),#5b8cff);color:#fff;transition:transform .12s,filter .15s;position:relative;white-space:nowrap}
-.btn:hover{filter:brightness(1.15)}.btn:active{transform:scale(.96)}.g{background:var(--p2);color:var(--tx)}.sm{padding:7px 12px;font-size:13px}.bl{width:100%}
-.bdg{position:absolute;top:-6px;right:-6px;background:var(--bad);border-radius:99px;font:800 11px inherit;padding:1px 6px;font-style:normal}
+:root{--bg:#0e1116;--p:#151a22;--p2:#1b212b;--ln:#262e3b;--tx:#e8ebf0;--mt:#8791a1;--ac:#f2a93b;--ac2:#7db4e6;--gd:#f2a93b;--bad:#ff5c7a;--ok:#4ade80;color-scheme:dark}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 Onest,system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:inherit;text-decoration:none}.w{max-width:1440px;margin:0 auto;padding:0 14px}
+header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--ln)}
+.bar{display:flex;align-items:center;gap:6px;height:56px}
+.logo{font-family:Unbounded,Onest,sans-serif;font-weight:900;font-size:20px;letter-spacing:-.5px;margin-right:6px}
+.logo b,.gr{color:var(--ac)}
+nav a{padding:8px 13px;border-radius:10px;color:var(--mt);font-weight:700;font-size:14px}
+nav a.on,nav a:hover{background:var(--p2);color:var(--tx)}
+.sp{flex:1}
+.btn{border:0;border-radius:10px;padding:10px 16px;font:700 14px inherit;font-family:inherit;cursor:pointer;background:var(--ac);color:#1a1204;transition:transform .12s,filter .15s;position:relative;white-space:nowrap}
+.btn:hover{filter:brightness(1.08)}.btn:active{transform:scale(.96)}
+.btn.g{background:var(--p2);color:var(--tx);border:1px solid var(--ln)}.btn.g:hover{border-color:#3a4556;filter:none}
+.sm{padding:7px 12px;font-size:13px}.bl{width:100%}
+.bdg{position:absolute;top:-6px;right:-6px;background:var(--ac);color:#1a1204;border-radius:99px;font:800 11px inherit;padding:1px 6px;font-style:normal}
 :focus-visible{outline:2px solid var(--ac2);outline-offset:2px}
-.chip{background:var(--p2);border:1px solid var(--ln);border-radius:11px;padding:8px 13px;font-weight:800;color:var(--gd);cursor:pointer}
-h1{font-size:clamp(32px,5vw,56px);line-height:1.02;margin:0 0 14px;letter-spacing:-2.5px;font-weight:900}h2{font-size:clamp(24px,3.4vw,34px);letter-spacing:-1px;margin:0 0 18px;font-weight:900}
-.hero{padding:40px 0 30px;display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center}.hero p{color:var(--mt);font-size:16px;max-width:52ch;margin:0 0 22px}
-.stats{display:flex;gap:10px;flex-wrap:wrap}.stat{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:10px 16px}.stat b{display:block;font-size:20px;font-weight:900}.stat span{font-size:12px;color:var(--mt)}
-.show{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sec{padding:34px 0}
-.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.step,.adv{background:var(--p);border:1px solid var(--ln);border-radius:18px;padding:20px}.step i{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:var(--p2);color:var(--ac2);font:900 16px inherit;margin-bottom:10px}.step b,.adv b{display:block;font-size:17px;margin-bottom:4px}.step span,.adv span{color:var(--mt);font-size:14px}
-details{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:14px 18px;margin-bottom:8px}summary{cursor:pointer;font-weight:700}details p{color:var(--mt);margin:8px 0 0}
-footer{border-top:1px solid var(--ln);padding:24px 0 40px;color:var(--mt);font-size:13px;margin-top:30px}
-.main{display:grid;grid-template-columns:240px 1fr;gap:18px;margin-top:20px}
-aside{background:var(--p);border:1px solid var(--ln);border-radius:18px;padding:16px;align-self:start;position:sticky;top:74px;max-height:calc(100vh - 90px);overflow:auto}
-aside h4{margin:14px 0 7px;font-size:12px;color:var(--mt);text-transform:uppercase;letter-spacing:.8px}aside h4:first-child{margin-top:0}
-.ch{display:flex;flex-wrap:wrap;gap:6px}.c{background:var(--p2);border:1px solid transparent;color:var(--mt);border-radius:99px;padding:5px 11px;font:600 12px inherit;font-family:inherit;cursor:pointer}.c.on{background:var(--ac);color:#fff}
-input,select{background:var(--p2);border:1px solid var(--ln);color:var(--tx);border-radius:11px;padding:10px 12px;font:600 14px inherit;font-family:inherit;width:100%}input:focus,select:focus{border-color:var(--ac);outline:0}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tb{display:flex;gap:10px;margin-bottom:14px}.tb input{flex:3}.tb select{flex:1;min-width:150px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-.card{background:var(--p);border:1px solid var(--ln);border-radius:16px;overflow:hidden;transition:transform .2s,border-color .2s,box-shadow .2s;--c:#888;position:relative}
-.card:hover{transform:translateY(-4px);border-color:var(--c);box-shadow:0 10px 30px -12px var(--c)}.card.in{border-color:var(--ok)}
-.art{height:150px;display:grid;place-items:center;background:radial-gradient(circle at 50% 115%,color-mix(in srgb,var(--c) 50%,transparent),transparent 72%)}
-.art img{max-width:88%;max-height:128px;object-fit:contain;filter:drop-shadow(0 8px 14px #000);transition:transform .25s}.card:hover .art img{transform:scale(1.1) rotate(-2deg)}
-.bd{position:absolute;top:9px;left:9px;background:#000a;border:1px solid var(--ln);border-radius:8px;padding:1px 8px;font-size:11px;font-weight:700}
-.cb{padding:11px 13px 13px}.nm{font-weight:700;font-size:13.5px;line-height:1.25;min-height:34px}.rr{font-size:12px;color:var(--c);margin:3px 0 9px}
-.row{display:flex;align-items:center;justify-content:space-between;gap:8px}.pr{font-weight:900;font-size:18px;color:var(--gd)}
-.sk{height:260px;border-radius:16px;background:linear-gradient(100deg,var(--p) 30%,var(--p2) 50%,var(--p) 70%);background-size:300% 100%;animation:sh 1.3s infinite}@keyframes sh{to{background-position:-100% 0}}
-.more{display:block;margin:18px auto 60px}.em{color:var(--mt);padding:30px 0;grid-column:1/-1;text-align:center}
-.ov{position:fixed;inset:0;background:#000d;display:none;place-items:center;z-index:50;padding:14px}.ov.s{display:grid}
-.md{background:var(--p);border:1px solid var(--ln);border-radius:20px;width:100%;max-width:440px;padding:20px;max-height:92vh;overflow:auto;animation:pop .25s cubic-bezier(.2,1.3,.4,1)}@keyframes pop{from{transform:scale(.92);opacity:0}}
-h3{margin:0 0 12px;font-size:20px;font-weight:900}label{display:block;color:var(--mt);font-size:13px;font-weight:600;margin:12px 0 5px}
-.tabs{display:flex;gap:6px;margin:0 0 14px;border-bottom:1px solid var(--ln);padding-bottom:10px;flex-wrap:wrap}.tabs a{padding:8px 14px;border-radius:10px;color:var(--mt);font-weight:700}.tabs a.on{background:var(--p2);color:var(--tx)}
-.note{background:var(--p2);border-radius:11px;padding:10px 12px;color:var(--mt);font-size:13px;margin:12px 0 6px}.err{color:var(--bad);font-size:13px;min-height:18px;margin:4px 0}
-.dr{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--p);border-left:1px solid var(--ln);z-index:45;transform:translateX(105%);transition:transform .3s cubic-bezier(.2,.9,.3,1);display:flex;flex-direction:column;padding:18px}.dr.s{transform:none}
-.dl{flex:1;overflow:auto}.li{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--ln)}.li img{width:52px;height:38px;object-fit:contain}.li .nm{flex:1;min-height:0;font-size:13px}.x{background:none;border:0;color:var(--mt);cursor:pointer;font-size:20px}
-.pc{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}.box{background:var(--p);border:1px solid var(--ln);border-radius:18px;padding:18px}.big{font-size:38px;font-weight:900;color:var(--gd)}
-.ord{padding:12px 0;border-bottom:1px solid var(--ln)}.ord:last-child{border:0}.st{font-size:12px;color:var(--gd);font-weight:700}
-.pb{height:5px;background:var(--p2);border-radius:9px;margin-top:7px;overflow:hidden}.pb i{display:block;height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2))}
-.mono{font-family:ui-monospace,monospace;background:var(--p2);padding:10px;border-radius:10px;word-break:break-all;font-size:13px;user-select:all}
-.toast{position:fixed;left:50%;top:70px;transform:translate(-50%,-140px);background:var(--ok);color:#03210f;font-weight:800;padding:12px 20px;border-radius:13px;z-index:70;transition:transform .35s cubic-bezier(.2,1.3,.4,1)}.toast.s{transform:translate(-50%,0)}
-.bn{background:#1b1440;border-bottom:1px solid var(--ac);text-align:center;padding:9px 14px;font-weight:700;font-size:14px}.bn.r{background:#3a0f1c;border-color:var(--bad)}.lk{color:var(--ac2)}footer a{color:var(--ac2)}
-.fb{display:none}
-/* v4: чисто и ровно, без градиентов и свечения */
-:root{--bg:#0e1116;--p:#151a22;--p2:#1b212b;--ln:#262e3b;--tx:#e8ebf0;--mt:#8791a1;--ac:#f2a93b;--ac2:#7db4e6;--gd:#f2a93b;color-scheme:dark}
-body{font-family:Onest,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px}body::before{display:none}
-header{background:var(--bg);backdrop-filter:none}.logo{font-family:Unbounded,Onest,sans-serif;font-size:20px;letter-spacing:-.5px}
-.logo b,.gr{background:none;-webkit-background-clip:initial;background-clip:initial;color:var(--ac)}
-h1{font-weight:800;letter-spacing:-1.5px}h2{font-weight:800;letter-spacing:-.5px}h3{font-weight:800}
-nav a.on,nav a:hover{background:var(--p2)}
-.btn{background:var(--ac);color:#1a1204;border-radius:10px;box-shadow:none;font-weight:700}.btn:hover{filter:brightness(1.08)}.btn.g{background:var(--p2);color:var(--tx);border:1px solid var(--ln)}.btn.g:hover{border-color:#3a4556;filter:none}
-.chip{color:var(--ac);border-radius:10px}.bdg{background:var(--ac);color:#1a1204}
-input,select{border-radius:10px;background:var(--p2)}input:focus,select:focus{border-color:var(--ac)}
-#cur{width:auto;padding:9px 10px;font-weight:700;cursor:pointer}#snd{padding:10px 12px}
-aside,.box,.step,.adv,.stat,details{background:var(--p);border-radius:14px}
-aside h4{text-transform:none;letter-spacing:0;font-size:13px;color:var(--tx);font-weight:700}
-.c{border-radius:8px;background:var(--p2);padding:6px 10px}.c.on{background:var(--ac);color:#1a1204}
-.grid{gap:14px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
-.card{background:var(--p);border:1px solid var(--ln);border-radius:12px;transition:border-color .15s}.card:hover{transform:none;box-shadow:none;border-color:#3a4556}.card.in{border-color:var(--ac)}
+.chip{background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:8px 13px;font-weight:800;color:var(--ac);cursor:pointer}
+h1{font-size:clamp(28px,4.2vw,50px);line-height:1.04;margin:0 0 14px;letter-spacing:-1.5px;font-weight:800}
+h2{font-size:clamp(22px,3vw,30px);letter-spacing:-.5px;margin:0 0 16px;font-weight:800}
+h3{margin:0 0 12px;font-size:19px;font-weight:800}
+.hero{padding:28px 0 24px;display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:center}
+.hero p{color:var(--mt);font-size:15.5px;max-width:52ch;margin:0 0 20px}
+.stats{display:flex;gap:10px;flex-wrap:wrap}
+.stat{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:10px 15px}
+.stat b{display:block;font-size:19px;font-weight:900}.stat span{font-size:12px;color:var(--mt)}
+.show{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sec{padding:28px 0}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.step,.adv{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:18px}
+.step i{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--p2);color:var(--ac);font:900 15px inherit;margin-bottom:10px}
+.step b,.adv b{display:block;font-size:16px;margin-bottom:4px}.step span,.adv span{color:var(--mt);font-size:13.5px}
+details{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:13px 16px;margin-bottom:8px}
+summary{cursor:pointer;font-weight:700}details p{color:var(--mt);margin:8px 0 0;font-size:14px}
+footer{border-top:1px solid var(--ln);padding:22px 0 36px;color:var(--mt);font-size:13px;margin-top:26px}
+.main{display:grid;grid-template-columns:230px 1fr;gap:16px;margin-top:16px}
+aside{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:14px;align-self:start;position:sticky;top:70px;max-height:calc(100vh - 86px);overflow:auto}
+aside h4{margin:13px 0 6px;font-size:12.5px;color:var(--tx);font-weight:700}aside h4:first-child{margin-top:0}
+.ch{display:flex;flex-wrap:wrap;gap:5px}
+.c{background:var(--p2);border:1px solid transparent;color:var(--mt);border-radius:8px;padding:5px 9px;font:600 12px inherit;font-family:inherit;cursor:pointer}
+.c.on{background:var(--ac);color:#1a1204}
+input,select{background:var(--p2);border:1px solid var(--ln);color:var(--tx);border-radius:10px;padding:9px 11px;font:600 14px inherit;font-family:inherit;width:100%}
+input:focus,select:focus{border-color:var(--ac);outline:0}
+#cur{width:auto;padding:8px 10px;font-weight:700;cursor:pointer}#snd{padding:9px 11px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tb{display:flex;gap:8px;margin-bottom:14px}.tb input{flex:3}.tb select{flex:1;min-width:140px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:12px}
+.card{background:var(--p);border:1px solid var(--ln);border-radius:12px;overflow:hidden;transition:border-color .15s;--c:#888;position:relative}
+.card:hover{border-color:#3a4556}.card.in{border-color:var(--ac)}
 .card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--c)}
-.art{height:140px;background:var(--p2)}.art img{filter:none}.card:hover .art img{transform:none}
-.bd{background:var(--bg);border-radius:6px}.nm{min-height:36px}.rr{margin:2px 0 8px}
-.pr{font-family:Onest,sans-serif;font-weight:800;font-size:17px;color:var(--tx);font-variant-numeric:tabular-nums}.big{font-family:Onest,sans-serif;font-weight:800;font-size:34px;color:var(--tx)}
-.wb{display:flex;gap:2px;margin:0 0 10px}.wb i{flex:1;min-width:6px;height:4px;border-radius:2px;background:var(--ln)}.wb i.on{background:var(--c)}
+.art{height:134px;display:grid;place-items:center;background:var(--p2)}
+.art img{max-width:86%;max-height:118px;object-fit:contain}
+.bd{position:absolute;top:8px;left:8px;background:var(--bg);border:1px solid var(--ln);border-radius:6px;padding:1px 7px;font-size:10.5px;font-weight:700}
+.cb{padding:10px 12px 12px}.nm{font-weight:700;font-size:13px;line-height:1.25;min-height:34px}.rr{font-size:11.5px;color:var(--c);margin:2px 0 7px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cb .row{flex-direction:column;align-items:stretch}.cb .row .btn{width:100%}
+.pr{font-family:Onest,sans-serif;font-weight:800;font-size:16.5px;color:var(--tx);font-variant-numeric:tabular-nums}
+.big{font-family:Onest,sans-serif;font-weight:800;font-size:32px;color:var(--tx)}
+.wb{display:flex;gap:2px;margin:0 0 9px}.wb i{flex:1;min-width:6px;height:4px;border-radius:2px;background:var(--ln)}.wb i.on{background:var(--c)}
+.sk{height:245px;border-radius:12px;background:linear-gradient(100deg,var(--p) 30%,var(--p2) 50%,var(--p) 70%);background-size:300% 100%;animation:sh 1.3s infinite}@keyframes sh{to{background-position:-100% 0}}
+.more{display:block;margin:18px auto 50px}.em{color:var(--mt);padding:26px 0;grid-column:1/-1;text-align:center}
+.ov{position:fixed;inset:0;background:#000d;display:none;place-items:center;z-index:50;padding:14px}.ov.s{display:grid}
+.md{background:var(--p);border:1px solid var(--ln);border-radius:18px;width:100%;max-width:430px;padding:20px;max-height:92vh;overflow:auto;animation:pop .22s cubic-bezier(.2,1.3,.4,1)}@keyframes pop{from{transform:scale(.93);opacity:0}}
+label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:11px 0 4px}
+.tabs{display:flex;gap:6px;margin:0 0 14px;border-bottom:1px solid var(--ln);padding-bottom:10px;flex-wrap:wrap}.tabs a{padding:8px 13px;border-radius:10px;color:var(--mt);font-weight:700}.tabs a.on{background:var(--p2);color:var(--tx)}
+.note{background:var(--p2);border-radius:10px;padding:9px 11px;color:var(--mt);font-size:12.5px;margin:10px 0 5px}.err{color:var(--bad);font-size:12.5px;min-height:17px;margin:4px 0}
 .hint{color:var(--mt);font-size:12px;min-height:16px;margin-top:4px}
-.pb i{background:var(--ac)}.bn{background:var(--p2);border-color:var(--ln)}.step i{color:var(--ac)}
-.md.au{max-width:760px;padding:0;display:grid;grid-template-columns:1fr 1.1fr;overflow:hidden}
-.ls{padding:30px 26px;background:var(--p2);display:flex;flex-direction:column;gap:14px;justify-content:center}.ls .logo{font-size:26px;margin:0}.ls p{margin:0;color:var(--mt);font-size:14px}.ls b{color:var(--tx)}
-.rs{padding:28px 26px}.pw{position:relative}.pw button{position:absolute;right:6px;top:5px;background:none;border:0;color:var(--mt);cursor:pointer;font:600 12px Onest,sans-serif;padding:8px}
-#lc{text-align:center;letter-spacing:10px;font:700 22px Onest,monospace}
-.cb .row{flex-direction:column;align-items:stretch}.cb .row .btn{width:100%}.pr{font-size:17px}
-.md.cr{text-align:center;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:6px}.md.cr h3{margin:8px 0 0}.md.cr p{color:var(--mt);margin:0 0 10px}.md.cr .big{color:var(--ac)}
+.dr{position:fixed;top:0;right:0;bottom:0;width:min(400px,100%);background:var(--p);border-left:1px solid var(--ln);z-index:45;transform:translateX(105%);transition:transform .28s cubic-bezier(.2,.9,.3,1);display:flex;flex-direction:column;padding:16px}.dr.s{transform:none}
+.dl{flex:1;overflow:auto}.li{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--ln)}.li img{width:48px;height:35px;object-fit:contain}.li .nm{flex:1;min-height:0;font-size:12.5px}.x{background:none;border:0;color:var(--mt);cursor:pointer;font-size:20px}
+.pc{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:13px}.box{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:16px}
+.ord{padding:11px 0;border-bottom:1px solid var(--ln)}.ord:last-child{border:0}.st{font-size:12px;color:var(--gd);font-weight:700}
+.pb{height:5px;background:var(--p2);border-radius:9px;margin-top:6px;overflow:hidden}.pb i{display:block;height:100%;background:var(--ac)}
+.mono{font-family:ui-monospace,monospace;background:var(--p2);padding:9px;border-radius:9px;word-break:break-all;font-size:12.5px;user-select:all}
+.toast{position:fixed;left:50%;top:66px;transform:translate(-50%,-140px);background:var(--ok);color:#03210f;font-weight:800;padding:11px 18px;border-radius:12px;z-index:70;transition:transform .32s cubic-bezier(.2,1.3,.4,1)}.toast.s{transform:translate(-50%,0)}
+.bn{background:var(--p2);border-bottom:1px solid var(--ln);text-align:center;padding:8px 12px;font-weight:700;font-size:13.5px}.bn.r{background:#3a0f1c;border-color:var(--bad)}.lk{color:var(--ac2)}footer a{color:var(--ac2)}
+.fb{display:none}
+.md.au{max-width:720px;padding:0;display:grid;grid-template-columns:1fr 1.1fr;overflow:hidden}
+.ls{padding:26px 22px;background:var(--p2);display:flex;flex-direction:column;gap:12px;justify-content:center}.ls .logo{font-size:24px;margin:0}.ls p{margin:0;color:var(--mt);font-size:13.5px}.ls b{color:var(--tx)}
+.rs{padding:24px 22px}.pw{position:relative}.pw button{position:absolute;right:6px;top:5px;background:none;border:0;color:var(--mt);cursor:pointer;font:600 12px Onest,sans-serif;padding:8px}
+#lc{text-align:center;letter-spacing:10px;font:700 21px Onest,monospace}
+.md.cr{text-align:center;max-width:350px;display:flex;flex-direction:column;align-items:center;gap:6px}.md.cr h3{margin:6px 0 0}.md.cr p{color:var(--mt);margin:0 0 8px}.md.cr .big{color:var(--ac)}.md.cr input{width:100%}
 .tb2{display:none}#snd svg,#cartb svg{vertical-align:-4px}
-.seg{display:flex;background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:3px}.seg button{border:0;background:none;color:var(--mt);padding:8px 16px;border-radius:8px;font:700 14px Onest,sans-serif;cursor:pointer}.seg button.on{background:var(--ac);color:#1a1204}
-.on2{display:inline-flex;align-items:center;gap:6px;margin-left:10px;color:var(--mt);font-size:13px;font-weight:600;white-space:nowrap}.on2 i{width:8px;height:8px;border-radius:50%;background:#3ccf7a;box-shadow:0 0 8px #3ccf7a}
-.md.cr input{width:100%}
-.fv{position:absolute;top:8px;right:8px;z-index:2;width:30px;height:30px;border-radius:50%;border:0;background:#0e1116cc;color:var(--mt);cursor:pointer;display:grid;place-items:center}.fv.on{color:#ff6b6b}.fv.on svg{fill:currentColor}
+.seg{display:flex;background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:3px}.seg button{border:0;background:none;color:var(--mt);padding:7px 14px;border-radius:8px;font:700 13.5px Onest,sans-serif;cursor:pointer}.seg button.on{background:var(--ac);color:#1a1204}
+.on2{display:inline-flex;align-items:center;gap:5px;margin-left:8px;color:var(--mt);font-size:12.5px;font-weight:600;white-space:nowrap}.on2 i{width:7px;height:7px;border-radius:50%;background:#3ccf7a;box-shadow:0 0 6px #3ccf7a}
+.fv{position:absolute;top:7px;right:7px;z-index:2;width:28px;height:28px;border-radius:50%;border:0;background:#0e1116cc;color:var(--mt);cursor:pointer;display:grid;place-items:center}.fv.on{color:#ff6b6b}.fv.on svg{fill:currentColor}
 #favb.on{background:var(--ac);color:#1a1204}
-.pl{display:flex;gap:10px;overflow-x:auto;margin-top:12px;padding-bottom:4px}.pi{flex:0 0 200px;display:flex;align-items:center;gap:8px;background:var(--p2);border-radius:10px;padding:8px}.pi img{width:48px;height:36px;object-fit:contain}.pi span{font-size:12px;flex:1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.pi b{color:var(--ac);font-size:13px}
+.pl{display:flex;gap:9px;overflow-x:auto;margin-top:10px;padding-bottom:4px}.pi{flex:0 0 185px;display:flex;align-items:center;gap:7px;background:var(--p2);border-radius:9px;padding:7px}.pi img{width:44px;height:32px;object-fit:contain}.pi span{font-size:11.5px;flex:1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.pi b{color:var(--ac);font-size:12.5px}
 
-/* Левая панель сделок и живых отзывов */
-.w{max-width:1540px}
-.app-grid{display:grid;grid-template-columns:310px minmax(0,1fr);gap:22px;align-items:start}
-.lf-panel{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:14px;position:sticky;top:72px;max-height:calc(100vh - 88px);display:flex;flex-direction:column;gap:10px;overflow:hidden}
-.lf-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--ln);padding-bottom:10px}
-.lf-head b{font-size:14px;display:flex;align-items:center;gap:7px}
-.lf-dot{width:8px;height:8px;border-radius:50%;background:#3ccf7a;animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.85)}}
-.lf-sub{font-size:11px;color:var(--mt);font-weight:600}
-.lf-list{display:flex;flex-direction:column;gap:9px;overflow-y:auto;padding-right:2px;scrollbar-width:thin}
-.lf-item{background:var(--p2);border:1px solid var(--ln);border-radius:11px;padding:10px;animation:slideIn .35s cubic-bezier(.2,1.2,.4,1)}
-@keyframes slideIn{from{opacity:0;transform:translateY(-14px) scale(.97)}to{opacity:1;transform:none}}
-.lf-top{display:flex;align-items:center;gap:9px}
-.lf-av{width:34px;height:34px;border-radius:50%;object-fit:cover;background:var(--bg);border:1px solid var(--ln);flex-shrink:0}
+/* КОМПАКТНАЯ ЛЕНТА СДЕЛОК И ОТЗЫВОВ СЛЕВА */
+.app-grid{display:grid;grid-template-columns:225px minmax(0,1fr);gap:16px;align-items:start}
+.lf-panel{background:var(--p);border:1px solid var(--ln);border-radius:12px;padding:10px;position:sticky;top:68px;max-height:calc(100vh - 82px);display:flex;flex-direction:column;gap:7px;overflow:hidden}
+.lf-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--ln);padding-bottom:7px}
+.lf-head b{font-size:12px;display:flex;align-items:center;gap:5px;color:var(--tx);letter-spacing:-.2px}
+.lf-dot{width:6px;height:6px;border-radius:50%;background:#3ccf7a;animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.lf-sub{font-size:10px;color:var(--mt);font-weight:700}
+.lf-list{display:flex;flex-direction:column;gap:6px;overflow-y:auto;padding-right:2px;scrollbar-width:none}
+.lf-list::-webkit-scrollbar{display:none}
+.lf-item{background:var(--p2);border:1px solid var(--ln);border-radius:9px;padding:7px 8px;animation:slideIn .28s ease-out}
+@keyframes slideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.lf-top{display:flex;align-items:center;gap:6px}
+.lf-av{width:24px;height:24px;border-radius:50%;object-fit:cover;background:var(--bg);flex-shrink:0;display:grid;place-items:center;font-weight:800;font-size:10.5px;color:#fff;text-transform:uppercase}
 .lf-u{flex:1;min-width:0}
-.lf-name{font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:5px}
-.lf-tag{font-size:10px;padding:1px 6px;border-radius:5px;font-weight:800;background:#3ccf7a22;color:#3ccf7a}
-.lf-tag.b{background:#f2a93b22;color:var(--ac)}
-.lf-time{font-size:11px;color:var(--mt)}
-.lf-deal{display:flex;align-items:center;gap:8px;background:var(--p);border:1px solid var(--ln);border-radius:8px;padding:6px 8px;margin:7px 0}
-.lf-deal img{width:40px;height:30px;object-fit:contain;flex-shrink:0}
-.lf-skin{font-size:11.5px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--tx)}
-.lf-pr{font-size:12.5px;font-weight:800;color:var(--ac);white-space:nowrap}
-.lf-rev{font-size:12.5px;color:#d0d6e2;line-height:1.35;background:#0e111677;border-radius:8px;padding:6px 8px;border-left:2px solid var(--ac)}
-.lf-stars{color:var(--ac);font-size:11px;letter-spacing:1px;margin-bottom:2px}
+.lf-name{font-weight:700;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--tx);line-height:1.15}
+.lf-rate{font-size:10px;color:var(--mt);display:flex;align-items:center;gap:4px;line-height:1.1}
+.lf-stars{color:var(--ac);font-size:10px;letter-spacing:.5px}
+.lf-deal{display:flex;align-items:center;gap:6px;background:var(--p);border-radius:6px;padding:4px 6px;margin:5px 0}
+.lf-deal img{width:30px;height:22px;object-fit:contain;flex-shrink:0}
+.lf-skin{font-size:10.5px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--mt)}
+.lf-pr{font-size:11px;font-weight:800;color:var(--ok);white-space:nowrap}
+.lf-rev{font-size:11px;color:var(--tx);line-height:1.3;word-break:break-word}
 
-@media(max-width:1100px){
+@media(max-width:1040px){
  .app-grid{grid-template-columns:1fr}
- .lf-panel{position:static;max-height:390px;order:2;margin-top:16px}
+ .lf-panel{position:static;max-height:290px;order:2;margin-top:12px}
 }
-@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:24px}.main{grid-template-columns:1fr}aside{display:none;position:static;max-height:none}aside.o{display:block}.fb{display:inline-block}nav a{padding:8px 9px}}
+@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:20px}.main{grid-template-columns:1fr}aside{display:none;position:static;max-height:none}aside.o{display:block}.fb{display:inline-block}nav a{padding:8px 9px}}
 @media(max-width:700px){
- body{padding-bottom:72px;font-size:14px}.w{padding:0 12px}nav:not(.tb2){display:none}.bar{height:54px;gap:6px}.logo{font-size:17px;margin-right:0}
- #cartb .tx,#balc{display:none}#cartb,#snd{padding:9px 10px}#cur{padding:8px 6px}#lg{max-width:96px;overflow:hidden;text-overflow:ellipsis}
- .on2{margin-left:4px;font-size:11.5px}
- .tb2{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--bg);border-top:1px solid var(--ln);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
- .tb2 a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border-radius:10px;color:var(--mt);font-size:11px;font-weight:700}.tb2 a.on{color:var(--ac);background:var(--p2)}
- .hero{padding:20px 0 8px}.hero p{font-size:15px}.show{grid-template-columns:1fr 1fr}.stat{flex:1 1 90px;padding:9px 12px}
- .grid{grid-template-columns:1fr 1fr;gap:10px}.art{height:112px}.nm{font-size:12.5px;min-height:32px}.cb{padding:10px}.pr{font-size:15px}
+ body{padding-bottom:70px;font-size:14px}.w{padding:0 10px}nav:not(.tb2){display:none}.bar{height:52px;gap:5px}.logo{font-size:17px;margin-right:0}
+ #cartb .tx,#balc{display:none}#cartb,#snd{padding:8px 9px}#cur{padding:7px 5px}#lg{max-width:92px;overflow:hidden;text-overflow:ellipsis}
+ .on2{margin-left:3px;font-size:11px}
+ .tb2{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--bg);border-top:1px solid var(--ln);padding:5px 5px calc(5px + env(safe-area-inset-bottom))}
+ .tb2 a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 0;border-radius:9px;color:var(--mt);font-size:10.5px;font-weight:700}.tb2 a.on{color:var(--ac);background:var(--p2)}
+ .hero{padding:16px 0 8px}.hero p{font-size:14.5px}.show{grid-template-columns:1fr 1fr}.stat{flex:1 1 85px;padding:8px 10px}
+ .grid{grid-template-columns:1fr 1fr;gap:9px}.art{height:108px}.nm{font-size:12px;min-height:30px}.cb{padding:9px}.pr{font-size:14.5px}
  .tb{flex-wrap:wrap}.tb input{flex:1 1 100%}.tb select{min-width:0;flex:1}.fb{flex:1}.seg{flex:1 1 100%}.seg button{flex:1}
- .pc{grid-template-columns:1fr}.big{font-size:28px}.dr{width:100%}.md{padding:16px}.rs{padding:20px 16px}.tabs a{padding:7px 10px}.sec{padding:22px 0}
- .toast{width:calc(100% - 24px);text-align:center;top:62px}.md.au{grid-template-columns:1fr}.ls{display:none}
+ .pc{grid-template-columns:1fr}.big{font-size:26px}.dr{width:100%}.md{padding:15px}.rs{padding:18px 15px}.tabs a{padding:7px 9px}.sec{padding:20px 0}
+ .toast{width:calc(100% - 20px);text-align:center;top:58px}.md.au{grid-template-columns:1fr}.ls{display:none}
 }
 </style></head><body>
 <header><div class="w bar"><a class="logo" href="#/">cs2<b>pay</b></a><span class="on2" id="onl" hidden></span><nav><a href="#/">Главная</a><a href="#/market">Маркет</a></nav><div class="sp"></div>
@@ -138,12 +136,12 @@ aside h4{text-transform:none;letter-spacing:0;font-size:13px;color:var(--tx);fon
 <button class="btn g" id="snd" aria-label="Звук"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg></button><button class="btn" id="lg">Войти</button></div></header>
 <div id="bn" class="bn" hidden></div>
 
-<main class="w" style="margin-top:16px">
+<main class="w" style="margin-top:14px">
 <div class="app-grid">
- <!-- ЛЕВАЯ ТАБЛИЦА СДЕЛОК И ОТЗЫВОВ -->
+ <!-- КОМПАКТНАЯ ЛЕНТА СДЕЛОК И ОТЗЫВОВ СЛЕВА -->
  <div class="lf-panel" id="lf-panel">
   <div class="lf-head">
-   <b><span class="lf-dot"></span> Живые сделки и отзывы</b>
+   <b><span class="lf-dot"></span> Сделки и отзывы</b>
    <span class="lf-sub">LIVE</span>
   </div>
   <div class="lf-list" id="lf-list"></div>
@@ -152,8 +150,8 @@ aside h4{text-transform:none;letter-spacing:0;font-size:13px;color:var(--tx);fon
  <!-- ОСНОВНОЙ КОНТЕНТ -->
  <div>
   <section id="v-home"><div class="hero"><div><h1>Продай скины CS2 <span class="gr">и выводи деньги</span></h1><p>Выбери скины, укажи трейд-ссылку и получи деньги на баланс через 7 дней. Выводи на USDT TRC20, в Crypto-бот или на карту.</p>
-  <a class="btn" href="#/market" style="display:inline-block;padding:14px 26px;font-size:16px">Открыть маркет</a>
-  <div class="stats" style="margin-top:22px"><div class="stat"><b id="all">…</b><span>скинов на маркете</span></div><div class="stat"><b>7 дней</b><span>до зачисления</span></div><div class="stat"><b>2FA</b><span>защита аккаунта</span></div></div></div><div class="show" id="showc"></div></div><div id="pay" hidden style="padding-top:8px"><div class="box"><div class="row"><h3 style="margin:0">Последние выплаты</h3><span class="chip" id="paid"></span></div><div class="pl" id="payl"></div></div></div>
+  <a class="btn" href="#/market" style="display:inline-block;padding:13px 24px;font-size:15.5px">Открыть маркет</a>
+  <div class="stats" style="margin-top:20px"><div class="stat"><b id="all">…</b><span>скинов на маркете</span></div><div class="stat"><b>7 дней</b><span>до зачисления</span></div><div class="stat"><b>2FA</b><span>защита аккаунта</span></div></div></div><div class="show" id="showc"></div></div><div id="pay" hidden style="padding-top:8px"><div class="box"><div class="row"><h3 style="margin:0">Последние выплаты</h3><span class="chip" id="paid"></span></div><div class="pl" id="payl"></div></div></div>
   <div class="sec"><h2>Как это работает</h2><div class="steps"><div class="step"><i>1</i><b>Выбери скины</b><span>Добавь их в корзину. Цена на карточке и есть сумма к зачислению.</span></div><div class="step"><i>2</i><b>Укажи трейд-ссылку</b><span>Сохрани её в профиле один раз.</span></div><div class="step"><i>3</i><b>Получи оффер</b><span>Мы пришлём трейд-оффер и проверим скины.</span></div><div class="step"><i>4</i><b>Выведи деньги</b><span>Через 7 дней сумма попадёт на баланс. Вывод на TRC20, Crypto-бот или карту.</span></div></div></div>
   <div class="sec"><h2>Почему cs2pay</h2><div class="steps"><div class="adv"><b>Все скины CS2</b><span>Полный каталог с фото и фильтрами по износу, редкости и цене.</span></div><div class="adv"><b>Двухэтапная защита</b><span>Код из Google Authenticator при входе и выводе.</span></div><div class="adv"><b>Статусы в профиле</b><span>Каждая заявка видна с прогрессом 7-дневного ожидания.</span></div><div class="adv"><b>Три способа вывода</b><span>USDT TRC20, Crypto-бот, банковская карта.</span></div></div></div>
   <div class="sec"><h2>Поддержка</h2><div class="steps"><div class="adv"><b>Telegram</b><span><a class="lk" href="https://t.me/cs2_pay">@cs2_pay</a></span></div><div class="adv"><b>Канал</b><span><a class="lk" href="https://t.me/SellSkin_cs2">@SellSkin_cs2</a></span></div></div></div>
@@ -169,7 +167,7 @@ aside h4{text-transform:none;letter-spacing:0;font-size:13px;color:var(--tx);fon
   <section id="v-market" hidden><div class="main"><aside id="as"><h4>Категория</h4><div class="ch" id="fc"></div><h4>Редкость</h4><div class="ch" id="fr"></div><h4>Износ</h4><div class="ch" id="fw"></div>
   <h4>Тип</h4><select id="st"><option value="">Все</option><option value="1">StatTrak™</option><option value="0">Без StatTrak</option></select>
   <h4 id="ph">Цена, $</h4><div class="two"><input id="mn" type="number" min="0" placeholder="от"><input id="mx" type="number" min="0" placeholder="до"></div><button class="btn g bl" style="margin-top:14px" id="rs">Сбросить фильтры</button></aside>
-  <div><div class="tb"><div class="seg" id="seg"><button class="on" data-m="0">Продать</button><button data-m="1">Купить</button></div><button class="btn g" id="favb">Избранное</button><button class="btn g fb" id="fbt">Фильтры</button><input id="q" placeholder="Поиск: AK-47 Redline, Karambit, Howl…" aria-label="Поиск"><select id="so" aria-label="Сортировка"><option value="">Дороже</option><option value="asc">Дешевле</option><option value="name">По названию</option></select></div>
+  <div><div class="tb"><div class="seg" id="seg"><button class="on" data-m="0">Продать</button><button data-m="1">Купить</button></div><button class="btn g" id="favb">Избранное</button><button class="btn g fb" id="fbt">Фильтры</button><input id="q" placeholder="Поиск: AK-47, M4A1-S, USP-S, AWP…" aria-label="Поиск"><select id="so" aria-label="Сортировка"><option value="">Дороже</option><option value="asc">Дешевле</option><option value="name">По названию</option></select></div>
   <div class="grid" id="gr"></div><button class="btn g more" id="mo" hidden>Показать ещё</button></div></div></section>
 
   <section id="v-profile" hidden style="padding:10px 0 50px"><div id="pt"></div><div id="pc"></div></section>
@@ -196,9 +194,9 @@ var $=function(i){return document.getElementById(i)},S={me:null,cart:{},items:{}
 try{S.cart=JSON.parse(localStorage.getItem("cart")||"{}")}catch(e){}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 var LB=null;function bc(b){if(LB!=null&&b>LB){$("cra").textContent="+"+mo(b-LB);$("cr").classList.add("s");sOk();confetti();clearTimeout(window.ct);window.ct=setTimeout(closeAll,6e3)}LB=b}
-var CUR="USD",R={USD:1};
+var CUR="UAH",R={USD:1,UAH:41.5,EUR:.86,PLN:3.65,GBP:.75,KZT:520,RUB:80};
 var SY={USD:"$",UAH:"₴",EUR:"€",PLN:"zł",GBP:"£",KZT:"₸",RUB:"₽"};
-function fm(u){var v=u*(R[CUR]||1),d=CUR=="KZT"||v>=10000?0:2,n=v.toLocaleString(CUR=="USD"?"en-US":"ru-RU",{minimumFractionDigits:d,maximumFractionDigits:d});return CUR=="USD"||CUR=="GBP"?SY[CUR]+n:n+"\u00a0"+SY[CUR]}
+function fm(u){var v=u*(R[CUR]||1),d=CUR=="KZT"||CUR=="UAH"||CUR=="RUB"||v>=1000?0:2,n=v.toLocaleString(CUR=="USD"?"en-US":"ru-RU",{minimumFractionDigits:d,maximumFractionDigits:d});return CUR=="USD"||CUR=="GBP"?SY[CUR]+n:n+"\u00a0"+SY[CUR]}
 function mo(c){return fm(c/100)}
 function hint(i,id){$(id).textContent=CUR=="USD"||!i.value?"":"≈ "+fm(+i.value)}
 function cu(){$("ph").textContent="Цена, "+({USD:"$",UAH:"₴",EUR:"€",PLN:"zł",GBP:"£",KZT:"₸",RUB:"₽"})[CUR];cartUp();if(loaded)load(true);home();if(S.me){$("balc").textContent=mo(S.me.bal);if(!$("v-profile").hidden)prof(tab)}}
@@ -226,7 +224,7 @@ document.querySelectorAll("nav a,.tb2 a").forEach(function(a){a.classList.toggle
 if(v=="market"&&!loaded){loaded=1;load(true)}if(v=="profile")prof(h[1]||"overview");scrollTo(0,0)}
 addEventListener("hashchange",route);
 /* market */
-function card(s){S.items[s.id]=s;var w=WS[s.w]||s.w,i=S.cart[s.id];return'<div class="card'+(i&&!S.buy?" in":"")+'" data-id="'+esc(s.id)+'" style="--c:'+esc(s.c)+'"><button class="fv'+(S.fav[s.id]?" on":"")+'" data-f="1" aria-label="В избранное"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.8-8 11-8 11z"/></svg></button>'+(w?'<div class="bd">'+esc(w)+'</div>':"")+'<div class="art"><img loading="lazy" src="'+esc(s.img)+'" alt="'+esc(s.n)+'"></div><div class="cb"><div class="nm">'+esc(s.n)+'</div><div class="rr">'+esc(s.r)+'</div>'+wb(s.w)+'<div class="row"><div class="pr">'+fm(S.buy?s.b:s.p)+'</div><button class="btn sm'+(i&&!S.buy?" g":"")+'" data-a="1">'+(S.buy?"Купить":i?"Убрать":"В корзину")+'</button></div></div></div>'}
+function card(s){S.items[s.id]=s;var w=WS[s.w]||s.w,i=S.cart[s.id];return'<div class="card'+(i&&!S.buy?" in":"")+'" data-id="'+esc(s.id)+'" style="--c:'+esc(s.c)+'"><button class="fv'+(S.fav[s.id]?" on":"")+'" data-f="1" aria-label="В избранное"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.8-8 11-8 11z"/></svg></button>'+(w?'<div class="bd">'+esc(w)+'</div>':"")+'<div class="art"><img loading="lazy" src="'+esc(s.img)+'" alt="'+esc(s.n)+'"></div><div class="cb"><div class="nm">'+esc(s.n)+'</div><div class="rr">'+esc(s.r)+'</div>'+wb(s.w)+'<div class="row"><div class="pr">'+fm(S.buy?s.b:s.p)+'</div><button class="btn sm'+(i&&!S.buy?" g":"")+'" data-a="1">'+(S.buy?"Купить":i?"Убрать":"В корзину")+'</button></div></div></div>'}
 function url(){return"/api/market?page="+page+"&q="+encodeURIComponent($("q").value)+"&sort="+$("so").value+"&min="+(+($("mn").value||0)/(R[CUR]||1))+"&max="+($("mx").value?$("mx").value/(R[CUR]||1):"")+(S.buy?"&buy=1":"")+(S.favOn?"&ids="+(Object.keys(S.fav).join(",")||"none"):"")+"&t="+encodeURIComponent(F.t)+"&r="+encodeURIComponent(F.r)+"&w="+encodeURIComponent(F.w)+"&st="+$("st").value}
 function load(reset){if(reset){page=1;$("gr").innerHTML=new Array(12).join('<div class="sk"></div>')}
 api(url()).then(function(d){$("all").textContent=d.all.toLocaleString("ru");
@@ -290,88 +288,208 @@ function buyOpen(id){var s=S.items[id];if(!s)return;if(!S.me){openAuth("Войд
 $("bgo").onclick=function(){var s=S.bi;if(!s)return;api("/api/buy",{id:s.id,tl:$("btl").value.trim()}).then(function(){closeAll();sOk();confetti();toast("Покупка оплачена. Скин отправим трейдом, статус в профиле");me()}).catch(function(e){$("be").textContent=e.message;sErr()})};
 $("seg").onclick=function(e){var m=e.target.dataset.m;if(m==null)return;S.buy=m=="1";this.querySelectorAll("button").forEach(function(b){b.classList.toggle("on",b===e.target)});load(true)};
 
-/* ОНЛАЙН 667 - 1214 (обновление каждые 3.5 сек) */
+/* ОНЛАЙН 667 - 1214 */
 var VID;try{VID=localStorage.vid||(localStorage.vid=Math.random().toString(36).slice(2)+Date.now().toString(36))}catch(e){VID=Math.random().toString(36).slice(2)}
 function pingOn(){if(document.hidden)return;api("/api/ping?v="+VID).then(function(d){$("onl").innerHTML="<i></i>"+d.n+" онлайн";$("onl").hidden=!!d.h}).catch(function(){})}pingOn();setInterval(pingOn,3500);
 
-/* ГЕНЕРАТОР ЖИВЫХ СДЕЛОК И УНИКАЛЬНЫХ ОТЗЫВОВ БОТОВ (2 отзыва каждые 10 сек = 1 каждые 5 сек) */
-var botPool=[],usedNicks=new Set(),usedRevs=new Set(),botCount=0;
-var N1=["s1mple","m0NESY","donk","b1t","ZywOo","NiKo","ropz","rain","electronic","Perfecto","flamie","Boombl4","sh1ro","Ax1Le"," Jame","fame","n0rb3r7"," Patsi","w0nderful","iM","jL","Aleksib"," Twistzz","karrigan","broky","frozen"," EliGE","malbsMd","Snax","huNter","nexa","device","stavn","jabbi"," blameF","XANTARES","woxic"," Calyx","MAJ3R","tabseN","syrsoN","Krimbo"," Brollan","torzsi","siuhy","xertioN","Jimpphat","Spinx","apEX","mezii","flameZ","Seneka","Krad","Forester","Lack1","NickelBack","deko","TRAVIS","glowiing","tN1R","Senzu","bLitz","Techno4K","910","mzinho","insani","biguzera","skullz","yuurih","KSCERATO","FalleN","chelo","Vini"," Imperial","fnx","fer","coldzera","olof","JW","flusha","kennyS","shox","ScreaM","NBK","Happy","f0rest","GeT_RiGhT","friberg","Xizt","allu","GuardiaN","Edward","Zeus","seized","starix","markeloff","Dosia","AdreN","mou","HObbit"," Buster","Qikert","SANJI","YEKINDAR","interz","nafany","Cloud","zorte"," Jerry","forze","xsepower","almazer","facecrack"," Bogdan"," Vovan","Dima","Sanya","Maksim","Artem","Nikita","Kirill","Vlad","Taras","Nazar","Denys","Bohdan","Oleh","Andriy","Yaroslav","Matviy","Tymofiy","Illia","Danylo","Roman","Ruslan","Gleb","Egor","Timur","Arthur","Marat"," Renat","Stas"," Zhenya","Pasha","Kostya"," Lesha"," Igor","Slava","Vadim"," Anton"," Viktor","Sergey"];
-var N2=["_cs2","_trade","_awp","_peek","_clutch","_aim","_god","_pro","_ua","_top","_king","_boss","_ez","_777","_666","_999","_1337","_420","_x","_z","_off","_real","_main","_skin","_drop","_lucky","_fast","_rich","_tap","_headshot","_ace","_mvp","_leet","_global","_faceit10","_lvl10","_premier","_bhop","_surf","_kz","_katowice","_major","_navi","_spirit","_faze","_g2","_vitality","_mouz","_heroic","_astralis","_fnatic","_nip","_cloud9","_liquid","_eternal","_mongolz","_vp","_bet","_win","_cash","_crypto","_usdt","_trc20","2006","2007","2008","2009","2010","77","88","99","01","07","11","13","21","24","69","100","300","500","1000","X","Z","Q","W","V","K"];
+/* ЖИВЫЕ СДЕЛКИ И ОТЗЫВЫ ЛЮДЕЙ 1 В 1 (в основном 100-200 грн, ножи очень редко) */
+var usedNicks=new Set(),usedRevs=new Set(),uIdx=0;
 
-var R_START=[
- "Слил свой ","Продал тут ","Забрал с маркета ","Только что сдал ","Отправил в трейд ","Быстро скинул ","Купил себе ","Обменял ","Вывел бабки за ","Приняли мой ","Закинул в скупку ","Урвал по кайфу ","Оформил сделку на ","Сдал ненужный ","Продал старый ","Купил по сочной цене ","Слил через сайт ","Прилетел трейд на ","Оценили норм мой ","Выкупили моментально "
-];
-var R_MID=[
- "выплата пришла на карту за пару минут","бабки на USDT TRC20 упали очень быстро","через CryptoBot забрал выплату моментально","прайс реально выше чем на других скупках","всё четко, без обмана и скрытых комиссий","поддержка в тг ответила за 10 секунд","лучший сервис по скинам, респект админу","сначала сомневался, но выплатили всё до копейки","трейд прилетел мгновенно после заявки","цены просто пушка, буду сливать только тут","вывел на монобанк без всяких проблем","вывод на приват прилетел быстрее чем ожидал","курс огонь, нигде такой процент не давали","удобный сайт, всё понятно и без лагов","продал уже третий скин за неделю, все четко","взял нож о котором давно мечтал, кайф","зачисление ровно как написано, 10 из 10","админ красавчик, помог разобраться с трейд-ссылкой","самый честный маркет, проверено лично","деньги уже на кошельке, рекомендую всем кентам","никаких задержек, всё на высшем уровне","процент выкупа приятно удивил, топчик","сделка прошла гладко, даже не ожидал такой скорости","уже второй раз вывожу на крипту, всё супер"
-];
-var R_END=[
- "🔥","👍","💸","⚡️","❤️","🙌","💯","🚀","🤝","👑","😎","🎯","✅","💪","🔝","✨","💎","🥳","😉","👏",
- " Буду заходить ещё!"," Однозначно +rep!"," Лучшие в своем деле!"," Всем советую!"," Респект проекту!"," Топ за свои деньги!"," Теперь только сюда!"," Просто имба!"," От души!"," Работаем дальше!"
-];
-
-var DEF_SKINS=[
- {n:"★ Нож-бабочка | Поверхностная закалка",p:840.5,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_knife_butterfly_aq_oiled_light_png.png"},
- {n:"AK-47 | Азимов (После полевых)",p:42.8,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_ak47_cu_ak47_asiimov_light_png.png"},
- {n:"AWP | Скоростной зверь",p:38.2,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_awp_cu_awp_hyper_beast_light_png.png"},
- {n:"★ Керамбит | Гамма-волны",p:1120,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_knife_karambit_am_gamma_doppler_phase1_light_png.png"},
- {n:"M4A1-S | Поток информации",p:54.9,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_m4a1_silencer_cu_m4a1s_printstream_light_png.png"},
- {n:"★ Нож «Бродяга» | Ночная полоса",p:118.4,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_knife_outdoor_so_night_light_png.png"}
+/* Дешёвые ходовые скины ~85-230 грн ($2.0 - $5.5) — основа ленты (85%) */
+var CHEAP_SKINS=[
+ {n:"AK-47 | Потерянная земля (FT)",p:2.65,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_ak47_cu_ak47_uncharted_light_png.png"},
+ {n:"M4A1-S | Ночной ужас (FT)",p:3.10,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_m4a1_silencer_cu_m4a1s_nightmare_light_png.png"},
+ {n:"AWP | Древесная гадюка (FT)",p:3.85,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_awp_cu_awp_viper_light_png.png"},
+ {n:"USP-S | Извилины (FT)",p:3.40,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_usp_silencer_cu_usps_blueprint_light_png.png"},
+ {n:"Glock-18 | Лунная ночь (MW)",p:2.20,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_glock_cu_glock_moonrise_light_png.png"},
+ {n:"Desert Eagle | Рельсотрон (FT)",p:2.95,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_deagle_cu_deagle_mecha_light_png.png"},
+ {n:"AK-47 | Элитное снаряжение (FT)",p:3.50,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_ak47_aq_ak47_cartel_light_png.png"},
+ {n:"M4A4 | Злобный даймё (FT)",p:3.75,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_m4a1_cu_m4a4_evil_daimyo_light_png.png"},
+ {n:"AWP | Лапки (MW)",p:4.20,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_awp_AWP_paw_light_png.png"},
+ {n:"USP-S | Билет в ад (FT)",p:2.45,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_usp_silencer_cu_usps_ticket_to_hell_light_png.png"},
+ {n:"Glock-18 | Дух воды (FT)",p:4.60,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_glock_cu_glock_water_elemental_light_png.png"},
+ {n:"AWP | Мортис (FT)",p:3.25,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_awp_cu_awp_death_light_png.png"},
+ {n:"MAC-10 | Неоновый гонщик (FT)",p:4.80,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_mac10_cu_mac10_neon_rider_light_png.png"},
+ {n:"AK-47 | Сланец (FT)",p:4.40,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_ak47_cu_ak47_slate_light_png.png"}
 ];
 
-function genUniqueNick(){
- for(var i=0;i<50;i++){
-  var a=N1[Math.floor(Math.random()*N1.length)].trim();
-  var b=N2[Math.floor(Math.random()*N2.length)];
-  var extra=Math.random()>.5?String(Math.floor(Math.random()*999)):"";
-  var nick=a+b+extra;
+/* Средние скины ~300-850 грн ($7 - $20) — редко (12%) */
+var MID_SKINS=[
+ {n:"AK-47 | Легион Анубиса (FT)",p:9.40,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_ak47_cu_ak47_anubis_light_png.png"},
+ {n:"M4A4 | Неонуар (FT)",p:11.20,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_m4a1_cu_m4a4_neo_noir_light_png.png"},
+ {n:"AWP | Хроматическая аберрация (FT)",p:13.50,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_awp_cu_awp_chromatic_aberration_light_png.png"},
+ {n:"USP-S | Неонуар (FT)",p:16.80,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_usp_silencer_cu_usps_noir_light_png.png"}
+];
+
+/* Ножи — очень редко (3%) */
+var RARE_KNIVES=[
+ {n:"★ Нож «Бродяга» | Ночная полоса (BS)",p:88.0,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_knife_outdoor_so_night_light_png.png"},
+ {n:"★ Тычковые ножи | Пыльник (FT)",p:68.5,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_knife_push_ddpat_light_png.png"},
+ {n:"★ Наваха | Сажа (FT)",p:64.0,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_knife_gypsy_jackknife_so_night_light_png.png"}
+];
+
+/* Реалистичные ники обычных людей (рус/укр/стим/тг) */
+var HUMAN_NICKS=[
+ "Богдан","Макс","Влад","Саня","Діма","Артем","Денис","Назар","Тарас","Олег","Андрій","Ярик","Кіріл","Рома","Гліб","Ілля","Даня","Руслан","Женя","Паша","Костя","Ігор","Вадим","Тоха","Вітя","Сєрий","Тимур","Матвій",
+ "бодя","максимка","владик","санек","дімон","артем_к","денчик","назарчик","олежа","андрюха","ярослав","рома_ua","ілья","данило","русік","жека","пашка",
+ "maksim_2008","vlad_ua","sanya_cs","dima_kiev","artem_07","denys_lviv","nazar_zp","taras_if","oleh_dn","andriy_kh","yarik_mk","kirill_od","roma_vn","gleb_pl","illia_ck","danylo_rv","ruslan_cv",
+ "кент","малой","стрелок","котик","призрак","сірий","бублик","пельмень","шаурма","кабан","легенда","снайпер","батя","пажилой","абобус","чіл","солевой","гуль","дед_инсайд","бебра",
+ "xX_Vlad_Xx","sanya1337","dimon_777","max_pro","artemka228","bohdan_09","nazar_top","rostik_ua","vitalik_cs","kolya_bro","ura_boss","stepan_gg","zahar_ez","misha_aim","lev_king","egor_clutch","nikita_peek"
+];
+
+/* Живые человеческие отзывы (5 звезд и 4 звезды, рус/укр/суржик, разная длина и регистр) */
+var HUMAN_REVS_5=[
+ "все прийшло на моно дякую",
+ "вивели за 4 хвилини на приват, топ",
+ "бабки на карте, респект",
+ "+реп все чітко",
+ "норм скуп, не кинули",
+ "продал калаш, выплата прилетела быстро",
+ "дякую, гроші вже на карті",
+ "сначала боялся кидать трейд но все честно",
+ "топчик, вивів на кріптобота",
+ "спс большое выручили",
+ "все супер, швидка виплата",
+ "прайс норм вище ніж на кс мані",
+ "забрали скін за пару хв, рекомендую",
+ "четко быстро без лишних вопросов",
+ "виплатили на монобанк за 2 хв",
+ "імба сайт буду ще зливати тут",
+ "прийшло на usdt все гуд",
+ "красавцы не скам",
+ "дякую адміну в тг допоміг",
+ "продав юсп і глок, гроші прийшли",
+ "все гуд +rep",
+ "швидко і без комісії майже",
+ "найкраща скупка в тг",
+ "вывели 160 грн на карту сразу",
+ "норм тема, кенту тоже скинул сайт",
+ "бабки получил можно доверять",
+ "все чисто дякую",
+ "трейд приняли сразу выплата на месте",
+ "реально платять, перевірив на дешевому скіні",
+ "от души братва все пришло",
+ "супер, вже вдруге тут продаю",
+ "гроші на базі дякую!",
+ "выплата на крипту за минуту буквально",
+ "чудовий сервіс все чесно",
+ "слил ширп, копейка упала на карту",
+ "дякую все швидко і по ділу",
+ "рекомендую, все прозрачно",
+ "приват24 прийшло моментально",
+ "топ скуп всім раджу",
+ "не скам, проверил лично",
+ "все ок гроші отримав",
+ "быстро ответили в тг и сразу оплатили"
+];
+
+var HUMAN_REVS_4=[
+ "все ок но ждал минут 10 пока примут",
+ "гроші прийшли але підтримка відповіла не зразу",
+ "норм но хотелось бы чуть больше прайс",
+ "вивели на карту, трохи затримали але все чесно",
+ "4 звезды чисто из-за того что ждал трейд 15 мин, а так все пришло",
+ "прийшло на моно, все ок але курс міг бути трошки вищий",
+ "бабки пришли но бот долго грузил инвентарь",
+ "норм сайт, виплатили через 10 хв",
+ "все честно но в тг ответили через 5 минут только"
+];
+
+var AV_COLORS=["#e17055","#0984e3","#00b894","#6c5ce7","#fdcb6e","#e84393","#2d3436","#d63031","#00cec9","#5f27cd"];
+var REAL_PICS=[
+ "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=80&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=80&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1542362567-b07e54358753?w=80&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=80&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1618826411640-d6df44dd3f7a?w=80&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=80&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=80&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=80&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=80&auto=format&fit=crop&q=60"
+];
+
+function pickSkin(){
+ var r=Math.random();
+ var allLoaded=Object.values(S.items);
+ /* 85% — дешёвые скины ~100-220 грн ($1.8 - $5.5) */
+ if(r<0.85){
+  var cheap=allLoaded.filter(function(s){return s.p>=1.8&&s.p<=5.5&&!s.n.includes("★")});
+  if(cheap.length>3)return cheap[Math.floor(Math.random()*cheap.length)];
+  return CHEAP_SKINS[Math.floor(Math.random()*CHEAP_SKINS.length)];
+ }
+ /* 12% — средние скины ~300-800 грн ($7 - $20) */
+ if(r<0.97){
+  var mid=allLoaded.filter(function(s){return s.p>5.5&&s.p<=20&&!s.n.includes("★")});
+  if(mid.length>2)return mid[Math.floor(Math.random()*mid.length)];
+  return MID_SKINS[Math.floor(Math.random()*MID_SKINS.length)];
+ }
+ /* 3% — редкий нож */
+ return RARE_KNIVES[Math.floor(Math.random()*RARE_KNIVES.length)];
+}
+
+function getHumanNick(){
+ uIdx++;
+ for(var i=0;i<60;i++){
+  var base=HUMAN_NICKS[Math.floor(Math.random()*HUMAN_NICKS.length)];
+  var mod=Math.random();
+  var nick=base;
+  if(mod>0.68)nick=base+Math.floor(Math.random()*90+10);
+  else if(mod>0.48&&!/[_0-9]/.test(base))nick=base+"_"+["ua","cs","bro","top","qq","zz","07","08","09"][Math.floor(Math.random()*9)];
   if(!usedNicks.has(nick)){usedNicks.add(nick);return nick}
  }
- return "player_"+(++botCount)+"_"+Math.floor(Math.random()*9999);
+ return HUMAN_NICKS[uIdx%HUMAN_NICKS.length]+uIdx;
 }
 
-function genUniqueAvatar(seed){
- var styles=["adventurer","avataaars","bottts","fun-emoji","lorelei","micah","miniavs","open-peeps","personas","pixel-art"];
- var st=styles[botCount%styles.length];
- var bg=["1b212b","151a22","262e3b","2a1b3d","1b3a2b","3a251b"][botCount%6];
- return "https://api.dicebear.com/7.x/"+st+"/svg?seed="+encodeURIComponent(seed)+"&backgroundColor="+bg;
-}
-
-function genUniqueRev(skinName){
- var shortSkin=skinName.replace(/^★\s*/,"").split("(")[0].trim();
+function getHumanReview(stars){
+ var arr=stars===5?HUMAN_REVS_5:HUMAN_REVS_4;
  for(var i=0;i<50;i++){
-  var s=R_START[Math.floor(Math.random()*R_START.length)];
-  var m=R_MID[Math.floor(Math.random()*R_MID.length)];
-  var e=R_END[Math.floor(Math.random()*R_END.length)];
-  var txt=s+"«"+shortSkin+"» — "+m+"! "+e;
+  var base=arr[Math.floor(Math.random()*arr.length)];
+  /* добавляем лёгкие человеческие вариации, чтобы ни один отзыв не повторялся */
+  var v=Math.random();
+  var txt=base;
+  if(v>0.7)txt=base+" 👍";
+  else if(v>0.45)txt=base+"!";
+  else if(v>0.25)txt=base.charAt(0).toUpperCase()+base.slice(1);
   if(!usedRevs.has(txt)){usedRevs.add(txt);return txt}
  }
- return "Продал «"+shortSkin+"», деньги пришли моментально, сервис топ! 🔥 #"+(++botCount);
+ usedRevs.clear();
+ return arr[Math.floor(Math.random()*arr.length)];
 }
 
 function addLiveDeal(){
- botCount++;
- var pool=Object.values(S.items);
- if(!pool.length)pool=DEF_SKINS;
- var sk=pool[Math.floor(Math.random()*pool.length)]||DEF_SKINS[0];
- var nick=genUniqueNick();
- var av=genUniqueAvatar(nick+"_"+botCount+"_"+Date.now());
- var isBuy=Math.random()>.65;
- var price=isBuy?(sk.b||sk.p):(sk.p||25);
- var rev=genUniqueRev(sk.n||"Скин CS2");
  var box=$("lf-list");
  if(!box)return;
+ var sk=pickSkin();
+ var nick=getHumanNick();
+ var stars=Math.random()<0.82?5:4; /* только 5 звезд или 4 звезды */
+ var starStr=stars===5?"★★★★★":"★★★★☆";
+ var rev=getHumanReview(stars);
+ /* Цена с небольшим разбросом копеек, чтобы выглядело натурально */
+ var price=+(sk.p*(0.94+Math.random()*0.12)).toFixed(2);
+ /* Половина юзеров с кружком-буквой как в ТГ, половина с реальной фоткой */
+ var avHtml;
+ if(Math.random()<0.52){
+  var col=AV_COLORS[(uIdx+nick.length)%AV_COLORS.length];
+  var ch=nick.replace(/[^a-zA-Zа-яА-ЯіїєґІЇЄҐ]/g,"").slice(0,1)||"U";
+  avHtml='<div class="lf-av" style="background:'+col+'">'+esc(ch)+'</div>';
+ }else{
+  var pic=REAL_PICS[uIdx%REAL_PICS.length];
+  avHtml='<img class="lf-av" src="'+esc(pic)+'" alt="">';
+ }
  var el=document.createElement("div");
  el.className="lf-item";
- el.innerHTML='<div class="lf-top"><img class="lf-av" src="'+esc(av)+'" alt=""><div class="lf-u"><div class="lf-name">'+esc(nick)+' <span class="lf-tag'+(isBuy?" b":"")+'">'+(isBuy?"ПОКУПКА":"ВЫПЛАТА")+'</span></div><div class="lf-time">только что</div></div></div>'+
-  '<div class="lf-deal"><img src="'+esc(sk.img)+'" alt=""><div class="lf-skin">'+esc(sk.n)+'</div><div class="lf-pr">'+(isBuy?"":"+" )+fm(price)+'</div></div>'+
-  '<div class="lf-rev"><div class="lf-stars">★★★★★</div>'+esc(rev)+'</div>';
+ el.innerHTML='<div class="lf-top">'+avHtml+'<div class="lf-u"><div class="lf-name">'+esc(nick)+'</div><div class="lf-rate"><span class="lf-stars">'+starStr+'</span><span>оценка '+stars+'★</span></div></div></div>'+
+  '<div class="lf-deal"><img src="'+esc(sk.img)+'" alt=""><div class="lf-skin">'+esc(sk.n)+'</div><div class="lf-pr">+'+fm(price)+'</div></div>'+
+  '<div class="lf-rev">'+esc(rev)+'</div>';
  box.insertBefore(el,box.firstChild);
- while(box.children.length>14)box.removeChild(box.lastChild);
+ while(box.children.length>12)box.removeChild(box.lastChild);
 }
 
 for(var k=0;k<4;k++)addLiveDeal();
-setInterval(addLiveDeal,5000); /* 1 бот каждые 5 сек = 2 бота за 10 сек */
+setInterval(addLiveDeal,5000); /* 2 отзыва за 10 секунд */
 
 S.fav=(function(){try{return JSON.parse(localStorage.fav||"{}")}catch(e){return{}}})();
 $("favb").onclick=function(){S.favOn=S.favOn?0:1;this.classList.toggle("on",!!S.favOn);load(true)};
@@ -383,5 +501,5 @@ function home(){api("/api/market?page=1").then(function(d){$("all").textContent=
 function banner(c){var b=$("bn"),t=[];if(location.protocol=="file:"){b.className="bn r";b.textContent="Сайт открыт как файл, поэтому вход и маркет не работают. Открой адрес своего сайта на Render.";b.hidden=false;return}
 if(c&&c.adj)t.push(c.adj>0?"Акция: цены выкупа выше рыночных на "+c.adj+"%":"Цены выкупа ниже рыночных на "+Math.abs(c.adj)+"%");if(c&&c.notice)t.push(c.notice);b.hidden=!t.length;b.textContent=t.join(" · ")}
 if(location.protocol=="file:")banner();
-api("/api/config").then(function(c){banner(c);if(c.rates){R=c.rates;try{var v=localStorage.cur;if(v&&R[v]){CUR=v;$("cur").value=v;cu()}}catch(e){}}if(!c.gid)return;var s=document.createElement("script");s.src="https://accounts.google.com/gsi/client";s.onload=function(){google.accounts.id.initialize({client_id:c.gid,callback:function(r){api("/api/google",{credential:r.credential}).then(function(){closeAll();sOk();me()}).catch(function(e){$("le").textContent=e.message})}});google.accounts.id.renderButton($("gb"),{theme:"filled_black",size:"large",text:"signin_with",width:320})};document.head.appendChild(s)});
+api("/api/config").then(function(c){banner(c);if(c.rates){R=c.rates;try{var v=localStorage.cur||"UAH";if(v&&R[v]){CUR=v;$("cur").value=v;cu()}}catch(e){}}if(!c.gid)return;var s=document.createElement("script");s.src="https://accounts.google.com/gsi/client";s.onload=function(){google.accounts.id.initialize({client_id:c.gid,callback:function(r){api("/api/google",{credential:r.credential}).then(function(){closeAll();sOk();me()}).catch(function(e){$("le").textContent=e.message})}});google.accounts.id.renderButton($("gb"),{theme:"filled_black",size:"large",text:"signin_with",width:320})};document.head.appendChild(s)});
 </script></body></html>
