@@ -5,9 +5,9 @@
 <style>
 :root{--bg:#0e1116;--p:#151a22;--p2:#1b212b;--ln:#262e3b;--tx:#e8ebf0;--mt:#8791a1;--ac:#f2a93b;--ac2:#7db4e6;--gd:#f2a93b;--bad:#ff5c7a;--ok:#4ade80;color-scheme:dark}
 *{box-sizing:border-box}[hidden]{display:none!important}
-body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 Onest,system-ui,-apple-system,"Segoe UI",sans-serif}
-a{color:inherit;text-decoration:none}.w{max-width:1440px;margin:0 auto;padding:0 14px}
-header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--ln)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 Onest,system-ui,-apple-system,"Segoe UI",sans-serif;padding-left:220px}
+a{color:inherit;text-decoration:none}.w{max-width:1220px;margin:0 auto;padding:0 18px}
+header{position:sticky;top:0;z-index:30;background:var(--bg);border-bottom:1px solid var(--ln);margin-left:-220px;padding-left:220px}
 .bar{display:flex;align-items:center;gap:6px;height:56px}
 .logo{font-family:Unbounded,Onest,sans-serif;font-weight:900;font-size:20px;letter-spacing:-.5px;margin-right:6px}
 .logo b,.gr{color:var(--ac)}
@@ -21,23 +21,23 @@ nav a.on,nav a:hover{background:var(--p2);color:var(--tx)}
 .bdg{position:absolute;top:-6px;right:-6px;background:var(--ac);color:#1a1204;border-radius:99px;font:800 11px inherit;padding:1px 6px;font-style:normal}
 :focus-visible{outline:2px solid var(--ac2);outline-offset:2px}
 .chip{background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:8px 13px;font-weight:800;color:var(--ac);cursor:pointer}
-h1{font-size:clamp(28px,4.2vw,50px);line-height:1.04;margin:0 0 14px;letter-spacing:-1.5px;font-weight:800}
-h2{font-size:clamp(22px,3vw,30px);letter-spacing:-.5px;margin:0 0 16px;font-weight:800}
-h3{margin:0 0 12px;font-size:19px;font-weight:800}
-.hero{padding:28px 0 24px;display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:center}
-.hero p{color:var(--mt);font-size:15.5px;max-width:52ch;margin:0 0 20px}
+h1{font-size:clamp(28px,4.2vw,48px);line-height:1.04;margin:0 0 14px;letter-spacing:-1.5px;font-weight:800}
+h2{font-size:clamp(22px,3vw,28px);letter-spacing:-.5px;margin:0 0 16px;font-weight:800}
+h3{margin:0 0 12px;font-size:18px;font-weight:800}
+.hero{padding:26px 0 22px;display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:center}
+.hero p{color:var(--mt);font-size:15px;max-width:52ch;margin:0 0 18px}
 .stats{display:flex;gap:10px;flex-wrap:wrap}
 .stat{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:10px 15px}
 .stat b{display:block;font-size:19px;font-weight:900}.stat span{font-size:12px;color:var(--mt)}
-.show{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sec{padding:28px 0}
+.show{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sec{padding:24px 0}
 .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.step,.adv{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:18px}
-.step i{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--p2);color:var(--ac);font:900 15px inherit;margin-bottom:10px}
-.step b,.adv b{display:block;font-size:16px;margin-bottom:4px}.step span,.adv span{color:var(--mt);font-size:13.5px}
+.step,.adv{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:16px}
+.step i{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--p2);color:var(--ac);font:900 14px inherit;margin-bottom:8px}
+.step b,.adv b{display:block;font-size:15.5px;margin-bottom:4px}.step span,.adv span{color:var(--mt);font-size:13px}
 details{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:13px 16px;margin-bottom:8px}
 summary{cursor:pointer;font-weight:700}details p{color:var(--mt);margin:8px 0 0;font-size:14px}
 footer{border-top:1px solid var(--ln);padding:22px 0 36px;color:var(--mt);font-size:13px;margin-top:26px}
-.main{display:grid;grid-template-columns:230px 1fr;gap:16px;margin-top:16px}
+.main{display:grid;grid-template-columns:220px 1fr;gap:16px;margin-top:16px}
 aside{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:14px;align-self:start;position:sticky;top:70px;max-height:calc(100vh - 86px);overflow:auto}
 aside h4{margin:13px 0 6px;font-size:12.5px;color:var(--tx);font-weight:700}aside h4:first-child{margin-top:0}
 .ch{display:flex;flex-wrap:wrap;gap:5px}
@@ -47,20 +47,20 @@ input,select{background:var(--p2);border:1px solid var(--ln);color:var(--tx);bor
 input:focus,select:focus{border-color:var(--ac);outline:0}
 #cur{width:auto;padding:8px 10px;font-weight:700;cursor:pointer}#snd{padding:9px 11px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tb{display:flex;gap:8px;margin-bottom:14px}.tb input{flex:3}.tb select{flex:1;min-width:140px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
 .card{background:var(--p);border:1px solid var(--ln);border-radius:12px;overflow:hidden;transition:border-color .15s;--c:#888;position:relative}
 .card:hover{border-color:#3a4556}.card.in{border-color:var(--ac)}
 .card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--c)}
-.art{height:134px;display:grid;place-items:center;background:var(--p2)}
-.art img{max-width:86%;max-height:118px;object-fit:contain}
+.art{height:130px;display:grid;place-items:center;background:var(--p2);cursor:pointer}
+.art img{max-width:86%;max-height:114px;object-fit:contain}
 .bd{position:absolute;top:8px;left:8px;background:var(--bg);border:1px solid var(--ln);border-radius:6px;padding:1px 7px;font-size:10.5px;font-weight:700}
-.cb{padding:10px 12px 12px}.nm{font-weight:700;font-size:13px;line-height:1.25;min-height:34px}.rr{font-size:11.5px;color:var(--c);margin:2px 0 7px}
+.cb{padding:10px 12px 12px}.nm{font-weight:700;font-size:12.5px;line-height:1.25;min-height:32px}.rr{font-size:11.5px;color:var(--c);margin:2px 0 7px}
 .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .cb .row{flex-direction:column;align-items:stretch}.cb .row .btn{width:100%}
-.pr{font-family:Onest,sans-serif;font-weight:800;font-size:16.5px;color:var(--tx);font-variant-numeric:tabular-nums}
+.pr{font-family:Onest,sans-serif;font-weight:800;font-size:16px;color:var(--tx);font-variant-numeric:tabular-nums}
 .big{font-family:Onest,sans-serif;font-weight:800;font-size:32px;color:var(--tx)}
 .wb{display:flex;gap:2px;margin:0 0 9px}.wb i{flex:1;min-width:6px;height:4px;border-radius:2px;background:var(--ln)}.wb i.on{background:var(--c)}
-.sk{height:245px;border-radius:12px;background:linear-gradient(100deg,var(--p) 30%,var(--p2) 50%,var(--p) 70%);background-size:300% 100%;animation:sh 1.3s infinite}@keyframes sh{to{background-position:-100% 0}}
+.sk{height:240px;border-radius:12px;background:linear-gradient(100deg,var(--p) 30%,var(--p2) 50%,var(--p) 70%);background-size:300% 100%;animation:sh 1.3s infinite}@keyframes sh{to{background-position:-100% 0}}
 .more{display:block;margin:18px auto 50px}.em{color:var(--mt);padding:26px 0;grid-column:1/-1;text-align:center}
 .ov{position:fixed;inset:0;background:#000d;display:none;place-items:center;z-index:50;padding:14px}.ov.s{display:grid}
 .md{background:var(--p);border:1px solid var(--ln);border-radius:18px;width:100%;max-width:430px;padding:20px;max-height:92vh;overflow:auto;animation:pop .22s cubic-bezier(.2,1.3,.4,1)}@keyframes pop{from{transform:scale(.93);opacity:0}}
@@ -81,7 +81,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:11px
 .ls{padding:26px 22px;background:var(--p2);display:flex;flex-direction:column;gap:12px;justify-content:center}.ls .logo{font-size:24px;margin:0}.ls p{margin:0;color:var(--mt);font-size:13.5px}.ls b{color:var(--tx)}
 .rs{padding:24px 22px}.pw{position:relative}.pw button{position:absolute;right:6px;top:5px;background:none;border:0;color:var(--mt);cursor:pointer;font:600 12px Onest,sans-serif;padding:8px}
 #lc{text-align:center;letter-spacing:10px;font:700 21px Onest,monospace}
-.md.cr{text-align:center;max-width:350px;display:flex;flex-direction:column;align-items:center;gap:6px}.md.cr h3{margin:6px 0 0}.md.cr p{color:var(--mt);margin:0 0 8px}.md.cr .big{color:var(--ac)}.md.cr input{width:100%}
+.md.cr{text-align:center;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:6px}.md.cr h3{margin:6px 0 0}.md.cr p{color:var(--mt);margin:0 0 8px}.md.cr .big{color:var(--ac)}.md.cr input{width:100%}
 .tb2{display:none}#snd svg,#cartb svg{vertical-align:-4px}
 .seg{display:flex;background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:3px}.seg button{border:0;background:none;color:var(--mt);padding:7px 14px;border-radius:8px;font:700 13.5px Onest,sans-serif;cursor:pointer}.seg button.on{background:var(--ac);color:#1a1204}
 .on2{display:inline-flex;align-items:center;gap:5px;margin-left:8px;color:var(--mt);font-size:12.5px;font-weight:600;white-space:nowrap}.on2 i{width:7px;height:7px;border-radius:50%;background:#3ccf7a;box-shadow:0 0 6px #3ccf7a}
@@ -89,104 +89,130 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:11px
 #favb.on{background:var(--ac);color:#1a1204}
 .pl{display:flex;gap:9px;overflow-x:auto;margin-top:10px;padding-bottom:4px}.pi{flex:0 0 185px;display:flex;align-items:center;gap:7px;background:var(--p2);border-radius:9px;padding:7px}.pi img{width:44px;height:32px;object-fit:contain}.pi span{font-size:11.5px;flex:1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.pi b{color:var(--ac);font-size:12.5px}
 
-/* КОМПАКТНАЯ ЛЕНТА СДЕЛОК И ОТЗЫВОВ СЛЕВА */
-.app-grid{display:grid;grid-template-columns:225px minmax(0,1fr);gap:16px;align-items:start}
-.lf-panel{background:var(--p);border:1px solid var(--ln);border-radius:12px;padding:10px;position:sticky;top:68px;max-height:calc(100vh - 82px);display:flex;flex-direction:column;gap:7px;overflow:hidden}
-.lf-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--ln);padding-bottom:7px}
-.lf-head b{font-size:12px;display:flex;align-items:center;gap:5px;color:var(--tx);letter-spacing:-.2px}
-.lf-dot{width:6px;height:6px;border-radius:50%;background:#3ccf7a;animation:pulse 1.6s infinite}
+/* ДЛИННЫЙ УЗКИЙ САЙДБАР СБОКУ СЛЕВА (НЕ ЛЕЗЕТ В ГЛАЗА) */
+.lf-panel{position:fixed;top:56px;left:0;bottom:0;width:215px;background:#11151cd9;backdrop-filter:blur(8px);border-right:1px solid var(--ln);padding:10px 8px;display:flex;flex-direction:column;gap:6px;z-index:18}
+.lf-head{display:flex;align-items:center;justify-content:space-between;padding:0 2px 6px;border-bottom:1px solid var(--ln)}
+.lf-head b{font-size:11.5px;display:flex;align-items:center;gap:5px;color:var(--mt);font-weight:700}
+.lf-dot{width:6px;height:6px;border-radius:50%;background:#3ccf7a;animation:pulse 1.8s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.lf-sub{font-size:10px;color:var(--mt);font-weight:700}
-.lf-list{display:flex;flex-direction:column;gap:6px;overflow-y:auto;padding-right:2px;scrollbar-width:none}
+.lf-add{border:0;background:var(--p2);color:var(--ac);font:700 10px Onest,sans-serif;padding:3px 7px;border-radius:6px;cursor:pointer;border:1px solid var(--ln)}
+.lf-add:hover{border-color:var(--ac)}
+.lf-list{display:flex;flex-direction:column;gap:6px;overflow-y:auto;flex:1;scrollbar-width:none}
 .lf-list::-webkit-scrollbar{display:none}
-.lf-item{background:var(--p2);border:1px solid var(--ln);border-radius:9px;padding:7px 8px;animation:slideIn .28s ease-out}
-@keyframes slideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.lf-item{background:var(--p);border:1px solid #202733;border-radius:8px;padding:6px 7px;animation:slideIn .25s ease-out;flex-shrink:0}
+@keyframes slideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .lf-top{display:flex;align-items:center;gap:6px}
-.lf-av{width:24px;height:24px;border-radius:50%;object-fit:cover;background:var(--bg);flex-shrink:0;display:grid;place-items:center;font-weight:800;font-size:10.5px;color:#fff;text-transform:uppercase}
-.lf-u{flex:1;min-width:0}
-.lf-name{font-weight:700;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--tx);line-height:1.15}
-.lf-rate{font-size:10px;color:var(--mt);display:flex;align-items:center;gap:4px;line-height:1.1}
-.lf-stars{color:var(--ac);font-size:10px;letter-spacing:.5px}
-.lf-deal{display:flex;align-items:center;gap:6px;background:var(--p);border-radius:6px;padding:4px 6px;margin:5px 0}
-.lf-deal img{width:30px;height:22px;object-fit:contain;flex-shrink:0}
-.lf-skin{font-size:10.5px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--mt)}
-.lf-pr{font-size:11px;font-weight:800;color:var(--ok);white-space:nowrap}
-.lf-rev{font-size:11px;color:var(--tx);line-height:1.3;word-break:break-word}
+.lf-av{width:22px;height:22px;border-radius:50%;object-fit:cover;background:var(--p2);flex-shrink:0;display:grid;place-items:center;font-weight:800;font-size:10px;color:#fff}
+.lf-u{flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:4px}
+.lf-name{font-weight:700;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--tx)}
+.lf-stars{color:var(--ac);font-size:9.5px;letter-spacing:.3px;flex-shrink:0}
+.lf-deal{display:flex;align-items:center;gap:5px;background:var(--p2);border-radius:6px;padding:3px 5px;margin:4px 0}
+.lf-deal img{width:28px;height:20px;object-fit:contain;flex-shrink:0}
+.lf-skin{font-size:10px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--mt)}
+.lf-pr{font-size:10.5px;font-weight:800;color:var(--ok);white-space:nowrap}
+.lf-rev{font-size:10.5px;color:#cfd5e0;line-height:1.28;word-break:break-word}
 
-@media(max-width:1040px){
- .app-grid{grid-template-columns:1fr}
- .lf-panel{position:static;max-height:290px;order:2;margin-top:12px}
+/* НОВАЯ ФУНКЦИЯ: КАЛЬКУЛЯТОР ВЫПЛАТЫ */
+.calc-box{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:16px;margin-top:16px;display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:end}
+.calc-res{background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:8px 14px;min-width:155px;text-align:right}
+.calc-res span{display:block;font-size:11px;color:var(--mt)}
+.calc-res b{font-size:18px;color:var(--ok);font-weight:800}
+
+@media(max-width:1020px){
+ body{padding-left:0}
+ header{margin-left:0;padding-left:0}
+ .lf-panel{position:static;width:100%;max-height:none;background:transparent;border:0;padding:0;margin:10px 0 18px}
+ .lf-head{padding:0 2px 8px;border:0}
+ .lf-list{flex-direction:row;overflow-x:auto;overflow-y:hidden;gap:8px;padding-bottom:4px}
+ .lf-item{flex:0 0 210px}
+ .calc-box{grid-template-columns:1fr 1fr}
 }
-@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:20px}.main{grid-template-columns:1fr}aside{display:none;position:static;max-height:none}aside.o{display:block}.fb{display:inline-block}nav a{padding:8px 9px}}
+@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:16px}.main{grid-template-columns:1fr}aside{display:none;position:static;max-height:none}aside.o{display:block}.fb{display:inline-block}nav a{padding:8px 9px}}
 @media(max-width:700px){
  body{padding-bottom:70px;font-size:14px}.w{padding:0 10px}nav:not(.tb2){display:none}.bar{height:52px;gap:5px}.logo{font-size:17px;margin-right:0}
  #cartb .tx,#balc{display:none}#cartb,#snd{padding:8px 9px}#cur{padding:7px 5px}#lg{max-width:92px;overflow:hidden;text-overflow:ellipsis}
  .on2{margin-left:3px;font-size:11px}
  .tb2{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--bg);border-top:1px solid var(--ln);padding:5px 5px calc(5px + env(safe-area-inset-bottom))}
  .tb2 a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 0;border-radius:9px;color:var(--mt);font-size:10.5px;font-weight:700}.tb2 a.on{color:var(--ac);background:var(--p2)}
- .hero{padding:16px 0 8px}.hero p{font-size:14.5px}.show{grid-template-columns:1fr 1fr}.stat{flex:1 1 85px;padding:8px 10px}
+ .hero{padding:12px 0 8px}.hero p{font-size:14.5px}.show{grid-template-columns:1fr 1fr}.stat{flex:1 1 85px;padding:8px 10px}
  .grid{grid-template-columns:1fr 1fr;gap:9px}.art{height:108px}.nm{font-size:12px;min-height:30px}.cb{padding:9px}.pr{font-size:14.5px}
  .tb{flex-wrap:wrap}.tb input{flex:1 1 100%}.tb select{min-width:0;flex:1}.fb{flex:1}.seg{flex:1 1 100%}.seg button{flex:1}
- .pc{grid-template-columns:1fr}.big{font-size:26px}.dr{width:100%}.md{padding:15px}.rs{padding:18px 15px}.tabs a{padding:7px 9px}.sec{padding:20px 0}
+ .pc{grid-template-columns:1fr}.big{font-size:26px}.dr{width:100%}.md{padding:15px}.rs{padding:18px 15px}.tabs a{padding:7px 9px}.sec{padding:18px 0}
  .toast{width:calc(100% - 20px);text-align:center;top:58px}.md.au{grid-template-columns:1fr}.ls{display:none}
+ .calc-box{grid-template-columns:1fr}
 }
 </style></head><body>
 <header><div class="w bar"><a class="logo" href="#/">cs2<b>pay</b></a><span class="on2" id="onl" hidden></span><nav><a href="#/">Главная</a><a href="#/market">Маркет</a></nav><div class="sp"></div>
-<a class="chip" id="balc" href="#/profile/wallet" hidden></a><select id="cur" aria-label="Валюта"><option>USD</option><option>UAH</option><option>EUR</option><option>PLN</option><option>GBP</option><option>KZT</option><option>RUB</option></select><button class="btn g" id="cartb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.4a1 1 0 001 .8h9.2a1 1 0 001-.8L21 7H6"/></svg><span class="tx"> Корзина</span><i class="bdg" id="cc" hidden>0</i></button>
+<a class="chip" id="balc" href="#/profile/wallet" hidden></a><select id="cur" aria-label="Валюта"><option>USD</option><option selected>UAH</option><option>EUR</option><option>PLN</option><option>GBP</option><option>KZT</option><option>RUB</option></select><button class="btn g" id="cartb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.4a1 1 0 001 .8h9.2a1 1 0 001-.8L21 7H6"/></svg><span class="tx"> Корзина</span><i class="bdg" id="cc" hidden>0</i></button>
 <button class="btn g" id="snd" aria-label="Звук"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg></button><button class="btn" id="lg">Войти</button></div></header>
 <div id="bn" class="bn" hidden></div>
 
-<main class="w" style="margin-top:14px">
-<div class="app-grid">
- <!-- КОМПАКТНАЯ ЛЕНТА СДЕЛОК И ОТЗЫВОВ СЛЕВА -->
+<main class="w" style="margin-top:10px">
+ <!-- БОКОВАЯ ЛЕНТА СДЕЛОК И ОТЗЫВОВ (НА ПК СБОКУ СЛЕВА, НА ТЕЛЕФОНЕ СВАЙП-ЛЕНТА) -->
  <div class="lf-panel" id="lf-panel">
   <div class="lf-head">
-   <b><span class="lf-dot"></span> Сделки и отзывы</b>
-   <span class="lf-sub">LIVE</span>
+   <b><span class="lf-dot"></span> Живые отзывы</b>
+   <button class="lf-add" id="revBtn">+ Отзыв</button>
   </div>
   <div class="lf-list" id="lf-list"></div>
  </div>
 
- <!-- ОСНОВНОЙ КОНТЕНТ -->
- <div>
-  <section id="v-home"><div class="hero"><div><h1>Продай скины CS2 <span class="gr">и выводи деньги</span></h1><p>Выбери скины, укажи трейд-ссылку и получи деньги на баланс через 7 дней. Выводи на USDT TRC20, в Crypto-бот или на карту.</p>
-  <a class="btn" href="#/market" style="display:inline-block;padding:13px 24px;font-size:15.5px">Открыть маркет</a>
-  <div class="stats" style="margin-top:20px"><div class="stat"><b id="all">…</b><span>скинов на маркете</span></div><div class="stat"><b>7 дней</b><span>до зачисления</span></div><div class="stat"><b>2FA</b><span>защита аккаунта</span></div></div></div><div class="show" id="showc"></div></div><div id="pay" hidden style="padding-top:8px"><div class="box"><div class="row"><h3 style="margin:0">Последние выплаты</h3><span class="chip" id="paid"></span></div><div class="pl" id="payl"></div></div></div>
-  <div class="sec"><h2>Как это работает</h2><div class="steps"><div class="step"><i>1</i><b>Выбери скины</b><span>Добавь их в корзину. Цена на карточке и есть сумма к зачислению.</span></div><div class="step"><i>2</i><b>Укажи трейд-ссылку</b><span>Сохрани её в профиле один раз.</span></div><div class="step"><i>3</i><b>Получи оффер</b><span>Мы пришлём трейд-оффер и проверим скины.</span></div><div class="step"><i>4</i><b>Выведи деньги</b><span>Через 7 дней сумма попадёт на баланс. Вывод на TRC20, Crypto-бот или карту.</span></div></div></div>
-  <div class="sec"><h2>Почему cs2pay</h2><div class="steps"><div class="adv"><b>Все скины CS2</b><span>Полный каталог с фото и фильтрами по износу, редкости и цене.</span></div><div class="adv"><b>Двухэтапная защита</b><span>Код из Google Authenticator при входе и выводе.</span></div><div class="adv"><b>Статусы в профиле</b><span>Каждая заявка видна с прогрессом 7-дневного ожидания.</span></div><div class="adv"><b>Три способа вывода</b><span>USDT TRC20, Crypto-бот, банковская карта.</span></div></div></div>
-  <div class="sec"><h2>Поддержка</h2><div class="steps"><div class="adv"><b>Telegram</b><span><a class="lk" href="https://t.me/cs2_pay">@cs2_pay</a></span></div><div class="adv"><b>Канал</b><span><a class="lk" href="https://t.me/SellSkin_cs2">@SellSkin_cs2</a></span></div></div></div>
-  <div class="sec"><h2>Частые вопросы</h2>
-  <details><summary>Почему выплата приходит через 7 дней?</summary><p>После обмена Steam даёт 7 дней, в течение которых трейд может быть отменён, например если аккаунт отправителя был взломан или сделка признана ошибочной. Если отмена случится после выплаты, скин вернётся прежнему владельцу, а мы останемся и без скина, и без денег. Поэтому сумма зачисляется на баланс только после окончания этого срока.</p></details>
-  <details><summary>Какая цена выкупа?</summary><p>За основу берётся рыночная цена скина. Во время акций мы можем менять цены на фиксированный процент, действующая корректировка всегда показана в баннере сверху. Цена на карточке и итог в корзине равны сумме, которая зачислится на баланс.</p></details>
-  <details><summary>Как пополнить баланс?</summary><p>Пополнение работает только через Crypto-бот. В профиле откройте «Кошелёк», создайте счёт и оплатите его в Telegram. Баланс обновится автоматически сразу после оплаты.</p></details>
-  <details><summary>Как вывести деньги?</summary><p>В профиле откройте «Кошелёк», укажите сумму, способ (USDT TRC20, Crypto-бот или карта) и реквизиты. Минимальный вывод $5. Если включена 2FA, понадобится код из приложения.</p></details>
-  <details><summary>Что нужно, чтобы продать скин?</summary><p>Зарегистрироваться, указать трейд-ссылку Steam, добавить скины в корзину и подтвердить заявку. После проверки мы отправим вам трейд-оффер.</p></details>
-  <details><summary>Безопасен ли аккаунт?</summary><p>Включите двухэтапную защиту в настройках профиля: код из Google Authenticator потребуется при входе и при каждом выводе средств.</p></details>
-  <details><summary>Что делать, если возникла проблема?</summary><p>Напишите в поддержку в Telegram @cs2_pay и укажите номер заявки из истории профиля.</p></details></div></section>
+ <section id="v-home"><div class="hero"><div><h1>Продай скины CS2 <span class="gr">и выводи деньги</span></h1><p>Выбери скины, укажи трейд-ссылку и получи деньги на баланс. Выводи на карту (Моно / Приват), в Crypto-бот или на USDT TRC20.</p>
+ <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="#/market" style="display:inline-block;padding:13px 24px;font-size:15.5px">Открыть маркет</a><a class="btn g" href="https://t.me/cs2_pay" target="_blank" rel="noopener" style="display:inline-block;padding:13px 18px;font-size:15px">Продать в Telegram</a></div>
+ <div class="stats" style="margin-top:18px"><div class="stat"><b id="all">…</b><span>скинов в базе</span></div><div class="stat"><b>0%</b><span>скрытых комиссий</span></div><div class="stat"><b>2FA</b><span>защита аккаунта</span></div></div></div><div class="show" id="showc"></div></div>
 
-  <section id="v-market" hidden><div class="main"><aside id="as"><h4>Категория</h4><div class="ch" id="fc"></div><h4>Редкость</h4><div class="ch" id="fr"></div><h4>Износ</h4><div class="ch" id="fw"></div>
-  <h4>Тип</h4><select id="st"><option value="">Все</option><option value="1">StatTrak™</option><option value="0">Без StatTrak</option></select>
-  <h4 id="ph">Цена, $</h4><div class="two"><input id="mn" type="number" min="0" placeholder="от"><input id="mx" type="number" min="0" placeholder="до"></div><button class="btn g bl" style="margin-top:14px" id="rs">Сбросить фильтры</button></aside>
-  <div><div class="tb"><div class="seg" id="seg"><button class="on" data-m="0">Продать</button><button data-m="1">Купить</button></div><button class="btn g" id="favb">Избранное</button><button class="btn g fb" id="fbt">Фильтры</button><input id="q" placeholder="Поиск: AK-47, M4A1-S, USP-S, AWP…" aria-label="Поиск"><select id="so" aria-label="Сортировка"><option value="">Дороже</option><option value="asc">Дешевле</option><option value="name">По названию</option></select></div>
-  <div class="grid" id="gr"></div><button class="btn g more" id="mo" hidden>Показать ещё</button></div></div></section>
-
-  <section id="v-profile" hidden style="padding:10px 0 50px"><div id="pt"></div><div id="pc"></div></section>
+ <!-- НОВАЯ ФУНКЦИЯ: КАЛЬКУЛЯТОР ВЫПЛАТЫ -->
+ <div class="calc-box">
+  <div><label style="margin-top:0">Сумма продажи (в выбранной валюте)</label><input id="ca" type="number" value="200" min="1"></div>
+  <div><label style="margin-top:0">Куда выводим</label><select id="cm"><option value="1">Карта (Монобанк / Приват24) — 0%</option><option value="1.02">CryptoBot (USDT) — бонус +2%</option><option value="1.01">USDT TRC-20 — бонус +1%</option></select></div>
+  <div class="calc-res"><span>К получению на руки:</span><b id="cres">200 ₴</b></div>
+  <a class="btn" href="#/market" style="text-align:center">Выбрать скины</a>
  </div>
-</div>
+
+ <div id="pay" hidden style="padding-top:14px"><div class="box"><div class="row"><h3 style="margin:0">Последние выплаты</h3><span class="chip" id="paid"></span></div><div class="pl" id="payl"></div></div></div>
+ <div class="sec"><h2>Как это работает</h2><div class="steps"><div class="step"><i>1</i><b>Выбери скины</b><span>Добавь их в корзину. Цена на карточке и есть сумма к зачислению.</span></div><div class="step"><i>2</i><b>Укажи трейд-ссылку</b><span>Сохрани её в профиле один раз.</span></div><div class="step"><i>3</i><b>Прими оффер</b><span>Мы пришлём обмен в Steam и проверим скины.</span></div><div class="step"><i>4</i><b>Забери выплату</b><span>Выводи деньги на карту любого банка, CryptoBot или USDT TRC20.</span></div></div></div>
+ <div class="sec"><h2>Почему cs2pay</h2><div class="steps"><div class="adv"><b>Все скины CS2</b><span>От дешёвого ширпа до редких ножей и перчаток с фильтрами.</span></div><div class="adv"><b>Быстрая оценка</b><span>Моментальный расчёт стоимости инвентаря по актуальному курсу.</span></div><div class="adv"><b>Прямая связь</b><span>Можно продать или купить скин напрямую через <a class="lk" href="https://t.me/cs2_pay">@cs2_pay</a>.</span></div><div class="adv"><b>Удобные выплаты</b><span>Карта (UAH/USD), CryptoBot и USDT TRC-20 без задержек.</span></div></div></div>
+ <div class="sec"><h2>Поддержка и контакты</h2><div class="steps"><div class="adv"><b>Менеджер в Telegram</b><span><a class="lk" href="https://t.me/cs2_pay" target="_blank">@cs2_pay</a> (оценка и сделки в ЛС)</span></div><div class="adv"><b>Наш Telegram-канал</b><span><a class="lk" href="https://t.me/SellSkin_cs2" target="_blank">@SellSkin_cs2</a> (акции и дешёвые ножи)</span></div></div></div>
+ <div class="sec"><h2>Частые вопросы</h2>
+ <details><summary>Почему выплата на сайте может идти до 7 дней?</summary><p>После обновления правил Steam трейд может быть отменён отправителем в течение 7 дней. Поэтому при автоматической продаже через баланс сайта действует холд, либо напишите нам в Telegram @cs2_pay для быстрой прямой сделки.</p></details>
+ <details><summary>Какая цена выкупа и продажи?</summary><p>За основу берётся актуальная рыночная цена. Действующие акции всегда отображаются в верхней панели сайта и в нашем канале @SellSkin_cs2.</p></details>
+ <details><summary>Как пополнить баланс для покупки ножа или скина?</summary><p>В профиле откройте «Кошелёк» и создайте счёт через Crypto-бот, либо напишите менеджеру @cs2_pay в Telegram для покупки напрямую с карты.</p></details>
+ <details><summary>Как вывести деньги?</summary><p>В профиле откройте «Кошелёк», укажите сумму, способ (Карта, Crypto-бот или USDT TRC20) и реквизиты. Минимальный вывод $5.</p></details></div></section>
+
+ <section id="v-market" hidden><div class="main"><aside id="as"><h4>Категория</h4><div class="ch" id="fc"></div><h4>Редкость</h4><div class="ch" id="fr"></div><h4>Износ</h4><div class="ch" id="fw"></div>
+ <h4>Тип</h4><select id="st"><option value="">Все</option><option value="1">StatTrak™</option><option value="0">Без StatTrak</option></select>
+ <h4 id="ph">Цена, ₴</h4><div class="two"><input id="mn" type="number" min="0" placeholder="от"><input id="mx" type="number" min="0" placeholder="до"></div><button class="btn g bl" style="margin-top:14px" id="rs">Сбросить фильтры</button></aside>
+ <div><div class="tb"><div class="seg" id="seg"><button class="on" data-m="0">Продать</button><button data-m="1">Купить</button></div><button class="btn g" id="favb">Избранное</button><button class="btn g fb" id="fbt">Фильтры</button><input id="q" placeholder="Поиск: AK-47, M4A1-S, USP-S, Nomad Knife…" aria-label="Поиск"><select id="so" aria-label="Сортировка"><option value="">Дороже</option><option value="asc">Дешевле</option><option value="name">По названию</option></select></div>
+ <div class="grid" id="gr"></div><button class="btn g more" id="mo" hidden>Показать ещё</button></div></div></section>
+
+ <section id="v-profile" hidden style="padding:10px 0 50px"><div id="pt"></div><div id="pc"></div></section>
 </main>
 
-<footer><div class="w"><div>cs2pay · Поддержка: <a href="https://t.me/cs2_pay">@cs2_pay</a> · Канал: <a href="https://t.me/SellSkin_cs2">@SellSkin_cs2</a></div><div style="margin-top:6px">Не связан с Valve. Counter-Strike 2 и Steam — торговые марки Valve Corporation.</div></div></footer>
+<footer><div class="w"><div>cs2pay · Сделки и поддержка: <a href="https://t.me/cs2_pay" target="_blank">@cs2_pay</a> · Telegram-канал: <a href="https://t.me/SellSkin_cs2" target="_blank">@SellSkin_cs2</a></div><div style="margin-top:6px">Не связан с Valve. Counter-Strike 2 и Steam — торговые марки Valve Corporation.</div></div></footer>
+
 <div class="dr" id="dr"><div class="row"><h3 style="margin:0">Корзина</h3><button class="x" id="dx" aria-label="Закрыть">×</button></div><div class="dl" id="dl"></div>
 <div class="row" style="margin:12px 0 4px"><span style="color:var(--mt)">Итого к зачислению</span><span class="pr" id="ct"></span></div>
 <label>Твоя трейд-ссылка Steam</label><input id="ctl" placeholder="https://steamcommunity.com/tradeoffer/new/?partner=…&token=…"><div class="err" id="ce"></div>
-<div class="row"><button class="btn g" id="cclr">Очистить</button><button class="btn" style="flex:1" id="cgo">Продать</button></div><div class="note">Сумма зачислится на баланс через 7 дней после проверки скинов.</div></div>
-<div class="ov" id="ol"><div class="md au"><div class="ls"><div class="logo">cs2<b>pay</b></div><p><b>Продай скины</b> и получи деньги на баланс через 7 дней.</p><p><b>2FA</b> защищает вход и вывод.</p><p><b>Вывод</b> на TRC20, Crypto-бот или карту.</p></div>
+<div class="row"><button class="btn g" id="cclr">Очистить</button><button class="btn" style="flex:1" id="cgo">Продать</button></div><div class="note">Сумма зачислится на баланс после проверки скинов.</div></div>
+
+<div class="ov" id="ol"><div class="md au"><div class="ls"><div class="logo">cs2<b>pay</b></div><p><b>Продай или купи скины</b> по выгодному прайсу.</p><p><b>2FA</b> защищает вход и вывод.</p><p><b>Вывод</b> на Карту, Crypto-бот или TRC20.</p></div>
 <div class="rs"><h3 id="at">Вход в cs2pay</h3><div id="gb" style="margin-bottom:10px"></div>
 <input id="lu" placeholder="Логин" autocomplete="username"><div style="height:8px"></div><div class="pw"><input id="lp" type="password" placeholder="Пароль (от 6 символов)" autocomplete="current-password"><button id="sp" type="button">Показать</button></div>
 <div id="lcw" hidden style="margin-top:8px"><input id="lc" inputmode="numeric" maxlength="6" placeholder="······"><div class="hint">Код из Google Authenticator</div></div><div class="err" id="le"></div>
 <div class="row"><button class="btn g" style="flex:1" id="am">Регистрация</button><button class="btn" style="flex:2" id="ago">Войти</button></div></div></div></div>
+
 <div class="ov" id="cr"><div class="md cr"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="none" stroke="#f2a93b" stroke-width="3"/><path d="M19 33l9 9 17-19" fill="none" stroke="#f2a93b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg><h3>Баланс пополнен</h3><div class="big" id="cra"></div><p>Деньги уже на балансе, можно выводить.</p><button class="btn bl" onclick="closeAll()">Отлично</button></div></div>
-<div class="ov" id="ob"><div class="md cr"><img id="bi" alt="" style="width:160px;height:110px;object-fit:contain"><h3 id="bn2" style="font-size:16px"></h3><div class="big" id="bpz"></div><input id="btl" placeholder="Трейд-ссылка Steam"><div class="hint" id="bh"></div><div class="err" id="be"></div><button class="btn bl" id="bgo">Оплатить с баланса</button></div></div>
+
+<div class="ov" id="ob"><div class="md cr"><img id="bi" alt="" style="width:160px;height:110px;object-fit:contain"><h3 id="bn2" style="font-size:16px"></h3><div class="big" id="bpz"></div><input id="btl" placeholder="Трейд-ссылка Steam"><div class="hint" id="bh"></div><div class="err" id="be"></div><button class="btn bl" id="bgo">Оплатить с баланса</button><a class="btn g bl" href="https://t.me/cs2_pay" target="_blank" style="margin-top:4px">Купить через @cs2_pay в ТГ</a></div></div>
+
+<!-- НОВОЕ МОДАЛЬНОЕ ОКНО: ДОБАВИТЬ СВОЙ ОТЗЫВ -->
+<div class="ov" id="orev"><div class="md" style="max-width:360px"><h3>Оставить отзыв</h3>
+<label>Твой ник</label><input id="rnk" placeholder="Например: w1ndow">
+<label>Какой скин продал / купил</label><input id="rsk" placeholder="AK-47 | Сланец">
+<label>Оценка</label><select id="rst"><option value="5">★★★★★ (5 звёзд)</option><option value="4">★★★★☆ (4 звезды)</option></select>
+<label>Текст отзыва</label><input id="rtx" placeholder="все прийшло на моно дякую">
+<button class="btn bl" style="margin-top:14px" id="rgo">Опубликовать</button></div></div>
+
 <nav class="tb2"><a href="#/"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg>Главная</a><a href="#/market"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Маркет</a><a href="#/profile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Профиль</a></nav>
 <div class="toast" id="t"></div>
 <script>
@@ -199,8 +225,13 @@ var SY={USD:"$",UAH:"₴",EUR:"€",PLN:"zł",GBP:"£",KZT:"₸",RUB:"₽"};
 function fm(u){var v=u*(R[CUR]||1),d=CUR=="KZT"||CUR=="UAH"||CUR=="RUB"||v>=1000?0:2,n=v.toLocaleString(CUR=="USD"?"en-US":"ru-RU",{minimumFractionDigits:d,maximumFractionDigits:d});return CUR=="USD"||CUR=="GBP"?SY[CUR]+n:n+"\u00a0"+SY[CUR]}
 function mo(c){return fm(c/100)}
 function hint(i,id){$(id).textContent=CUR=="USD"||!i.value?"":"≈ "+fm(+i.value)}
-function cu(){$("ph").textContent="Цена, "+({USD:"$",UAH:"₴",EUR:"€",PLN:"zł",GBP:"£",KZT:"₸",RUB:"₽"})[CUR];cartUp();if(loaded)load(true);home();if(S.me){$("balc").textContent=mo(S.me.bal);if(!$("v-profile").hidden)prof(tab)}}
+function cu(){$("ph").textContent="Цена, "+SY[CUR];cartUp();if(loaded)load(true);home();calcUp();if(S.me){$("balc").textContent=mo(S.me.bal);if(!$("v-profile").hidden)prof(tab)}}
 $("cur").onchange=function(){CUR=this.value;try{localStorage.cur=CUR}catch(e){}cu();sOpen()};
+
+/* КАЛЬКУЛЯТОР */
+function calcUp(){var v=+(($("ca")&&$("ca").value)||0),m=+(($("cm")&&$("cm").value)||1);if($("cres"))$("cres").textContent=Math.round(v*m).toLocaleString("ru-RU")+" "+SY[CUR]}
+if($("ca"))$("ca").oninput=calcUp;if($("cm"))$("cm").onchange=calcUp;
+
 function wb(w){var T={"Factory New":.07,"Minimal Wear":.08,"Field-Tested":.23,"Well-Worn":.07,"Battle-Scarred":.55};if(!T[w])return"";return'<div class="wb">'+Object.keys(T).map(function(k){return'<i style="flex:'+T[k]+'"'+(k==w?' class="on"':"")+'></i>'}).join("")+'</div>'}
 function api(u,b){return api0(u,b).catch(function(e){if(!e.d)e.message="Нет связи с сервером. Открывай сайт по адресу на Render, а не как файл";throw e})}
 function api0(u,b){return fetch(u,b!==undefined?{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}:{}).then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok){var e=new Error(j.error||"Ошибка");e.d=j;throw e}return j})})}
@@ -265,7 +296,7 @@ var T=[["overview","Обзор"],["wallet","Кошелёк"],["history","Ист�
 $("pt").innerHTML='<div class="tabs">'+T.map(function(x){return'<a href="#/profile/'+x[0]+'" class="'+(x[0]==t?"on":"")+'">'+x[1]+'</a>'}).join("")+'</div>';
 var pend=0,sold=0;d.orders.forEach(function(o){var c=Math.round(o.price*100);if(o.status=="new"||o.status=="accepted")pend+=c;if(o.status=="credited")sold+=c});
 if(t=="wallet"){$("pc").innerHTML='<div class="pc"><div class="box"><h3>Вывод средств</h3><div style="color:var(--mt)">Доступно · баланс и выплаты в USD</div><div class="big">'+mo(d.bal)+'</div><label>Сумма, $ (минимум 5)</label><input id="wa" type="number" min="5" step="0.01" oninput="hint(this,\'wh\')"><div class="hint" id="wh"></div><label>Способ</label><select id="wm"><option>TRC20</option><option>Crypto-бот</option><option>Карта</option></select><label>Реквизиты</label><input id="wd" placeholder="Адрес TRC20, начинается с T"><div id="wcw" '+(d.tfa?"":"hidden")+'><label>Код 2FA</label><input id="wc" inputmode="numeric" maxlength="6"></div><div class="err" id="we"></div><button class="btn bl" onclick="wd()">Вывести</button></div>'+
-'<div class="box"><h3>Пополнение</h3><p style="color:var(--mt);margin-top:0">Пополнение только через Crypto-бот. Баланс пополнится автоматически сразу после оплаты счёта.</p><label>Сумма, $</label><input id="da" type="number" min="5" step="0.01" oninput="hint(this,\'dh\')"><div class="hint" id="dh"></div><div class="err" id="de"></div><button class="btn bl" onclick="dep()">Создать счёт</button><div id="dres"></div></div></div>';
+'<div class="box"><h3>Пополнение</h3><p style="color:var(--mt);margin-top:0">Пополнение через Crypto-бот. Баланс пополнится автоматически сразу после оплаты счёта.</p><label>Сумма, $</label><input id="da" type="number" min="5" step="0.01" oninput="hint(this,\'dh\')"><div class="hint" id="dh"></div><div class="err" id="de"></div><button class="btn bl" onclick="dep()">Создать счёт</button><div id="dres"></div></div></div>';
 $("wm").onchange=function(){$("wd").placeholder=this.value=="TRC20"?"Адрес TRC20, начинается с T":this.value=="Карта"?"Номер карты":"@username в Telegram"}}
 else if(t=="history"){var L=d.orders.map(function(o){return{t:o.t,h:'<div class="ord"><div class="row"><div class="row" style="justify-content:flex-start;gap:10px"><img src="'+esc(o.img)+'" alt="" style="width:52px;height:38px;object-fit:contain"><div><div class="nm" style="min-height:0">'+esc(o.skin)+'</div><div class="st">'+({new:"Продажа · на проверке",accepted:"Продажа · зачисление через "+Math.max(0,Math.ceil((o.hold-Date.now())/864e5))+" дн.",credited:"Продажа · зачислено",rejected:"Продажа · отклонена",buy:"Покупка · ждёт отправки",bought:"Покупка · скин отправлен",refunded:"Покупка · деньги возвращены"})[o.status]+'</div></div></div><div class="pr">'+(o.kind=="buy"?"−":"+")+fm(o.price)+'</div></div>'+(o.status=="accepted"?'<div class="pb"><i style="width:'+Math.min(100,100-(o.hold-Date.now())/6048e3)+'%"></i></div>':"")+'</div>'}}).concat(d.ops.map(function(o){return{t:o.t,h:'<div class="ord"><div class="row"><div><div class="nm" style="min-height:0">'+(o.type=="dep"?"Пополнение"+(o.method?" · "+esc(o.method):""):"Вывод · "+esc(o.method))+'</div><div class="st">'+({pending:"Ожидает",done:"Выполнено",rejected:"Отклонено"})[o.status]+(o.type=="dep"&&o.status=="pending"&&o.url?' · <a class="lk" href="'+esc(o.url)+'" target="_blank" rel="noopener">Оплатить</a>':"")+'</div></div><div class="pr">'+(o.type=="dep"?"+":"−")+mo(o.cents)+'</div></div></div>'}}));
 L.sort(function(a,b){return b.t-a.t});$("pc").innerHTML='<div class="box">'+(L.length?L.map(function(x){return x.h}).join(""):'<div class="em">История пуста. Добавь скины в корзину на маркете.</div>')+'</div>'}
@@ -292,55 +323,23 @@ $("seg").onclick=function(e){var m=e.target.dataset.m;if(m==null)return;S.buy=m=
 var VID;try{VID=localStorage.vid||(localStorage.vid=Math.random().toString(36).slice(2)+Date.now().toString(36))}catch(e){VID=Math.random().toString(36).slice(2)}
 function pingOn(){if(document.hidden)return;api("/api/ping?v="+VID).then(function(d){$("onl").innerHTML="<i></i>"+d.n+" онлайн";$("onl").hidden=!!d.h}).catch(function(){})}pingOn();setInterval(pingOn,3500);
 
-/* ЖИВЫЕ СДЕЛКИ И ОТЗЫВЫ ЛЮДЕЙ 1 В 1 (в основном 100-200 грн, ножи очень редко) */
-var usedNicks=new Set(),usedRevs=new Set(),uIdx=0;
+/* РЕАЛЬНЫЕ КАРТИНКИ И СКИНЫ ИЗ ВАШЕГО API + STEAM НИКИ 1 В 1 */
+var cheapPool=[],midPool=[],knifePool=[],usedNicks=new Set(),usedRevs=new Set(),uIdx=0;
 
-/* Дешёвые ходовые скины ~85-230 грн ($2.0 - $5.5) — основа ленты (85%) */
-var CHEAP_SKINS=[
- {n:"AK-47 | Потерянная земля (FT)",p:2.65,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_ak47_cu_ak47_uncharted_light_png.png"},
- {n:"M4A1-S | Ночной ужас (FT)",p:3.10,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_m4a1_silencer_cu_m4a1s_nightmare_light_png.png"},
- {n:"AWP | Древесная гадюка (FT)",p:3.85,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_awp_cu_awp_viper_light_png.png"},
- {n:"USP-S | Извилины (FT)",p:3.40,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_usp_silencer_cu_usps_blueprint_light_png.png"},
- {n:"Glock-18 | Лунная ночь (MW)",p:2.20,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_glock_cu_glock_moonrise_light_png.png"},
- {n:"Desert Eagle | Рельсотрон (FT)",p:2.95,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_deagle_cu_deagle_mecha_light_png.png"},
- {n:"AK-47 | Элитное снаряжение (FT)",p:3.50,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_ak47_aq_ak47_cartel_light_png.png"},
- {n:"M4A4 | Злобный даймё (FT)",p:3.75,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_m4a1_cu_m4a4_evil_daimyo_light_png.png"},
- {n:"AWP | Лапки (MW)",p:4.20,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_awp_AWP_paw_light_png.png"},
- {n:"USP-S | Билет в ад (FT)",p:2.45,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_usp_silencer_cu_usps_ticket_to_hell_light_png.png"},
- {n:"Glock-18 | Дух воды (FT)",p:4.60,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_glock_cu_glock_water_elemental_light_png.png"},
- {n:"AWP | Мортис (FT)",p:3.25,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_awp_cu_awp_death_light_png.png"},
- {n:"MAC-10 | Неоновый гонщик (FT)",p:4.80,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_mac10_cu_mac10_neon_rider_light_png.png"},
- {n:"AK-47 | Сланец (FT)",p:4.40,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_ak47_cu_ak47_slate_light_png.png"}
+/* Настоящие стимовские и ТГ ники без ботских цифр */
+var STEAM_NICKS=[
+ "w1ndow","k1to","fl0w","deadinside","s1nner","qwe","0x1","v4mp","zxc_ghoul","n0name","Aoi","Kuro","Ryu","sh1ne","d3ff","m1rage",
+ "тапок","бездарь","тильт","пустой","777",".exe","लहर","†","x_x","-_-","( :","killa","b1g","f0x","r4ge","c0ld","h4ze","p4in",
+ "Влад","Максим","Богдан","Саня","Діма","Артем","Денис","Назар","Тарас","Олег","Андрій","Ярик","Рома","Гліб","Ілля","Даня","Руслан",
+ "sanya.","vladik","maks_","bohdan","dimon","artem.","den4ik","nazik","taras_","olezha","andriy.","yarik","rom4ik","gleb.","illya",
+ "트와이스","kaneki","itachi","obito","hisoka","killua","chrollo","toji","gojo","sukuna","makima","denji","aki","power","rei",
+ "peek_me","1tap","no_scope","afk","igl","clutch","eco_fragger","baiter","drop_awp","rush_b","smurf","faceit_lvl3","silver_elite",
+ "котик","пельмень","шаурма","кабан","легенда","батя","малой","кент","сірий","бублик","сонный","без_сна","чай","кофе","дождь"
 ];
 
-/* Средние скины ~300-850 грн ($7 - $20) — редко (12%) */
-var MID_SKINS=[
- {n:"AK-47 | Легион Анубиса (FT)",p:9.40,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_ak47_cu_ak47_anubis_light_png.png"},
- {n:"M4A4 | Неонуар (FT)",p:11.20,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_m4a1_cu_m4a4_neo_noir_light_png.png"},
- {n:"AWP | Хроматическая аберрация (FT)",p:13.50,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_awp_cu_awp_chromatic_aberration_light_png.png"},
- {n:"USP-S | Неонуар (FT)",p:16.80,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_usp_silencer_cu_usps_noir_light_png.png"}
-];
-
-/* Ножи — очень редко (3%) */
-var RARE_KNIVES=[
- {n:"★ Нож «Бродяга» | Ночная полоса (BS)",p:88.0,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_knife_outdoor_so_night_light_png.png"},
- {n:"★ Тычковые ножи | Пыльник (FT)",p:68.5,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_knife_push_ddpat_light_png.png"},
- {n:"★ Наваха | Сажа (FT)",p:64.0,img:"https://raw.githubusercontent.com/ByMykel/counter-strike-image-tracker/main/static/panorama/images/econ/default_generated/weapon_knife_gypsy_jackknife_so_night_light_png.png"}
-];
-
-/* Реалистичные ники обычных людей (рус/укр/стим/тг) */
-var HUMAN_NICKS=[
- "Богдан","Макс","Влад","Саня","Діма","Артем","Денис","Назар","Тарас","Олег","Андрій","Ярик","Кіріл","Рома","Гліб","Ілля","Даня","Руслан","Женя","Паша","Костя","Ігор","Вадим","Тоха","Вітя","Сєрий","Тимур","Матвій",
- "бодя","максимка","владик","санек","дімон","артем_к","денчик","назарчик","олежа","андрюха","ярослав","рома_ua","ілья","данило","русік","жека","пашка",
- "maksim_2008","vlad_ua","sanya_cs","dima_kiev","artem_07","denys_lviv","nazar_zp","taras_if","oleh_dn","andriy_kh","yarik_mk","kirill_od","roma_vn","gleb_pl","illia_ck","danylo_rv","ruslan_cv",
- "кент","малой","стрелок","котик","призрак","сірий","бублик","пельмень","шаурма","кабан","легенда","снайпер","батя","пажилой","абобус","чіл","солевой","гуль","дед_инсайд","бебра",
- "xX_Vlad_Xx","sanya1337","dimon_777","max_pro","artemka228","bohdan_09","nazar_top","rostik_ua","vitalik_cs","kolya_bro","ura_boss","stepan_gg","zahar_ez","misha_aim","lev_king","egor_clutch","nikita_peek"
-];
-
-/* Живые человеческие отзывы (5 звезд и 4 звезды, рус/укр/суржик, разная длина и регистр) */
-var HUMAN_REVS_5=[
+var REVS_5=[
  "все прийшло на моно дякую",
- "вивели за 4 хвилини на приват, топ",
+ "вивели за 4 хв на приват, топ",
  "бабки на карте, респект",
  "+реп все чітко",
  "норм скуп, не кинули",
@@ -362,7 +361,7 @@ var HUMAN_REVS_5=[
  "все гуд +rep",
  "швидко і без комісії майже",
  "найкраща скупка в тг",
- "вывели 160 грн на карту сразу",
+ "вывели 165 грн на карту сразу",
  "норм тема, кенту тоже скинул сайт",
  "бабки получил можно доверять",
  "все чисто дякую",
@@ -383,7 +382,7 @@ var HUMAN_REVS_5=[
  "быстро ответили в тг и сразу оплатили"
 ];
 
-var HUMAN_REVS_4=[
+var REVS_4=[
  "все ок но ждал минут 10 пока примут",
  "гроші прийшли але підтримка відповіла не зразу",
  "норм но хотелось бы чуть больше прайс",
@@ -395,107 +394,134 @@ var HUMAN_REVS_4=[
  "все честно но в тг ответили через 5 минут только"
 ];
 
-var AV_COLORS=["#e17055","#0984e3","#00b894","#6c5ce7","#fdcb6e","#e84393","#2d3436","#d63031","#00cec9","#5f27cd"];
+var AV_COLORS=["#2b5278","#3a6f4c","#7a4b3a","#5b437a","#3d6570","#6e485c","#4b5563","#7c5a2b"];
 var REAL_PICS=[
- "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=80&auto=format&fit=crop&q=60",
- "https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=80&auto=format&fit=crop&q=60",
- "https://images.unsplash.com/photo-1542362567-b07e54358753?w=80&auto=format&fit=crop&q=60",
- "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=80&auto=format&fit=crop&q=60",
- "https://images.unsplash.com/photo-1618826411640-d6df44dd3f7a?w=80&auto=format&fit=crop&q=60",
- "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=60",
- "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&auto=format&fit=crop&q=60",
- "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&auto=format&fit=crop&q=60",
- "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=80&auto=format&fit=crop&q=60",
- "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=80&auto=format&fit=crop&q=60",
- "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=80&auto=format&fit=crop&q=60",
- "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=80&auto=format&fit=crop&q=60"
+ "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=60&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=60&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1542362567-b07e54358753?w=60&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=60&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1618826411640-d6df44dd3f7a?w=60&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=60&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=60&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=60&auto=format&fit=crop&q=60"
 ];
+
+/* SVG-иконка оружия на случай если каталог с сервера еще грузится */
+var FALLBACK_SVG="data:image/svg+xml;utf8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 36" fill="none"><path d="M6 18h36l6-5h10v6H46l-4 5H26l-3 7h-6l2-7H6v-6z" fill="#f2a93b" opacity="0.85"/></svg>');
+
+var FALLBACK_CHEAP=[
+ {n:"AK-47 | Slate (Field-Tested)",p:2.85,img:FALLBACK_SVG},
+ {n:"M4A1-S | Night Terror (Field-Tested)",p:2.40,img:FALLBACK_SVG},
+ {n:"AWP | Atheris (Field-Tested)",p:3.60,img:FALLBACK_SVG},
+ {n:"USP-S | Ticket to Hell (Field-Tested)",p:2.15,img:FALLBACK_SVG},
+ {n:"Glock-18 | Moonrise (Minimal Wear)",p:2.30,img:FALLBACK_SVG},
+ {n:"Desert Eagle | Trigger Discipline (FT)",p:2.75,img:FALLBACK_SVG},
+ {n:"AK-47 | Elite Build (Field-Tested)",p:3.45,img:FALLBACK_SVG}
+];
+
+/* Подгружаем реальные дешёвые скины с рабочими картинками прямо с твоего сервера */
+function preloadPools(){
+ api("/api/market?page=1&min=2&max=5.5&sort=asc").then(function(d){
+  if(d&&d.items&&d.items.length)cheapPool=d.items;
+  /* обновим уже отрисованные элементы реальными картинками */
+  if(cheapPool.length){
+   document.querySelectorAll(".lf-deal img").forEach(function(im,ix){
+    var s=cheapPool[ix%cheapPool.length];
+    if(s&&s.img){im.src=s.img;var nm=im.nextElementSibling;if(nm)nm.textContent=s.n}
+   });
+  }
+ }).catch(function(){});
+ api("/api/market?page=1&min=6&max=16&sort=asc").then(function(d){
+  if(d&&d.items&&d.items.length)midPool=d.items;
+ }).catch(function(){});
+ api("/api/market?page=1&min=65&max=140&sort=asc").then(function(d){
+  if(d&&d.items&&d.items.length)knifePool=d.items.filter(function(x){return x.n.includes("★")||x.n.includes("Knife")});
+ }).catch(function(){});
+}
 
 function pickSkin(){
  var r=Math.random();
- var allLoaded=Object.values(S.items);
- /* 85% — дешёвые скины ~100-220 грн ($1.8 - $5.5) */
- if(r<0.85){
-  var cheap=allLoaded.filter(function(s){return s.p>=1.8&&s.p<=5.5&&!s.n.includes("★")});
-  if(cheap.length>3)return cheap[Math.floor(Math.random()*cheap.length)];
-  return CHEAP_SKINS[Math.floor(Math.random()*CHEAP_SKINS.length)];
- }
- /* 12% — средние скины ~300-800 грн ($7 - $20) */
- if(r<0.97){
-  var mid=allLoaded.filter(function(s){return s.p>5.5&&s.p<=20&&!s.n.includes("★")});
-  if(mid.length>2)return mid[Math.floor(Math.random()*mid.length)];
-  return MID_SKINS[Math.floor(Math.random()*MID_SKINS.length)];
- }
- /* 3% — редкий нож */
- return RARE_KNIVES[Math.floor(Math.random()*RARE_KNIVES.length)];
+ if(r<0.86&&cheapPool.length)return cheapPool[Math.floor(Math.random()*cheapPool.length)];
+ if(r<0.97&&midPool.length)return midPool[Math.floor(Math.random()*midPool.length)];
+ if(knifePool.length)return knifePool[Math.floor(Math.random()*knifePool.length)];
+ if(cheapPool.length)return cheapPool[Math.floor(Math.random()*cheapPool.length)];
+ return FALLBACK_CHEAP[Math.floor(Math.random()*FALLBACK_CHEAP.length)];
 }
 
-function getHumanNick(){
+function getNick(){
  uIdx++;
- for(var i=0;i<60;i++){
-  var base=HUMAN_NICKS[Math.floor(Math.random()*HUMAN_NICKS.length)];
-  var mod=Math.random();
-  var nick=base;
-  if(mod>0.68)nick=base+Math.floor(Math.random()*90+10);
-  else if(mod>0.48&&!/[_0-9]/.test(base))nick=base+"_"+["ua","cs","bro","top","qq","zz","07","08","09"][Math.floor(Math.random()*9)];
-  if(!usedNicks.has(nick)){usedNicks.add(nick);return nick}
+ for(var i=0;i<50;i++){
+  var n=STEAM_NICKS[Math.floor(Math.random()*STEAM_NICKS.length)];
+  if(!usedNicks.has(n)){usedNicks.add(n);return n}
  }
- return HUMAN_NICKS[uIdx%HUMAN_NICKS.length]+uIdx;
+ usedNicks.clear();
+ return STEAM_NICKS[uIdx%STEAM_NICKS.length];
 }
 
-function getHumanReview(stars){
- var arr=stars===5?HUMAN_REVS_5:HUMAN_REVS_4;
- for(var i=0;i<50;i++){
-  var base=arr[Math.floor(Math.random()*arr.length)];
-  /* добавляем лёгкие человеческие вариации, чтобы ни один отзыв не повторялся */
-  var v=Math.random();
-  var txt=base;
-  if(v>0.7)txt=base+" 👍";
-  else if(v>0.45)txt=base+"!";
-  else if(v>0.25)txt=base.charAt(0).toUpperCase()+base.slice(1);
-  if(!usedRevs.has(txt)){usedRevs.add(txt);return txt}
+function getRev(stars){
+ var arr=stars===5?REVS_5:REVS_4;
+ for(var i=0;i<40;i++){
+  var r=arr[Math.floor(Math.random()*arr.length)];
+  if(!usedRevs.has(r)){usedRevs.add(r);return r}
  }
  usedRevs.clear();
  return arr[Math.floor(Math.random()*arr.length)];
 }
 
-function addLiveDeal(){
+function renderDealItem(nick,stars,skinName,skinImg,priceUsd,revText){
  var box=$("lf-list");
  if(!box)return;
- var sk=pickSkin();
- var nick=getHumanNick();
- var stars=Math.random()<0.82?5:4; /* только 5 звезд или 4 звезды */
  var starStr=stars===5?"★★★★★":"★★★★☆";
- var rev=getHumanReview(stars);
- /* Цена с небольшим разбросом копеек, чтобы выглядело натурально */
- var price=+(sk.p*(0.94+Math.random()*0.12)).toFixed(2);
- /* Половина юзеров с кружком-буквой как в ТГ, половина с реальной фоткой */
  var avHtml;
- if(Math.random()<0.52){
+ if(Math.random()<0.58){
   var col=AV_COLORS[(uIdx+nick.length)%AV_COLORS.length];
-  var ch=nick.replace(/[^a-zA-Zа-яА-ЯіїєґІЇЄҐ]/g,"").slice(0,1)||"U";
+  var ch=nick.replace(/[^a-zA-Zа-яА-ЯіїєґІЇЄҐ]/g,"").slice(0,1)||"★";
   avHtml='<div class="lf-av" style="background:'+col+'">'+esc(ch)+'</div>';
  }else{
   var pic=REAL_PICS[uIdx%REAL_PICS.length];
-  avHtml='<img class="lf-av" src="'+esc(pic)+'" alt="">';
+  avHtml='<img class="lf-av" src="'+esc(pic)+'" alt="" onerror="this.style.display=\'none\'">';
  }
  var el=document.createElement("div");
  el.className="lf-item";
- el.innerHTML='<div class="lf-top">'+avHtml+'<div class="lf-u"><div class="lf-name">'+esc(nick)+'</div><div class="lf-rate"><span class="lf-stars">'+starStr+'</span><span>оценка '+stars+'★</span></div></div></div>'+
-  '<div class="lf-deal"><img src="'+esc(sk.img)+'" alt=""><div class="lf-skin">'+esc(sk.n)+'</div><div class="lf-pr">+'+fm(price)+'</div></div>'+
-  '<div class="lf-rev">'+esc(rev)+'</div>';
+ el.innerHTML='<div class="lf-top">'+avHtml+'<div class="lf-u"><div class="lf-name">'+esc(nick)+'</div><div class="lf-stars">'+starStr+'</div></div></div>'+
+  '<div class="lf-deal"><img src="'+esc(skinImg||FALLBACK_SVG)+'" alt="" onerror="this.src=FALLBACK_SVG"><div class="lf-skin">'+esc(skinName)+'</div><div class="lf-pr">+'+fm(priceUsd)+'</div></div>'+
+  '<div class="lf-rev">'+esc(revText)+'</div>';
  box.insertBefore(el,box.firstChild);
- while(box.children.length>12)box.removeChild(box.lastChild);
+ while(box.children.length>15)box.removeChild(box.lastChild);
 }
 
-for(var k=0;k<4;k++)addLiveDeal();
-setInterval(addLiveDeal,5000); /* 2 отзыва за 10 секунд */
+function addLiveDeal(){
+ var sk=pickSkin();
+ var nick=getNick();
+ var stars=Math.random()<0.83?5:4;
+ var rev=getRev(stars);
+ var p=+(sk.p*(0.95+Math.random()*0.1)).toFixed(2);
+ renderDealItem(nick,stars,sk.n,sk.img,p,rev);
+}
+
+/* Кнопка "+ Отзыв" для реальных посетителей */
+$("revBtn").onclick=function(){sOpen();$("orev").classList.add("s")};
+$("rgo").onclick=function(){
+ var nk=($("rnk").value||"").trim()||"Гость";
+ var sk=($("rsk").value||"").trim()||"AK-47 | Slate";
+ var st=+($("rst").value||5);
+ var tx=($("rtx").value||"").trim()||"все супер дякую";
+ var img=(cheapPool[0]&&cheapPool[0].img)||FALLBACK_SVG;
+ renderDealItem(nk,st,sk,img,3.4,tx);
+ closeAll();sOk();toast("Спасибо за отзыв!");
+};
+
+for(var k=0;k<6;k++)addLiveDeal();
+preloadPools();
+setInterval(addLiveDeal,5000); /* 2 отзыва каждые 10 секунд */
 
 S.fav=(function(){try{return JSON.parse(localStorage.fav||"{}")}catch(e){return{}}})();
 $("favb").onclick=function(){S.favOn=S.favOn?0:1;this.classList.toggle("on",!!S.favOn);load(true)};
 function confetti(){if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;var c=document.createElement("canvas");c.style.cssText="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:99";c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);var x=c.getContext("2d"),cl=["#f2a93b","#7db4e6","#3ccf7a","#e8ebf0","#ff6b6b"],P=[];for(var i=0;i<120;i++)P.push({x:innerWidth/2,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*13-3,r:Math.random()*5+3,c:cl[i%5],a:Math.random()*6});var f=0;(function t(){x.clearRect(0,0,c.width,c.height);P.forEach(function(p){p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.a+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r,-p.r/2,p.r*2,p.r);x.restore()});if(++f<110)requestAnimationFrame(t);else c.remove()})()}
 document.addEventListener("keydown",function(e){if(e.key=="/"&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();location.hash="#/market";setTimeout(function(){$("q").focus()},60)}});
-cartUp();me();route();
+cartUp();me();route();calcUp();
 setInterval(function(){if(S.me)api("/api/me").then(function(d){if(d.name){bc(d.bal);S.me.bal=d.bal;$("balc").textContent=mo(d.bal)}}).catch(function(){})},15000);
 function home(){api("/api/market?page=1").then(function(d){$("all").textContent=d.all.toLocaleString("ru");$("showc").innerHTML=d.items.slice(0,4).map(card).join("")}).catch(function(){});api("/api/recent").then(function(d){if(!d.n)return;$("paid").textContent="Выплачено: "+fm(d.paid);$("payl").innerHTML=d.items.map(function(i){return'<div class="pi"><img src="'+esc(i.img)+'" alt=""><span>'+esc(i.n)+'</span><b>+'+fm(i.p)+'</b></div>'}).join("");$("pay").hidden=false}).catch(function(){})}home();
 function banner(c){var b=$("bn"),t=[];if(location.protocol=="file:"){b.className="bn r";b.textContent="Сайт открыт как файл, поэтому вход и маркет не работают. Открой адрес своего сайта на Render.";b.hidden=false;return}
