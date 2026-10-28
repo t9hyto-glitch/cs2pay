@@ -50,7 +50,7 @@ async function screen(chat,mid,text,k){const b={chat_id:chat,text,parse_mode:'HT
  return tg('sendMessage',b)}
 const cnt=(k)=>db.orders.filter(o=>o.status==k).length,pendP=()=>db.ops.filter(o=>o.type=='wd'&&o.status=='pending');
 function mainScr(){const n=cnt('new')+cnt('buy'),w=pendP().length,pCnt=Object.keys(db.promos||{}).length;
- return{t:`<b>cs2pay · панель</b>\n\n🆕 Новых заявок: <b>${n}</b>\nВыводов в ожидании: <b>${w}</b>\nЦены выкупа: <b>${adjTxt()}</b>\nЦены продажи: <b>${buyTxt()}</b>\nПромокодов активно: <b>${pCnt}</b>\n\nВыбери раздел:`,k:kb([[{text:'Заявки'+(n+w?` (${n+w})`:''),callback_data:'m:pend'},{text:'Статистика',callback_data:'m:stats'}],[{text:'Пользователи',callback_data:'m:users:0'},{text:'Найти',callback_data:'m:find'}],[{text:'Цены выкупа (все скины)',callback_data:'m:price'},{text:'Цены продажи (все скины)',callback_data:'m:buyp'}],[{text:'🎁 Промокоды ('+pCnt+')',callback_data:'m:promos'},{text:'Скачать бэкап',callback_data:'m:bk'}],[{text:'Объявление',callback_data:'m:notice'},{text:'Онлайн: '+(db.cfg.hideOn?'скрыт':'виден'),callback_data:'m:onl'}]])}}
+ return{t:`<b>cs2pay · панель</b>\n\nНовых заявок: <b>${n}</b>\nВыводов в ожидании: <b>${w}</b>\nЦены выкупа: <b>${adjTxt()}</b>\nЦены продажи: <b>${buyTxt()}</b>\nПромокодов активно: <b>${pCnt}</b>\n\nВыбери раздел:`,k:kb([[{text:'Заявки'+(n+w?` (${n+w})`:''),callback_data:'m:pend'},{text:'Статистика',callback_data:'m:stats'}],[{text:'Пользователи',callback_data:'m:users:0'},{text:'Найти',callback_data:'m:find'}],[{text:'Цены выкупа (все скины)',callback_data:'m:price'},{text:'Цены продажи (все скины)',callback_data:'m:buyp'}],[{text:'Промокоды ('+pCnt+')',callback_data:'m:promos'},{text:'Скачать бэкап',callback_data:'m:bk'}],[{text:'Объявление',callback_data:'m:notice'},{text:'Онлайн: '+(db.cfg.hideOn?'скрыт':'виден'),callback_data:'m:onl'}]])}}
 function statsScr(){const sum=(l,f)=>l.reduce((t,x)=>t+f(x),0),W=pendP(),D=db.ops.filter(o=>o.type=='dep'&&o.status=='pending');
  return{t:`<b>Статистика</b>\n\nПользователей: <b>${Object.keys(db.users).length}</b>\nСкинов в каталоге: <b>${skins.length}</b>\n\nЗаявки: новые ${cnt('new')} · hold ${cnt('accepted')} · зачислено ${cnt('credited')} · отклонено ${cnt('rejected')}\nНа балансах: <b>${usd(sum(Object.values(db.users),x=>x.bal||0))}</b>\nВыводы: ${W.length} на ${usd(sum(W,o=>o.cents))}\nПополнения: ${D.length} на ${usd(sum(D,o=>o.cents))}\nЦены выкупа: ${adjTxt()} · продажи: ${buyTxt()}`,k:kb([[{text:'Обновить',callback_data:'m:stats'}],BACK])}}
 function usersScr(pg){const L=Object.entries(db.users).sort((a,b)=>(b[1].created||0)-(a[1].created||0)),per=8,N=Math.max(1,Math.ceil(L.length/per));pg=Math.min(Math.max(0,pg),N-1);
@@ -61,15 +61,15 @@ function userScr(l){const x=db.users[l];if(!x)return{t:'Пользователь
 function balScr(l){const B=a=>a.map(v=>({text:(v>0?'+':'−')+Math.abs(v)+'$',callback_data:`ad:${l}:${v}`}));
  return{t:`<b>Баланс ${esc(l)}</b>: ${usd((db.users[l]||{}).bal||0)}\nВыбери сумму или введи свою:`,k:kb([B([1,5,10,50]),B([-1,-5,-10,-50]),[{text:'Своя сумма',callback_data:'ac:'+l}],[{text:'← К пользователю',callback_data:'u:'+l}]])}}
 function priceScr(m){const B=a=>a.map(v=>({text:(v>0?'+':'')+v+'%',callback_data:'pr:'+v}));
- return{t:`<b>Цены выкупа ВСЕХ скинов</b>: ${adjTxt()}${m?'\n\n✅ '+m:''}\nТы можешь понизить или повысить цены всех скинов на любой процент.`,k:kb([B([-80,-50,-30,-15]),B([-10,-5,0,5]),B([10,20,50,100]),[{text:'Ввести любой свой %',callback_data:'pr:c'}],BACK])}}
+ return{t:`<b>Цены выкупа ВСЕХ скинов</b>: ${adjTxt()}${m?'\n\n'+m:''}\nТы можешь понизить или повысить цены всех скинов на любой процент.`,k:kb([B([-80,-50,-30,-15]),B([-10,-5,0,5]),B([10,20,50,100]),[{text:'Ввести любой свой %',callback_data:'pr:c'}],BACK])}}
 function buyScr(m){const B=a=>a.map(v=>({text:(v>0?'+':'')+v+'%',callback_data:'bp:'+v}));
- return{t:`<b>Цены продажи ВСЕХ скинов (покупка на сайте)</b>: ${buyTxt()}${m?'\n\n✅ '+m:''}\nМеняет стоимость всех скинов и ножей в разделе «Купить».`,k:kb([B([-80,-50,-30,-15]),B([-5,0,10,25]),B([50,100,200,300]),[{text:'Ввести любой свой %',callback_data:'bp:c'}],BACK])}}
+ return{t:`<b>Цены продажи ВСЕХ скинов (покупка на сайте)</b>: ${buyTxt()}${m?'\n\n'+m:''}\nМеняет стоимость всех скинов и ножей в разделе «Купить».`,k:kb([B([-80,-50,-30,-15]),B([-5,0,10,25]),B([50,100,200,300]),[{text:'Ввести любой свой %',callback_data:'bp:c'}],BACK])}}
 function promosScr(m){
  const P=Object.entries(db.promos||{});
  const tp={bal:'$ на баланс',sell:'% к продаже',dep:'% к пополнению'};
  const list=P.length?P.map(([k,v])=>`• <code>${esc(k)}</code> — <b>+${v.val}${v.type=='bal'?'$':'%'}</b> (${tp[v.type]}) · исп: ${(v.used||[]).length}/${v.max}`).join('\n'):'<i>Активных промокодов пока нет</i>';
- const delBtns=P.slice(0,8).map(([k])=>[{text:'🗑 Удалить '+k,callback_data:'pd:'+k}]);
- return{t:`<b>🎁 Управление промокодами</b>${m?'\n\n✅ '+m:''}\n\n${list}\n\nВыбери, какой промокод создать:`,k:kb([[{text:'➕ На баланс ($)',callback_data:'pc:bal'}],[{text:'➕ На % к продаже скинов',callback_data:'pc:sell'}],[{text:'➕ На % к пополнению',callback_data:'pc:dep'}],...delBtns,BACK])}}
+ const delBtns=P.slice(0,8).map(([k])=>[{text:'Удалить '+k,callback_data:'pd:'+k}]);
+ return{t:`<b>Управление промокодами</b>${m?'\n\n'+m:''}\n\n${list}\n\nВыбери, какой промокод создать:`,k:kb([[{text:'+ На баланс ($)',callback_data:'pc:bal'}],[{text:'+ На % к продаже скинов',callback_data:'pc:sell'}],[{text:'+ На % к пополнению',callback_data:'pc:dep'}],...delBtns,BACK])}}
 function noticeScr(){return{t:`<b>Объявление на сайте</b>\n\n${db.cfg.notice?esc(db.cfg.notice):'<i>сейчас пусто</i>'}`,k:kb([[{text:'Изменить',callback_data:'n:e'},{text:'Убрать',callback_data:'n:off'}],BACK])}}
 function setBal(l,v,al){const x=db.users[l];if(!x||!v)return;if((x.bal||0)+v*100<0){al.t='Баланс не может уйти в минус';return}
  x.bal=(x.bal||0)+Math.round(v*100);db.ops.push({id:db.ops.length+1,user:l,type:v>0?'dep':'wd',cents:Math.round(Math.abs(v)*100),method:'Корректировка',details:'admin',status:'done',t:Date.now()});save()}
@@ -89,7 +89,7 @@ async function onInput(chat,w,t){
   const max=parseInt(parts[2]||'100',10)||100;
   if(!code||isNaN(val)||val<=0){wait[chat]=w;return screen(chat,0,'Неверный формат. Отправь через пробел:\n<code>КОД ЧИСЛО ЛИМИТ</code>\nНапример: <code>CS2PAY 10 50</code>',CANCEL)}
   db.promos[code]={type:w.tp,val,max,used:[]};save();
-  return show(chat,0,promosScr('Промокод '+code+' создан!'))
+  return show(chat,0,promosScr('Промокод '+code+' создан'))
  }
  const v=parseFloat(t.replace(',','.'));
  if(isNaN(v)){wait[chat]=w;return screen(chat,0,'Не похоже на число. Попробуй ещё раз, например 12.5 или -35',CANCEL)}
@@ -196,12 +196,12 @@ http.createServer(async(req,res)=>{try{
   if(prm.used.includes(n))return bad(res,'Ты уже активировал этот промокод');
   if(prm.used.length>=prm.max)return bad(res,'Лимит активаций этого промокода исчерпан');
   prm.used.push(n);
-  let msg='';
+  let msg='',cents=0;
   if(prm.type=='bal'){
-   const cents=Math.round(prm.val*100);
+   cents=Math.round(prm.val*100);
    x.bal=(x.bal||0)+cents;
-   db.ops.push({id:db.ops.length+1,user:n,type:'dep',cents,method:'Промокод '+code,status:'done',t:Date.now()});
-   msg=`Промокод активирован! Начислено +$${prm.val.toFixed(2)}`;
+   db.ops.push({id:db.ops.length+1,user:n,type:'bonus',cents,method:'Промокод '+code,status:'done',t:Date.now()});
+   msg=`Промокод активирован`;
   }else if(prm.type=='sell'){
    x.sellB=(x.sellB||0)+prm.val;
    msg=`Промокод активирован! Бонус +${prm.val}% к следующей продаже скинов`;
@@ -209,17 +209,17 @@ http.createServer(async(req,res)=>{try{
    x.depB=(x.depB||0)+prm.val;
    msg=`Промокод активирован! Бонус +${prm.val}% к следующему пополнению`;
   }
-  save();note(`<b>🎁 Активирован промокод</b>\nКод: <code>${esc(code)}</code>\nПользователь: ${esc(n)}`);
-  return send(res,200,{ok:true,msg})
+  save();note(`<b>Активирован промокод</b>\nКод: <code>${esc(code)}</code>\nПользователь: ${esc(n)}`);
+  return send(res,200,{ok:true,msg,cents})
  }
  /* Задания и бонусы */
  if(p=='/api/task'){
   const tid=String(b.id||'');
   if(tid=='daily'){
-   if(Date.now()-(x.dailyAt||0)<864e5)return bad(res,'Ежедневный бонус уже получен, приходи завтра!');
+   if(Date.now()-(x.dailyAt||0)<864e5)return bad(res,'Ежедневный бонус уже получен, приходи завтра');
    x.dailyAt=Date.now();x.bal=(x.bal||0)+5;
-   db.ops.push({id:db.ops.length+1,user:n,type:'dep',cents:5,method:'Ежедневный бонус',status:'done',t:Date.now()});
-   save();return send(res,200,{ok:true,msg:'Ежедневный бонус +$0.05 начислен!'})
+   db.ops.push({id:db.ops.length+1,user:n,type:'bonus',cents:5,method:'Ежедневный бонус',status:'done',t:Date.now()});
+   save();return send(res,200,{ok:true,cents:5})
   }
   if(x.tasks[tid])return bad(res,'Задание уже выполнено');
   const rewards={tg_chan:15,tg_mgr:10,tl_set:10,tfa_set:25,first_deal:30};
@@ -229,13 +229,13 @@ http.createServer(async(req,res)=>{try{
   if(tid=='tfa_set'&&!x.totp)return bad(res,'Сначала подключи 2FA в настройках профиля');
   if(tid=='first_deal'&&!db.orders.some(o=>o.user==n))return bad(res,'Сначала соверши хотя бы одну покупку или продажу скина');
   x.tasks[tid]=1;x.bal=(x.bal||0)+rw;
-  db.ops.push({id:db.ops.length+1,user:n,type:'dep',cents:rw,method:'Бонус за задание',status:'done',t:Date.now()});
-  save();return send(res,200,{ok:true,msg:`Задание выполнено! Начислено +$${(rw/100).toFixed(2)}`})
+  db.ops.push({id:db.ops.length+1,user:n,type:'bonus',cents:rw,method:'Бонус за задание',status:'done',t:Date.now()});
+  save();return send(res,200,{ok:true,cents:rw})
  }
  /* Оставить отзыв (только после покупки или продажи) */
  if(p=='/api/review'){
   const myOrders=db.orders.filter(o=>o.user==n);
-  if(!myOrders.length)return bad(res,'Оставить отзыв можно только после покупки или продажи скина!');
+  if(!myOrders.length)return bad(res,'Оставить отзыв можно только после покупки или продажи скина');
   const stars=+b.stars===4?4:5;
   const text=String(b.text||'').trim().slice(0,180);
   if(text.length<3)return bad(res,'Напиши хотя бы пару слов в отзыве');
@@ -264,6 +264,9 @@ http.createServer(async(req,res)=>{try{
   const o={id:db.ops.length+1,user:n,type:'dep',cents:finalC,baseCents:baseC,method:'Crypto-бот',status:'pending',inv:v.invoice_id,url:v.bot_invoice_url||v.pay_url,t:Date.now()};db.ops.push(o);save();return send(res,200,{ok:true,id:o.id,url:o.url})}
  if(p=='/api/withdraw'){const c=Math.round((+b.amount||0)*100),d=String(b.details||'').trim().replace(/\s+/g,' ').slice(0,100);
   if(c<500)return bad(res,'Минимальный вывод $5');if(c>(x.bal||0))return bad(res,'Недостаточно средств на балансе');
+  /* ПРОВЕРКА: Вывод с бонусов доступен только если пользователь пополнял баланс */
+  const hasRealDep=db.ops.some(o=>o.user==n&&o.type=='dep'&&o.status=='done'&&o.inv);
+  if(!hasRealDep)return bad(res,'Для вывода средств (включая бонусные) необходимо совершить хотя бы одно пополнение баланса');
   if(x.totp&&!chk(x.totp,b.code))return bad(res,'Неверный код 2FA');
   if(b.method=='TRC20'&&!/^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(d))return bad(res,'Неверный адрес TRC20');
   if(b.method=='Crypto-бот'&&!/^@?\w{3,32}$/.test(d))return bad(res,'Укажи @username в Telegram');
