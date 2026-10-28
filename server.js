@@ -24,14 +24,16 @@ const chk=(sec,code)=>[-1,0,1].some(d=>totp(sec,Date.now()+d*3e4)===String(code|
 /* telegram: панель на кнопках */
 const tg=(m,b)=>fetch(`https://api.telegram.org/bot${TOKEN}/${m}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(r=>r.json());
 const esc=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-const OS={new:'🆕 новая',accepted:'принята, hold 7 дней',credited:'зачислена',rejected:'отклонена'},PS={pending:'ожидает',done:'выполнено',rejected:'отклонено'};
+const OS={buy:'покупка, ждёт отправки',bought:'отправлено',refunded:'деньги возвращены',new:'новая',accepted:'принята, hold 7 дней',credited:'зачислена',rejected:'отклонена'},PS={pending:'ожидает',done:'выполнено',rejected:'отклонено'};
 const pr=s=>Math.max(.01,+(s.p*(1+(db.cfg.adj||0)/100)).toFixed(2));
+const bp=s=>Math.max(.01,+(s.p*(1+(db.cfg.buyAdj??10)/100)).toFixed(2)),seen=new Map();
+const buyTxt=()=>{const a=db.cfg.buyAdj??10;return a?(a>0?'+':'')+a+'% к рынку':'рыночные'};
 const usd=c=>'$'+(c/100).toFixed(2);
 const adjTxt=()=>db.cfg.adj?(db.cfg.adj>0?'+':'')+db.cfg.adj+'% к рынку':'рыночные';
 const uBtn=l=>[{text:''+l,callback_data:'u:'+l}];
-const fmtO=o=>`<b>Продажа #${o.id}</b> · ${OS[o.status]}\n${esc(o.skin)}\n<b>${usd(Math.round(o.price*100))}</b>\n${esc(o.user)}\n${esc(o.tl)}`;
+const fmtO=o=>`<b>${o.kind=='buy'?'Покупка':'Продажа'} #${o.id}</b> · ${OS[o.status]}\n${esc(o.skin)}\n<b>${usd(Math.round(o.price*100))}</b>\n${esc(o.user)}\n${esc(o.tl)}`;
 const fmtP=p=>`${p.type=='dep'?'<b>Пополнение':'<b>Вывод'} #${p.id}</b> · ${PS[p.status]}\n<b>${usd(p.cents)}</b>${p.method?'\n'+esc(p.method)+(p.details?': <code>'+esc(p.details)+'</code>':''):''}\n${esc(p.user)}`;
-const kbO=o=>({inline_keyboard:[...(o.status=='new'?[[{text:'Принять',callback_data:'o:accepted:'+o.id},{text:'Отклонить',callback_data:'o:rejected:'+o.id}]]:[]),uBtn(o.user)]});
+const kbO=o=>({inline_keyboard:[...(o.status=='new'?[[{text:'Принять',callback_data:'o:accepted:'+o.id},{text:'Отклонить',callback_data:'o:rejected:'+o.id}]]:o.status=='buy'?[[{text:'Отправил',callback_data:'o:bought:'+o.id},{text:'Отказ, вернуть деньги',callback_data:'o:refunded:'+o.id}]]:[]),uBtn(o.user)]});
 const kbP=p=>({inline_keyboard:[...(p.status=='pending'&&p.type=='wd'?[[{text:'Выплачено',callback_data:'p:done:'+p.id},{text:'Отклонить',callback_data:'p:rejected:'+p.id}]]:[]),uBtn(p.user)]});
 const note=async(t,k,img)=>{if(!(TOKEN&&ADMIN))return;const b={chat_id:ADMIN,parse_mode:'HTML',reply_markup:k};try{if(img){const r=await tg('sendPhoto',{...b,photo:img,caption:t});if(r.ok)return}await tg('sendMessage',{...b,text:t,link_preview_options:{is_disabled:true}})}catch(e){}};
 const kb=r=>({inline_keyboard:r}),BACK=[{text:'← В меню',callback_data:'m:main'}],CANCEL=kb([[{text:'Отмена',callback_data:'m:main'}]]),MENU='Меню',wait={};
@@ -39,8 +41,8 @@ async function screen(chat,mid,text,k){const b={chat_id:chat,text,parse_mode:'HT
  if(mid){const r=await tg('editMessageText',{...b,message_id:mid}).catch(()=>({}));if(r.ok||/not modified/.test(r.description||''))return r}
  return tg('sendMessage',b)}
 const cnt=(k)=>db.orders.filter(o=>o.status==k).length,pendP=()=>db.ops.filter(o=>o.type=='wd'&&o.status=='pending');
-function mainScr(){const n=cnt('new'),w=pendP().length;
- return{t:`<b>cs2pay · панель</b>\n\n🆕 Новых заявок: <b>${n}</b>\nВыводов в ожидании: <b>${w}</b>\nЦены: <b>${adjTxt()}</b>\n\nВыбери раздел:`,k:kb([[{text:'Заявки'+(n+w?` (${n+w})`:''),callback_data:'m:pend'},{text:'Статистика',callback_data:'m:stats'}],[{text:'Пользователи',callback_data:'m:users:0'},{text:'Найти',callback_data:'m:find'}],[{text:'Цены',callback_data:'m:price'},{text:'Объявление',callback_data:'m:notice'}]])}}
+function mainScr(){const n=cnt('new')+cnt('buy'),w=pendP().length;
+ return{t:`<b>cs2pay · панель</b>\n\n🆕 Новых заявок: <b>${n}</b>\nВыводов в ожидании: <b>${w}</b>\nЦены: <b>${adjTxt()}</b>\n\nВыбери раздел:`,k:kb([[{text:'Заявки'+(n+w?` (${n+w})`:''),callback_data:'m:pend'},{text:'Статистика',callback_data:'m:stats'}],[{text:'Пользователи',callback_data:'m:users:0'},{text:'Найти',callback_data:'m:find'}],[{text:'Цены выкупа',callback_data:'m:price'},{text:'Цены продажи',callback_data:'m:buyp'}],[{text:'Объявление',callback_data:'m:notice'}]])}}
 function statsScr(){const sum=(l,f)=>l.reduce((t,x)=>t+f(x),0),W=pendP(),D=db.ops.filter(o=>o.type=='dep'&&o.status=='pending');
  return{t:`<b>Статистика</b>\n\nПользователей: <b>${Object.keys(db.users).length}</b>\nСкинов в каталоге: <b>${skins.length}</b>\n\nЗаявки: новые ${cnt('new')} · hold ${cnt('accepted')} · зачислено ${cnt('credited')} · отклонено ${cnt('rejected')}\nНа балансах: <b>${usd(sum(Object.values(db.users),x=>x.bal||0))}</b>\nВыводы: ${W.length} на ${usd(sum(W,o=>o.cents))}\nПополнения: ${D.length} на ${usd(sum(D,o=>o.cents))}\nЦены: ${adjTxt()}`,k:kb([[{text:'Обновить',callback_data:'m:stats'}],BACK])}}
 function usersScr(pg){const L=Object.entries(db.users).sort((a,b)=>(b[1].created||0)-(a[1].created||0)),per=8,N=Math.max(1,Math.ceil(L.length/per));pg=Math.min(Math.max(0,pg),N-1);
@@ -51,11 +53,13 @@ function userScr(l){const x=db.users[l];if(!x)return{t:'Пользователь
 function balScr(l){const B=a=>a.map(v=>({text:(v>0?'+':'−')+Math.abs(v)+'$',callback_data:`ad:${l}:${v}`}));
  return{t:`<b>Баланс ${esc(l)}</b>: ${usd((db.users[l]||{}).bal||0)}\nВыбери сумму или введи свою:`,k:kb([B([1,5,10,50]),B([-1,-5,-10,-50]),[{text:'Своя сумма',callback_data:'ac:'+l}],[{text:'← К пользователю',callback_data:'u:'+l}]])}}
 function priceScr(m){const B=a=>a.map(v=>({text:(v>0?'+':'')+v+'%',callback_data:'pr:'+v}));
- return{t:`<b>Цены выкупа</b>: ${adjTxt()}${m?'\n\n'+m:''}\nПрименяется к новым заявкам, на сайте появится баннер.`,k:kb([B([-50,-20,-10,-5]),[{text:'Рыночные (0%)',callback_data:'pr:0'}],B([5,10,15]),[{text:'Свой процент',callback_data:'pr:c'}],BACK])}}
+ return{t:`<b>Цены выкупа</b>: ${adjTxt()}${m?'\n\n'+m:''}\nПрименяется к новым заявкам, на сайте появится баннер.`,k:kb([B([-50,-20,-10,-5]),[{text:'Рыночные (0%)',callback_data:'pr:0'}],B([5,10,15,25]),[{text:'Свой процент',callback_data:'pr:c'}],BACK])}}
+function buyScr(m){const B=a=>a.map(v=>({text:(v>0?'+':'')+v+'%',callback_data:'bp:'+v}));
+ return{t:`<b>Цены продажи (покупка на сайте)</b>: ${buyTxt()}${m?'\n\n'+m:''}\nПользователи покупают скины с баланса по этой цене.`,k:kb([B([-10,-5,0,5]),B([10,15,20,30]),[{text:'Свой процент',callback_data:'bp:c'}],BACK])}}
 function noticeScr(){return{t:`<b>Объявление на сайте</b>\n\n${db.cfg.notice?esc(db.cfg.notice):'<i>сейчас пусто</i>'}`,k:kb([[{text:'Изменить',callback_data:'n:e'},{text:'Убрать',callback_data:'n:off'}],BACK])}}
 function setBal(l,v,al){const x=db.users[l];if(!x||!v)return;if((x.bal||0)+v*100<0){al.t='Баланс не может уйти в минус';return}
  x.bal=(x.bal||0)+Math.round(v*100);db.ops.push({id:db.ops.length+1,user:l,type:v>0?'dep':'wd',cents:Math.round(Math.abs(v)*100),method:'Корректировка',details:'admin',status:'done',t:Date.now()});save()}
-async function pending(chat,mid){const O=db.orders.filter(o=>o.status=='new').slice(0,10),P=pendP().slice(0,10);
+async function pending(chat,mid){const O=db.orders.filter(o=>o.status=='new'||o.status=='buy').slice(0,10),P=pendP().slice(0,10);
  if(!O.length&&!P.length)return screen(chat,mid,'<b>Ожидающих заявок нет</b>',kb([[{text:'Обновить',callback_data:'m:pend'}],BACK]));
  await screen(chat,mid,`<b>Ждут решения</b>: заявок ${O.length}, выводов ${P.length}`,kb([BACK]));
  for(const o of O)await tg('sendMessage',{chat_id:chat,text:fmtO(o),parse_mode:'HTML',link_preview_options:{is_disabled:true},reply_markup:kbO(o)});
@@ -67,7 +71,8 @@ async function onInput(chat,w,t){
  const v=parseFloat(t.replace(',','.'));
  if(isNaN(v)){wait[chat]=w;return screen(chat,0,'Не похоже на число. Попробуй ещё раз, например 12.5',CANCEL)}
  if(w.k=='addbal'){const al={};setBal(w.l,v,al);return show(chat,0,balScr(w.l))}
- if(w.k=='price'){if(v<-90||v>15){wait[chat]=w;return screen(chat,0,'Допустимо от -90 до +15',CANCEL)}db.cfg.adj=v;save();return show(chat,0,priceScr('Готово'))}}
+ if(w.k=='buyp'){if(v<-50||v>200){wait[chat]=w;return screen(chat,0,'Допустимо от -50 до 200',CANCEL)}db.cfg.buyAdj=v;save();return show(chat,0,buyScr('Готово'))}
+ if(w.k=='price'){if(v<-90||v>50){wait[chat]=w;return screen(chat,0,'Допустимо от -90 до 50',CANCEL)}db.cfg.adj=v;save();return show(chat,0,priceScr('Готово'))}}
 async function onUpdate(u){const m=u.message,c=u.callback_query;
  if(m&&m.text){const chat=m.chat.id,t=m.text.trim();
   if(String(chat)!==String(ADMIN)){if(t.startsWith('/start'))await tg('sendMessage',{chat_id:chat,text:'ID этого чата: '+chat+'\nУкажи его в ADMIN_CHAT_ID.'});return}
@@ -78,17 +83,18 @@ async function onUpdate(u){const m=u.message,c=u.callback_query;
  if(!c||String(c.message.chat.id)!==String(ADMIN))return;
  const chat=c.message.chat.id,mid=c.message.message_id,p=(c.data||'').split(':'),k=p[0],al={};
  if(k!='o'&&k!='p'&&k!='noop')delete wait[chat];
- if(k=='m'){const s=p[1];if(s=='main')await show(chat,mid,mainScr());else if(s=='stats')await show(chat,mid,statsScr());else if(s=='pend')await pending(chat,mid);else if(s=='users')await show(chat,mid,usersScr(+p[2]||0));else if(s=='price')await show(chat,mid,priceScr());else if(s=='notice')await show(chat,mid,noticeScr());
+ if(k=='m'){const s=p[1];if(s=='main')await show(chat,mid,mainScr());else if(s=='stats')await show(chat,mid,statsScr());else if(s=='pend')await pending(chat,mid);else if(s=='users')await show(chat,mid,usersScr(+p[2]||0));else if(s=='price')await show(chat,mid,priceScr());else if(s=='buyp')await show(chat,mid,buyScr());else if(s=='notice')await show(chat,mid,noticeScr());
   else if(s=='find'){wait[chat]={k:'find'};await screen(chat,mid,'Отправь логин пользователя сообщением',CANCEL)}}
  else if(k=='u')await show(chat,mid,userScr(p[1]));
  else if(k=='ban'){const x=db.users[p[1]];if(x){x.ban=!x.ban;save()}await show(chat,mid,userScr(p[1]))}
  else if(k=='ab')await show(chat,mid,balScr(p[1]));
  else if(k=='ad'){setBal(p[1],+p[2],al);await show(chat,mid,balScr(p[1]))}
  else if(k=='ac'){wait[chat]={k:'addbal',l:p[1]};await screen(chat,mid,'Отправь сумму в $, например 12.5 или -3',CANCEL)}
- else if(k=='pr'){if(p[1]=='c'){wait[chat]={k:'price'};await screen(chat,mid,'Отправь процент от -90 до 15, например -7',CANCEL)}else{db.cfg.adj=+p[1];save();await show(chat,mid,priceScr('Готово'))}}
+ else if(k=='pr'){if(p[1]=='c'){wait[chat]={k:'price'};await screen(chat,mid,'Отправь процент от -90 до 50, например -7',CANCEL)}else{db.cfg.adj=+p[1];save();await show(chat,mid,priceScr('Готово'))}}
+ else if(k=='bp'){if(p[1]=='c'){wait[chat]={k:'buyp'};await screen(chat,mid,'Отправь процент от -50 до 200, например 12',CANCEL)}else{db.cfg.buyAdj=+p[1];save();await show(chat,mid,buyScr('Готово'))}}
  else if(k=='n'){if(p[1]=='e'){wait[chat]={k:'notice'};await screen(chat,mid,'Отправь текст объявления сообщением',CANCEL)}else{db.cfg.notice='';save();await show(chat,mid,noticeScr())}}
  else if(k=='o'||k=='p'){const id=+p[2];let txt,kk;
-  if(k=='o'){const o=db.orders.find(x=>x.id==id);if(o&&o.status=='new'){o.status=p[1];if(p[1]=='accepted')o.hold=Date.now()+7*864e5;save()}if(o){txt=fmtO(o);kk=kbO(o)}}
+  if(k=='o'){const o=db.orders.find(x=>x.id==id);if(o&&o.status=='new'){o.status=p[1];if(p[1]=='accepted')o.hold=Date.now()+7*864e5;save()}else if(o&&o.status=='buy'&&(p[1]=='bought'||p[1]=='refunded')){o.status=p[1];if(p[1]=='refunded'){const us=db.users[o.user];if(us)us.bal=(us.bal||0)+Math.round(o.price*100)}save()}if(o){txt=fmtO(o);kk=kbO(o)}}
   else{const q=db.ops.find(x=>x.id==id);if(q&&q.status=='pending'){q.status=p[1];const us=db.users[q.user];if(us&&((p[1]=='done'&&q.type=='dep')||(p[1]=='rejected'&&q.type=='wd')))us.bal=(us.bal||0)+q.cents;save()}if(q){txt=fmtP(q);kk=kbP(q)}}
   if(txt)await(c.message.photo?tg('editMessageCaption',{chat_id:chat,message_id:mid,caption:txt,parse_mode:'HTML',reply_markup:kk}):tg('editMessageText',{chat_id:chat,message_id:mid,text:txt,parse_mode:'HTML',link_preview_options:{is_disabled:true},reply_markup:kk}))}
  await tg('answerCallbackQuery',{callback_query_id:c.id,text:al.t,show_alert:!!al.t})}
@@ -115,7 +121,7 @@ const send=(res,c,o,h)=>{res.writeHead(c,{'Content-Type':'application/json',...h
 const bad=(res,m,c=400,x)=>send(res,c,{error:m,...x});
 const me=req=>{const sid=(/sid=(\w+)/.exec(req.headers.cookie||'')||[])[1],s=sid&&db.sess[sid];return s&&Date.now()-s.t<30*864e5&&db.users[s.n]&&!db.users[s.n].ban?s.n:null};
 const start=(req,res,n)=>{const sid=crypto.randomBytes(24).toString('hex');db.sess[sid]={n,t:Date.now()};save();send(res,200,{name:n},{'Set-Cookie':`sid=${sid}; HttpOnly; SameSite=Lax; Path=/; Max-Age=2592000${req.headers['x-forwarded-proto']=='https'?'; Secure':''}`})};
-const pub=n=>{const u=db.users[n];return{name:n,bal:u.bal||0,tl:u.tl||'',tfa:!!u.totp,google:!!u.google,orders:db.orders.filter(o=>o.user==n).map(({id,skin,img,price,status,hold,t})=>({id,skin,img,price,status,hold,t})),ops:db.ops.filter(o=>o.user==n)}};
+const pub=n=>{const u=db.users[n];return{name:n,bal:u.bal||0,tl:u.tl||'',tfa:!!u.totp,google:!!u.google,orders:db.orders.filter(o=>o.user==n).map(({id,skin,img,price,status,hold,t,kind})=>({id,skin,img,price,status,hold,t,kind})),ops:db.ops.filter(o=>o.user==n)}};
 const fails={};const lim=k=>{const f=fails[k]=(fails[k]||[]).filter(t=>Date.now()-t<6e5);return f.length>=8};
 const TL=/^https:\/\/steamcommunity\.com\/tradeoffer\/new\/\?partner=\d+&token=[\w-]+$/;
 http.createServer(async(req,res)=>{try{
@@ -125,11 +131,11 @@ http.createServer(async(req,res)=>{try{
   res.writeHead(200,{'Content-Type':f.endsWith('.html')?'text/html; charset=utf-8':'application/octet-stream','Cache-Control':'no-cache'});return fs.createReadStream(f).pipe(res)}
  if(p=='/api/config')return send(res,200,{gid:GID||'',cp:!!CP,adj:db.cfg.adj||0,notice:db.cfg.notice||'',rates,ratesAt});
  if(p=='/api/health')return send(res,200,{skins:skins.length,loadedAt,lastErr,db:pool?'postgres':'file',users:Object.keys(db.users).length});
- if(p=='/api/market'){const g=k=>u.searchParams.get(k)||'',q=g('q').toLowerCase(),pg=+g('page')||1,mn=+g('min')||0,mx=+g('max')||1e9,so=g('sort');
-  let f=skins.filter(s=>(!q||s.n.toLowerCase().includes(q))&&(!g('r')||s.r==g('r'))&&(!g('t')||s.t==g('t'))&&(!g('w')||s.w==g('w'))&&pr(s)>=mn&&pr(s)<=mx&&(!g('st')||s.n.includes('StatTrak')==(g('st')=='1')));
+ if(p=='/api/market'){const g=k=>u.searchParams.get(k)||'',q=g('q').toLowerCase(),pg=+g('page')||1,mn=+g('min')||0,mx=+g('max')||1e9,so=g('sort'),P=g('buy')=='1'?bp:pr;
+  let f=skins.filter(s=>(!q||s.n.toLowerCase().includes(q))&&(!g('r')||s.r==g('r'))&&(!g('t')||s.t==g('t'))&&(!g('w')||s.w==g('w'))&&P(s)>=mn&&P(s)<=mx&&(!g('st')||s.n.includes('StatTrak')==(g('st')=='1')));
   if(so=='asc')f=f.slice().sort((a,b)=>a.p-b.p);else if(so=='name')f=f.slice().sort((a,b)=>a.n.localeCompare(b.n));
   const uq=k=>[...new Set(skins.map(s=>s[k]))].filter(Boolean);
-  return send(res,200,{total:f.length,all:skins.length,items:f.slice((pg-1)*48,pg*48).map(s=>({...s,p:pr(s)})),rarities:uq('r'),cats:uq('t'),wears:uq('w')})}
+  return send(res,200,{total:f.length,all:skins.length,items:f.slice((pg-1)*48,pg*48).map(s=>({...s,p:pr(s),b:bp(s)})),rarities:uq('r'),cats:uq('t'),wears:uq('w')})}
  if(p=='/api/register'){const b=await body(req),l=String(b.login||'').trim().toLowerCase(),pw=String(b.password||'');
   if(!/^[a-z0-9_.@-]{3,40}$/.test(l))return bad(res,'Логин: 3–40 символов, латиница, цифры, _ . - @');
   if(pw.length<6)return bad(res,'Пароль от 6 символов');
@@ -145,6 +151,7 @@ http.createServer(async(req,res)=>{try{
   if(!GID||j.aud!==GID||!j.email)return bad(res,'Google-вход не прошёл',401);const l=j.email.toLowerCase();if(!db.users[l]){db.users[l]={google:true,bal:0,created:Date.now()};save()}return start(req,res,l)}
  if(p=='/api/logout'){const sid=(/sid=(\w+)/.exec(req.headers.cookie||'')||[])[1];if(sid){delete db.sess[sid];save()}return send(res,200,{},{'Set-Cookie':'sid=; Max-Age=0; Path=/'})}
  const n=me(req);
+ if(p=='/api/ping'){const v=(u.searchParams.get('v')||'').slice(0,40),now=Date.now();if(v)seen.set(v,now);let k=0;for(const[a,t]of seen){if(now-t>9e4)seen.delete(a);else k++}return send(res,200,{n:k})}
  if(p=='/api/me'){if(!n)return send(res,200,{});settle();return send(res,200,pub(n))}
  if(!n)return bad(res,'Войди в аккаунт',401);
  const x=db.users[n],b=req.method=='POST'?await body(req):{};
@@ -157,6 +164,9 @@ http.createServer(async(req,res)=>{try{
   if(!ss.length)return bad(res,'Скины не найдены, обнови страницу');if(!TL.test(b.tl||''))return bad(res,'Укажи верную трейд-ссылку Steam');
   x.tl=b.tl;for(const s of ss){const o={id:db.orders.length+1,user:n,skin:s.id,img:s.img,price:pr(s),tl:b.tl,status:'new',t:Date.now()};db.orders.push(o);note(fmtO(o),kbO(o),o.img)}
   save();return send(res,200,{ok:true,n:ss.length})}
+ if(p=='/api/buy'){const s=skins.find(k=>k.id==b.id);if(!s)return bad(res,'Скин не найден, обнови страницу');if(!TL.test(b.tl||''))return bad(res,'Укажи верную трейд-ссылку Steam');
+  const c=Math.round(bp(s)*100);if((x.bal||0)<c)return bad(res,'Не хватает баланса: нужно '+usd(c));
+  x.bal-=c;x.tl=b.tl;const o={id:db.orders.length+1,user:n,skin:s.id,img:s.img,price:c/100,tl:b.tl,status:'buy',kind:'buy',t:Date.now()};db.orders.push(o);save();note(fmtO(o),kbO(o),o.img);return send(res,200,{ok:true})}
  if(p=='/api/deposit'){if(!CP)return bad(res,'Пополнение через Crypto-бот пока не подключено');const c=Math.round((+b.amount||0)*100);if(c<500||c>1e6)return bad(res,'Сумма от $5 до $10000');
   const r=await cp('createInvoice',{asset:'USDT',amount:(c/100).toFixed(2),description:'Пополнение баланса cs2pay',expires_in:3600}).catch(()=>({}));
   if(!r.ok)return bad(res,'Crypto-бот не создал счёт, попробуй позже',502);const v=r.result;
@@ -171,4 +181,8 @@ http.createServer(async(req,res)=>{try{
   x.bal-=c;const o={id:db.ops.length+1,user:n,type:'wd',cents:c,method:b.method,details:d,status:'pending',t:Date.now()};db.ops.push(o);save();note(fmtP(o),kbP(o));return send(res,200,{ok:true})}
  return bad(res,'404',404);
 }catch(e){console.log(e);send(res,500,{error:'Ошибка сервера'})}}).listen(PORT,()=>console.log('http://localhost:'+PORT));
-dbInit().then(()=>{load();setInterval(load,18e5);loadRates();setInterval(loadRates,36e5);settle()}).catch(e=>{console.log('DB ERROR',e.message);process.exit(1)});
+dbInit().then(()=>{load();setInterval(load,18e5);loadRates();setInterval(loadRates,36e5);settle();if(!DBU&&E.RENDER)note('<b>Внимание:</b> не задан DATABASE_URL. Аккаунты и заявки пропадут при обновлении сайта. Подключи базу PostgreSQL в Render.')}).catch(e=>{console.log('DB ERROR',e.message);process.exit(1)});
+
+/* сохранить данные перед остановкой при обновлении */
+const flushNow=()=>{clearTimeout(st);return Promise.resolve().then(()=>pool?pool.query("insert into kv(k,v) values('db',$1) on conflict(k) do update set v=$1",[JSON.stringify(db)]):fs.writeFileSync('data.json',JSON.stringify(db))).catch(()=>{})};
+process.on('SIGTERM',()=>flushNow().then(()=>process.exit(0)));
