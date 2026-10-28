@@ -22,11 +22,19 @@ function b32d(s){let b='';for(const c of s)b+=b32.indexOf(c).toString(2).padStar
 function totp(sec,t=Date.now()){const c=Buffer.alloc(8);c.writeBigUInt64BE(BigInt(Math.floor(t/30000)));const h=crypto.createHmac('sha1',b32d(sec)).update(c).digest(),o=h[19]&15;return String((h.readUInt32BE(o)&0x7fffffff)%1e6).padStart(6,'0')}
 const chk=(sec,code)=>[-1,0,1].some(d=>totp(sec,Date.now()+d*3e4)===String(code||'').trim());
 /* telegram: панель на кнопках */
-const tg=(m,b)=>fetch(`https://api.telegram.org/bot${TOKEN}/${m}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(r=>r.json());
+const tg=(m,b)=>fetch(`https://api.telegram.org/bot${TOKEN}/${m}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(r.json());
 const esc=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const OS={buy:'покупка, ждёт отправки',bought:'отправлено',refunded:'деньги возвращены',new:'новая',accepted:'принята, hold 7 дней',credited:'зачислена',rejected:'отклонена'},PS={pending:'ожидает',done:'выполнено',rejected:'отклонено'};
 const pr=s=>Math.max(.01,+(s.p*(1+(db.cfg.adj||0)/100)).toFixed(2));
 const bp=s=>Math.max(.01,+(s.p*(1+(db.cfg.buyAdj??10)/100)).toFixed(2)),seen=new Map();
+let fakeOnl=890,fakeTarget=1050;
+setInterval(()=>{
+ if(Math.abs(fakeOnl-fakeTarget)<15)fakeTarget=636+Math.floor(Math.random()*(1243-636+1));
+ const dir=fakeTarget>fakeOnl?1:-1;
+ const step=Math.floor(Math.random()*14)+3;
+ const noise=Math.floor(Math.random()*9)-4;
+ fakeOnl=Math.max(636,Math.min(1243,fakeOnl+dir*step+noise));
+},3000);
 const buyTxt=()=>{const a=db.cfg.buyAdj??10;return a?(a>0?'+':'')+a+'% к рынку':'рыночные'};
 const usd=c=>'$'+(c/100).toFixed(2);
 const adjTxt=()=>db.cfg.adj?(db.cfg.adj>0?'+':'')+db.cfg.adj+'% к рынку':'рыночные';
@@ -151,7 +159,7 @@ http.createServer(async(req,res)=>{try{
   if(!GID||j.aud!==GID||!j.email)return bad(res,'Google-вход не прошёл',401);const l=j.email.toLowerCase();if(!db.users[l]){db.users[l]={google:true,bal:0,created:Date.now()};save()}return start(req,res,l)}
  if(p=='/api/logout'){const sid=(/sid=(\w+)/.exec(req.headers.cookie||'')||[])[1];if(sid){delete db.sess[sid];save()}return send(res,200,{},{'Set-Cookie':'sid=; Max-Age=0; Path=/'})}
  const n=me(req);
- if(p=='/api/ping'){const v=(u.searchParams.get('v')||'').slice(0,40),now=Date.now();if(v)seen.set(v,now);let k=0;for(const[a,t]of seen){if(now-t>9e4)seen.delete(a);else k++}return send(res,200,{n:k})}
+ if(p=='/api/ping'){const v=(u.searchParams.get('v')||'').slice(0,40),now=Date.now();if(v)seen.set(v,now);let k=0;for(const[a,t]of seen){if(now-t>9e4)seen.delete(a);else k++}return send(res,200,{n:Math.min(1243,fakeOnl+k)})}
  if(p=='/api/me'){if(!n)return send(res,200,{});settle();return send(res,200,pub(n))}
  if(!n)return bad(res,'Войди в аккаунт',401);
  const x=db.users[n],b=req.method=='POST'?await body(req):{};
