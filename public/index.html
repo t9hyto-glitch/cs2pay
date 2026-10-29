@@ -3,56 +3,62 @@
 <title>cs2pay — выкуп и продажа скинов CS2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;600;800&family=Unbounded:wght@600;800&display=swap&subset=cyrillic" rel="stylesheet">
 <style>
-:root{--bg:#0e1116;--p:#151a22;--p2:#1b212b;--ln:#262e3b;--tx:#e8ebf0;--mt:#8791a1;--ac:#f2a93b;--ac2:#7db4e6;--gd:#f2a93b;--bad:#ff5c7a;--ok:#4ade80;color-scheme:dark}
+:root{--bg:#0d1015;--p:#141922;--p2:#1b222e;--ln:#263040;--tx:#edf0f5;--mt:#8892a4;--ac:#f2a93b;--ac2:#7db4e6;--gd:#f2a93b;--bad:#ff5c7a;--ok:#4ade80;--ease:cubic-bezier(.22,1,.36,1);color-scheme:dark}
 *{box-sizing:border-box}[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 Onest,system-ui,-apple-system,"Segoe UI",sans-serif;padding-left:220px}
 a{color:inherit;text-decoration:none}.w{max-width:1220px;margin:0 auto;padding:0 18px}
-header{position:sticky;top:0;z-index:30;background:var(--bg);border-bottom:1px solid var(--ln);margin-left:-220px;padding-left:220px}
+header{position:sticky;top:0;z-index:30;background:#0d1015e6;backdrop-filter:blur(12px);border-bottom:1px solid var(--ln);margin-left:-220px;padding-left:220px}
 .bar{display:flex;align-items:center;gap:6px;height:56px}
-.logo{font-family:Unbounded,Onest,sans-serif;font-weight:900;font-size:20px;letter-spacing:-.5px;margin-right:6px}
-.logo b,.gr{color:var(--ac)}
-nav a{padding:8px 13px;border-radius:10px;color:var(--mt);font-weight:700;font-size:14px}
+.logo{font-family:Unbounded,Onest,sans-serif;font-weight:900;font-size:20px;letter-spacing:-.5px;margin-right:6px;transition:transform .2s var(--ease)}
+.logo:hover{transform:scale(1.03)}.logo b,.gr{color:var(--ac)}
+nav a{padding:8px 13px;border-radius:10px;color:var(--mt);font-weight:700;font-size:14px;transition:background .2s var(--ease),color .2s var(--ease)}
 nav a.on,nav a:hover{background:var(--p2);color:var(--tx)}
 .sp{flex:1}
-.btn{border:0;border-radius:10px;padding:10px 16px;font:700 14px inherit;font-family:inherit;cursor:pointer;background:var(--ac);color:#1a1204;transition:transform .12s,filter .15s;position:relative;white-space:nowrap}
-.btn:hover{filter:brightness(1.08)}.btn:active{transform:scale(.96)}
-.btn.g{background:var(--p2);color:var(--tx);border:1px solid var(--ln)}.btn.g:hover{border-color:#3a4556;filter:none}
+.btn{border:0;border-radius:10px;padding:10px 16px;font:700 14px inherit;font-family:inherit;cursor:pointer;background:var(--ac);color:#1a1204;transition:transform .2s var(--ease),filter .2s var(--ease),box-shadow .2s var(--ease);position:relative;white-space:nowrap}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px);box-shadow:0 6px 18px -6px #f2a93b88}.btn:active{transform:translateY(0) scale(.97)}
+.btn.g{background:var(--p2);color:var(--tx);border:1px solid var(--ln);box-shadow:none}.btn.g:hover{border-color:#3d4a60;filter:none;box-shadow:0 4px 12px -4px #0008}
 .sm{padding:7px 12px;font-size:13px}.bl{width:100%}
 .bdg{position:absolute;top:-6px;right:-6px;background:var(--ac);color:#1a1204;border-radius:99px;font:800 11px inherit;padding:1px 6px;font-style:normal}
 :focus-visible{outline:2px solid var(--ac2);outline-offset:2px}
-.chip{background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:8px 13px;font-weight:800;color:var(--ac);cursor:pointer}
+.chip{background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:8px 13px;font-weight:800;color:var(--ac);cursor:pointer;transition:border-color .2s}
+.chip:hover{border-color:var(--ac)}
+.uid-badge{background:var(--p2);border:1px solid var(--ln);color:var(--mt);font:700 12px ui-monospace,monospace;padding:5px 10px;border-radius:8px;cursor:pointer;transition:border-color .2s,color .2s}
+.uid-badge:hover{border-color:var(--ac);color:var(--tx)}
 h1{font-size:clamp(28px,4.2vw,48px);line-height:1.04;margin:0 0 14px;letter-spacing:-1.5px;font-weight:800}
 h2{font-size:clamp(22px,3vw,28px);letter-spacing:-.5px;margin:0 0 16px;font-weight:800}
 h3{margin:0 0 12px;font-size:18px;font-weight:800}
 .hero{padding:26px 0 22px;display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:center}
 .hero p{color:var(--mt);font-size:15px;max-width:52ch;margin:0 0 18px}
 .stats{display:flex;gap:10px;flex-wrap:wrap}
-.stat{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:10px 15px}
+.stat{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:10px 15px;transition:transform .25s var(--ease),border-color .25s}
+.stat:hover{transform:translateY(-2px);border-color:#38465e}
 .stat b{display:block;font-size:19px;font-weight:900}.stat span{font-size:12px;color:var(--mt)}
 .show{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sec{padding:24px 0}
 .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.step,.adv{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:16px}
+.step,.adv{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:16px;transition:transform .25s var(--ease),border-color .25s}
+.step:hover,.adv:hover{transform:translateY(-3px);border-color:#38465e}
 .step i{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--p2);color:var(--ac);font:900 14px inherit;margin-bottom:8px}
 .step b,.adv b{display:block;font-size:15.5px;margin-bottom:4px}.step span,.adv span{color:var(--mt);font-size:13px}
-details{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:13px 16px;margin-bottom:8px}
-summary{cursor:pointer;font-weight:700}details p{color:var(--mt);margin:8px 0 0;font-size:14px}
+details{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:13px 16px;margin-bottom:8px;transition:border-color .2s}
+details:hover{border-color:#38465e}summary{cursor:pointer;font-weight:700}details p{color:var(--mt);margin:8px 0 0;font-size:14px}
 footer{border-top:1px solid var(--ln);padding:22px 0 36px;color:var(--mt);font-size:13px;margin-top:26px}
 .main{display:grid;grid-template-columns:220px 1fr;gap:16px;margin-top:16px}
 aside{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:14px;align-self:start;position:sticky;top:70px;max-height:calc(100vh - 86px);overflow:auto}
 aside h4{margin:13px 0 6px;font-size:12.5px;color:var(--tx);font-weight:700}aside h4:first-child{margin-top:0}
 .ch{display:flex;flex-wrap:wrap;gap:5px}
-.c{background:var(--p2);border:1px solid transparent;color:var(--mt);border-radius:8px;padding:5px 9px;font:600 12px inherit;font-family:inherit;cursor:pointer}
-.c.on{background:var(--ac);color:#1a1204}
-input,select{background:var(--p2);border:1px solid var(--ln);color:var(--tx);border-radius:10px;padding:9px 11px;font:600 14px inherit;font-family:inherit;width:100%}
+.c{background:var(--p2);border:1px solid transparent;color:var(--mt);border-radius:8px;padding:5px 9px;font:600 12px inherit;font-family:inherit;cursor:pointer;transition:all .18s var(--ease)}
+.c:hover{color:var(--tx)}.c.on{background:var(--ac);color:#1a1204}
+input,select{background:var(--p2);border:1px solid var(--ln);color:var(--tx);border-radius:10px;padding:9px 11px;font:600 14px inherit;font-family:inherit;width:100%;transition:border-color .2s}
 input:focus,select:focus{border-color:var(--ac);outline:0}
 #cur{width:auto;padding:8px 10px;font-weight:700;cursor:pointer}#snd{padding:9px 11px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tb{display:flex;gap:8px;margin-bottom:14px}.tb input{flex:3}.tb select{flex:1;min-width:140px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
-.card{background:var(--p);border:1px solid var(--ln);border-radius:12px;overflow:hidden;transition:border-color .15s;--c:#888;position:relative}
-.card:hover{border-color:#3a4556}.card.in{border-color:var(--ac)}
+.card{background:var(--p);border:1px solid var(--ln);border-radius:12px;overflow:hidden;transition:transform .25s var(--ease),border-color .25s var(--ease),box-shadow .25s var(--ease);--c:#888;position:relative}
+.card:hover{transform:translateY(-4px);border-color:var(--c);box-shadow:0 12px 26px -14px var(--c)}.card.in{border-color:var(--ac)}
 .card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--c)}
-.art{height:130px;display:grid;place-items:center;background:var(--p2)}
-.art img{max-width:86%;max-height:114px;object-fit:contain}
+.art{height:130px;display:grid;place-items:center;background:radial-gradient(circle at 50% 110%,color-mix(in srgb,var(--c) 24%,var(--p2)),var(--p2) 75%)}
+.art img{max-width:86%;max-height:114px;object-fit:contain;transition:transform .3s var(--ease)}
+.card:hover .art img{transform:scale(1.07) translateY(-2px)}
 .bd{position:absolute;top:8px;left:8px;background:var(--bg);border:1px solid var(--ln);border-radius:6px;padding:1px 7px;font-size:10.5px;font-weight:700}
 .cb{padding:10px 12px 12px}.nm{font-weight:700;font-size:12.5px;line-height:1.25;min-height:32px}.rr{font-size:11.5px;color:var(--c);margin:2px 0 7px}
 .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -62,19 +68,19 @@ input:focus,select:focus{border-color:var(--ac);outline:0}
 .wb{display:flex;gap:2px;margin:0 0 9px}.wb i{flex:1;min-width:6px;height:4px;border-radius:2px;background:var(--ln)}.wb i.on{background:var(--c)}
 .sk{height:240px;border-radius:12px;background:linear-gradient(100deg,var(--p) 30%,var(--p2) 50%,var(--p) 70%);background-size:300% 100%;animation:sh 1.3s infinite}@keyframes sh{to{background-position:-100% 0}}
 .more{display:block;margin:18px auto 50px}.em{color:var(--mt);padding:26px 0;grid-column:1/-1;text-align:center}
-.ov{position:fixed;inset:0;background:#000d;display:none;place-items:center;z-index:50;padding:14px}.ov.s{display:grid}
-.md{background:var(--p);border:1px solid var(--ln);border-radius:18px;width:100%;max-width:430px;padding:20px;max-height:92vh;overflow:auto;animation:pop .22s cubic-bezier(.2,1.3,.4,1)}@keyframes pop{from{transform:scale(.93);opacity:0}}
+.ov{position:fixed;inset:0;background:#000c;backdrop-filter:blur(5px);display:none;place-items:center;z-index:50;padding:14px}.ov.s{display:grid}
+.md{background:var(--p);border:1px solid var(--ln);border-radius:18px;width:100%;max-width:430px;padding:20px;max-height:92vh;overflow:auto;animation:pop .26s var(--ease)}@keyframes pop{from{transform:translateY(12px) scale(.95);opacity:0}}
 label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:11px 0 4px}
-.tabs{display:flex;gap:6px;margin:0 0 14px;border-bottom:1px solid var(--ln);padding-bottom:10px;flex-wrap:wrap}.tabs a{padding:8px 13px;border-radius:10px;color:var(--mt);font-weight:700}.tabs a.on{background:var(--p2);color:var(--tx)}
+.tabs{display:flex;gap:6px;margin:0 0 14px;border-bottom:1px solid var(--ln);padding-bottom:10px;flex-wrap:wrap;align-items:center}.tabs a{padding:8px 13px;border-radius:10px;color:var(--mt);font-weight:700;transition:background .2s}.tabs a.on{background:var(--p2);color:var(--tx)}
 .note{background:var(--p2);border-radius:10px;padding:9px 11px;color:var(--mt);font-size:12.5px;margin:10px 0 5px}.err{color:var(--bad);font-size:12.5px;min-height:17px;margin:4px 0}
 .hint{color:var(--mt);font-size:12px;min-height:16px;margin-top:4px}
-.dr{position:fixed;top:0;right:0;bottom:0;width:min(400px,100%);background:var(--p);border-left:1px solid var(--ln);z-index:45;transform:translateX(105%);transition:transform .28s cubic-bezier(.2,.9,.3,1);display:flex;flex-direction:column;padding:16px}.dr.s{transform:none}
+.dr{position:fixed;top:0;right:0;bottom:0;width:min(400px,100%);background:var(--p);border-left:1px solid var(--ln);z-index:45;transform:translateX(105%);transition:transform .32s var(--ease);display:flex;flex-direction:column;padding:16px}.dr.s{transform:none}
 .dl{flex:1;overflow:auto}.li{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--ln)}.li img{width:48px;height:35px;object-fit:contain}.li .nm{flex:1;min-height:0;font-size:12.5px}.x{background:none;border:0;color:var(--mt);cursor:pointer;font-size:20px}
 .pc{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:13px}.box{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:16px}
 .ord{padding:11px 0;border-bottom:1px solid var(--ln)}.ord:last-child{border:0}.st{font-size:12px;color:var(--gd);font-weight:700}
 .pb{height:5px;background:var(--p2);border-radius:9px;margin-top:6px;overflow:hidden}.pb i{display:block;height:100%;background:var(--ac)}
 .mono{font-family:ui-monospace,monospace;background:var(--p2);padding:9px;border-radius:9px;word-break:break-all;font-size:12.5px;user-select:all}
-.toast{position:fixed;left:50%;top:66px;transform:translate(-50%,-140px);background:var(--ok);color:#03210f;font-weight:800;padding:11px 18px;border-radius:12px;z-index:70;transition:transform .32s cubic-bezier(.2,1.3,.4,1)}.toast.s{transform:translate(-50%,0)}
+.toast{position:fixed;left:50%;top:66px;transform:translate(-50%,-140px);background:var(--ok);color:#03210f;font-weight:800;padding:11px 18px;border-radius:12px;z-index:70;transition:transform .34s var(--ease);box-shadow:0 10px 25px -8px #000a}.toast.s{transform:translate(-50%,0)}
 .bn{background:var(--p2);border-bottom:1px solid var(--ln);text-align:center;padding:8px 12px;font-weight:700;font-size:13.5px}.bn.r{background:#3a0f1c;border-color:var(--bad)}.lk{color:var(--ac2)}footer a{color:var(--ac2)}
 .fb{display:none}
 .md.au{max-width:720px;padding:0;display:grid;grid-template-columns:1fr 1.1fr;overflow:hidden}
@@ -83,24 +89,25 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:11px
 #lc{text-align:center;letter-spacing:10px;font:700 21px Onest,monospace}
 .md.cr{text-align:center;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:6px}.md.cr h3{margin:6px 0 0}.md.cr p{color:var(--mt);margin:0 0 8px}.md.cr .big{color:var(--ac)}.md.cr input{width:100%}
 .tb2{display:none}#snd svg,#cartb svg{vertical-align:-4px}
-.seg{display:flex;background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:3px}.seg button{border:0;background:none;color:var(--mt);padding:7px 14px;border-radius:8px;font:700 13.5px Onest,sans-serif;cursor:pointer}.seg button.on{background:var(--ac);color:#1a1204}
-.on2{display:inline-flex;align-items:center;gap:5px;margin-left:8px;color:var(--mt);font-size:12.5px;font-weight:600;white-space:nowrap}.on2 i{width:7px;height:7px;border-radius:50%;background:#3ccf7a;box-shadow:0 0 6px #3ccf7a}
-.fv{position:absolute;top:7px;right:7px;z-index:2;width:28px;height:28px;border-radius:50%;border:0;background:#0e1116cc;color:var(--mt);cursor:pointer;display:grid;place-items:center}.fv.on{color:#ff6b6b}.fv.on svg{fill:currentColor}
+.seg{display:flex;background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:3px}.seg button{border:0;background:none;color:var(--mt);padding:7px 14px;border-radius:8px;font:700 13.5px Onest,sans-serif;cursor:pointer;transition:all .2s var(--ease)}.seg button.on{background:var(--ac);color:#1a1204}
+.on2{display:inline-flex;align-items:center;gap:5px;margin-left:8px;color:var(--mt);font-size:12.5px;font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}.on2 i{width:7px;height:7px;border-radius:50%;background:#3ccf7a;box-shadow:0 0 6px #3ccf7a}
+.fv{position:absolute;top:7px;right:7px;z-index:2;width:28px;height:28px;border-radius:50%;border:0;background:#0e1116cc;color:var(--mt);cursor:pointer;display:grid;place-items:center;transition:transform .2s var(--ease),color .2s}.fv:hover{transform:scale(1.12)}.fv.on{color:#ff6b6b}.fv.on svg{fill:currentColor}
 #favb.on{background:var(--ac);color:#1a1204}
 .pl{display:flex;gap:9px;overflow-x:auto;margin-top:10px;padding-bottom:4px}.pi{flex:0 0 185px;display:flex;align-items:center;gap:7px;background:var(--p2);border-radius:9px;padding:7px}.pi img{width:44px;height:32px;object-fit:contain}.pi span{font-size:11.5px;flex:1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.pi b{color:var(--ac);font-size:12.5px}
 
-/* ДЛИННЫЙ УЗКИЙ САЙДБАР СБОКУ СЛЕВА */
-.lf-panel{position:fixed;top:56px;left:0;bottom:0;width:215px;background:#11151cd9;backdrop-filter:blur(8px);border-right:1px solid var(--ln);padding:10px 8px;display:flex;flex-direction:column;gap:6px;z-index:18}
+/* ДЛИННЫЙ УЗКИЙ САЙДБАР СБОКУ СЛЕВА С ПЛАВНОЙ АНИМАЦИЕЙ */
+.lf-panel{position:fixed;top:56px;left:0;bottom:0;width:215px;background:#10141be6;backdrop-filter:blur(10px);border-right:1px solid var(--ln);padding:10px 8px;display:flex;flex-direction:column;gap:6px;z-index:18}
 .lf-head{display:flex;align-items:center;justify-content:space-between;padding:0 2px 6px;border-bottom:1px solid var(--ln)}
 .lf-head b{font-size:11.5px;display:flex;align-items:center;gap:5px;color:var(--mt);font-weight:700}
 .lf-dot{width:6px;height:6px;border-radius:50%;background:#3ccf7a;animation:pulse 1.8s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.lf-add{border:0;background:var(--p2);color:var(--ac);font:700 10px Onest,sans-serif;padding:3px 7px;border-radius:6px;cursor:pointer;border:1px solid var(--ln)}
+.lf-add{border:0;background:var(--p2);color:var(--ac);font:700 10px Onest,sans-serif;padding:3px 7px;border-radius:6px;cursor:pointer;border:1px solid var(--ln);transition:border-color .2s}
 .lf-add:hover{border-color:var(--ac)}
 .lf-list{display:flex;flex-direction:column;gap:6px;overflow-y:auto;flex:1;scrollbar-width:none}
 .lf-list::-webkit-scrollbar{display:none}
-.lf-item{background:var(--p);border:1px solid #202733;border-radius:8px;padding:6px 7px;animation:slideIn .25s ease-out;flex-shrink:0}
-@keyframes slideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.lf-item{background:var(--p);border:1px solid #202733;border-radius:9px;padding:6px 7px;animation:dealIn .38s var(--ease);flex-shrink:0;transition:border-color .2s}
+.lf-item:hover{border-color:#344156}
+@keyframes dealIn{0%{opacity:0;transform:translateY(-12px) scale(.96)}100%{opacity:1;transform:none}}
 .lf-top{display:flex;align-items:center;gap:6px}
 .lf-av{width:22px;height:22px;border-radius:50%;object-fit:cover;background:var(--p2);flex-shrink:0;display:grid;place-items:center;font-weight:800;font-size:10px;color:#fff}
 .lf-u{flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:4px}
@@ -117,7 +124,8 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:11px
 .calc-res{background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:8px 14px;min-width:155px;text-align:right}
 .calc-res span{display:block;font-size:11px;color:var(--mt)}
 .calc-res b{font-size:18px;color:var(--ok);font-weight:800}
-.t-card{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:15px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.t-card{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:15px;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:border-color .2s}
+.t-card:hover{border-color:#38465e}
 .t-info b{display:block;font-size:15px;margin-bottom:3px}
 .t-info span{color:var(--mt);font-size:13px}
 .t-rw{color:var(--ok);font-weight:800;font-size:14px;white-space:nowrap}
@@ -129,13 +137,13 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:11px
  .lf-panel{position:static;width:100%;max-height:none;background:transparent;border:0;padding:0;margin:10px 0 18px}
  .lf-head{padding:0 2px 8px;border:0}
  .lf-list{flex-direction:row;overflow-x:auto;overflow-y:hidden;gap:8px;padding-bottom:4px}
- .lf-item{flex:0 0 210px}
+ .lf-item{flex:0 0 215px}
  .calc-box{grid-template-columns:1fr 1fr}
 }
 @media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:16px}.main{grid-template-columns:1fr}aside{display:none;position:static;max-height:none}aside.o{display:block}.fb{display:inline-block}nav a{padding:8px 9px}}
 @media(max-width:700px){
  body{padding-bottom:70px;font-size:14px}.w{padding:0 10px}nav:not(.tb2){display:none}.bar{height:52px;gap:5px}.logo{font-size:17px;margin-right:0}
- #cartb .tx,#balc{display:none}#cartb,#snd{padding:8px 9px}#cur{padding:7px 5px}#lg{max-width:92px;overflow:hidden;text-overflow:ellipsis}
+ #cartb .tx,#balc{display:none}#cartb,#snd{padding:8px 9px}#cur{padding:7px 5px}#lg{max-width:105px;overflow:hidden;text-overflow:ellipsis}
  .on2{margin-left:3px;font-size:11px}
  .tb2{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--bg);border-top:1px solid var(--ln);padding:5px 5px calc(5px + env(safe-area-inset-bottom))}
  .tb2 a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 0;border-radius:9px;color:var(--mt);font-size:10.5px;font-weight:700}.tb2 a.on{color:var(--ac);background:var(--p2)}
@@ -179,7 +187,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:11px
  <div class="sec"><h2>Поддержка и контакты</h2><div class="steps"><div class="adv"><b>Менеджер в Telegram</b><span><a class="lk" href="https://t.me/cs2_pay" target="_blank">@cs2_pay</a> (оценка и сделки в ЛС)</span></div><div class="adv"><b>Наш Telegram-канал</b><span><a class="lk" href="https://t.me/SellSkin_cs2" target="_blank">@SellSkin_cs2</a> (раздачи промокодов и ножи)</span></div></div></div>
  </section>
 
- <!-- РАЗДЕЛ: БОНУСЫ, ЗАДАНИЯ И ПРОМОКОДЫ (АВТОПЕРЕСЧЕТ ВАЛЮТЫ, БЕЗ СМАЙЛИКОВ) -->
+ <!-- РАЗДЕЛ: БОНУСЫ, ЗАДАНИЯ И ПРОМОКОДЫ -->
  <section id="v-bonuses" hidden style="padding:16px 0 40px">
   <h2>Бонусы, задания и промокоды</h2>
   <div id="b-active" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"></div>
@@ -187,7 +195,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:11px
    <div class="box">
     <h3>Активировать промокод</h3>
     <p style="color:var(--mt);margin-top:0;font-size:13.5px">Введи промокод из нашего канала <a class="lk" href="https://t.me/SellSkin_cs2" target="_blank">@SellSkin_cs2</a>, чтобы получить деньги на баланс, бонус к продаже скинов или бонус к пополнению.</p>
-    <div style="display:flex;gap:8px"><input id="pcode" placeholder="Например: CS2PAY"><button class="btn" id="pbtn">Активировать</button></div>
+    <div style="display:flex;gap:8px"><input id="pcode" placeholder="Например: SELLSKIN"><button class="btn" id="pbtn">Активировать</button></div>
     <div class="err" id="perr"></div>
    </div>
    <div class="box">
@@ -223,17 +231,16 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:11px
 <label>Твоя трейд-ссылка Steam</label><input id="ctl" placeholder="https://steamcommunity.com/tradeoffer/new/?partner=…&token=…"><div class="err" id="ce"></div>
 <div class="row"><button class="btn g" id="cclr">Очистить</button><button class="btn" style="flex:1" id="cgo">Продать</button></div><div class="note">Сумма зачислится на баланс после проверки скинов.</div></div>
 
-<div class="ov" id="ol"><div class="md au"><div class="ls"><div class="logo">cs2<b>pay</b></div><p><b>Продай или купи скины</b> по выгодному прайсу.</p><p><b>Промокоды и бонусы</b> для каждого пользователя.</p><p><b>Вывод</b> на Карту, Crypto-бот или TRC20.</p></div>
+<div class="ov" id="ol"><div class="md au"><div class="ls"><div class="logo">cs2<b>pay</b></div><p><b>Продай или купи скины</b> по выгодному прайсу.</p><p><b>Уникальный ID профиля</b> и система бонусов.</p><p><b>Вывод</b> на Карту, Crypto-бот или TRC20.</p></div>
 <div class="rs"><h3 id="at">Вход в cs2pay</h3><div id="gb" style="margin-bottom:10px"></div>
 <input id="lu" placeholder="Логин" autocomplete="username"><div style="height:8px"></div><div class="pw"><input id="lp" type="password" placeholder="Пароль (от 6 символов)" autocomplete="current-password"><button id="sp" type="button">Показать</button></div>
 <div id="lcw" hidden style="margin-top:8px"><input id="lc" inputmode="numeric" maxlength="6" placeholder="······"><div class="hint">Код из Google Authenticator</div></div><div class="err" id="le"></div>
 <div class="row"><button class="btn g" style="flex:1" id="am">Регистрация</button><button class="btn" style="flex:2" id="ago">Войти</button></div></div></div></div>
 
-<div class="ov" id="cr"><div class="md cr"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="none" stroke="#f2a93b" stroke-width="3"/><path d="M19 33l9 9 17-19" fill="none" stroke="#f2a93b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg><h3>Баланс пополнен</h3><div class="big" id="cra"></div><p>Деньги уже на балансе, можно выводить.</p><button class="btn bl" onclick="closeAll()">Отлично</button></div></div>
+<div class="ov" id="cr"><div class="md cr"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="none" stroke="#f2a93b" stroke-width="3"/><path d="M19 33l9 9 17-19" fill="none" stroke="#f2a93b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg><h3>Баланс пополнен</h3><div class="big" id="cra"></div><p>Средства зачислены на ваш аккаунт.</p><button class="btn bl" onclick="closeAll()">Отлично</button></div></div>
 
 <div class="ov" id="ob"><div class="md cr"><img id="bi" alt="" style="width:160px;height:110px;object-fit:contain"><h3 id="bn2" style="font-size:16px"></h3><div class="big" id="bpz"></div><input id="btl" placeholder="Трейд-ссылка Steam"><div class="hint" id="bh"></div><div class="err" id="be"></div><button class="btn bl" id="bgo">Оплатить с баланса</button><a class="btn g bl" href="https://t.me/cs2_pay" target="_blank" style="margin-top:4px">Купить через @cs2_pay в ТГ</a></div></div>
 
-<!-- ОКНО ОТЗЫВА (ТОЛЬКО ПОСЛЕ ПОКУПКИ ИЛИ ПРОДАЖИ) -->
 <div class="ov" id="orev"><div class="md" style="max-width:360px"><h3>Оставить отзыв о сделке</h3>
 <p style="color:var(--mt);font-size:13px;margin:0 0 10px">Отзыв будет привязан к твоей последней сделке на сайте.</p>
 <label>Оценка</label><select id="rst"><option value="5">★★★★★ (5 звёзд)</option><option value="4">★★★★☆ (4 звезды)</option></select>
@@ -244,7 +251,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:11px
 <nav class="tb2"><a href="#/"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg>Главная</a><a href="#/market"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Маркет</a><a href="#/bonuses"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20 12v8H4v-8M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>Бонусы</a><a href="#/profile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Профиль</a></nav>
 <div class="toast" id="t"></div>
 <script>
-var $=function(i){return document.getElementById(i)},S={me:null,cart:{},items:{},fav:{},favOn:0},F={t:"",r:"",w:"",st:""},page=1,loaded=0,fl=0,snd=true,ac,M,D,NB,tm,qt,mode="login",WS={"Factory New":"FN","Minimal Wear":"MW","Field-Tested":"FT","Well-Worn":"WW","Battle-Scarred":"BS"};
+var $=function(i){return document.getElementById(i)},S={me:null,cart:{},items:{},fav:{},favOn:0,cfg:{dailyCents:5,minWd:5,botsOn:true,botSec:5}},F={t:"",r:"",w:"",st:""},page=1,loaded=0,fl=0,snd=true,ac,M,tm,qt,mode="login",WS={"Factory New":"FN","Minimal Wear":"MW","Field-Tested":"FT","Well-Worn":"WW","Battle-Scarred":"BS"};
 try{S.cart=JSON.parse(localStorage.getItem("cart")||"{}")}catch(e){}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 var LB=null;function bc(b){if(LB!=null&&b>LB){$("cra").textContent="+"+mo(b-LB);$("cr").classList.add("s");sOk();confetti();clearTimeout(window.ct);window.ct=setTimeout(closeAll,6e3)}LB=b}
@@ -266,12 +273,44 @@ if($("ca"))$("ca").oninput=calcUp;if($("cm"))$("cm").onchange=calcUp;
 function wb(w){var T={"Factory New":.07,"Minimal Wear":.08,"Field-Tested":.23,"Well-Worn":.07,"Battle-Scarred":.55};if(!T[w])return"";return'<div class="wb">'+Object.keys(T).map(function(k){return'<i style="flex:'+T[k]+'"'+(k==w?' class="on"':"")+'></i>'}).join("")+'</div>'}
 function api(u,b){return api0(u,b).catch(function(e){if(!e.d)e.message="Нет связи с сервером. Открывай сайт по адресу на Render, а не как файл";throw e})}
 function api0(u,b){return fetch(u,b!==undefined?{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}:{}).then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok){var e=new Error(j.error||"Ошибка");e.d=j;throw e}return j})})}
-/* sound */
+
+/* МЯГКИЙ СТУДИЙНЫЙ ЗВУК (НИКАКОГО ПИСКА, ТЁПЛЫЙ ФИЛЬТР И БАРХАТНЫЕ АККОРДЫ) */
 var IO='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg>',IF='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>';function SI(){$("snd").innerHTML=snd?IO:IF}
-function A(){if(!ac){ac=new(window.AudioContext||window.webkitAudioContext)();M=ac.createGain();M.gain.value=.55;var cv=ac.createConvolver(),n=ac.sampleRate*1.6,b=ac.createBuffer(2,n,ac.sampleRate);for(var c=0;c<2;c++){var a=b.getChannelData(c);for(var i=0;i<n;i++)a[i]=(Math.random()*2-1)*Math.pow(1-i/n,3)}cv.buffer=b;D=ac.createGain();D.gain.value=.4;D.connect(cv);cv.connect(M);M.connect(ac.destination)}if(ac.state=="suspended")ac.resume();return ac}
-function nt(f,t,d,v){if(!snd)return;try{var c=A(),n=c.currentTime+t,g=c.createGain();g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(v,n+.008);g.gain.exponentialRampToValueAtTime(.0001,n+d);g.connect(M);g.connect(D);[[1,1],[2,.18],[3.01,.06]].forEach(function(h){var o=c.createOscillator(),k=c.createGain();o.frequency.value=f*h[0];k.gain.value=h[1];o.connect(k);k.connect(g);o.start(n);o.stop(n+d+.05)})}catch(e){}}
-function sTap(){nt(1568,0,.07,.03)}function sPop(){nt(784,0,.35,.1);nt(1175,.07,.45,.09)}function sOpen(){nt(660,0,.25,.07)}function sErr(){nt(330,0,.3,.08);nt(262,.11,.4,.08)}
-function sOk(){[523,659,784,1047].forEach(function(f,i){nt(f,i*.09,.8,.09)})}
+function A(){
+ if(!ac){
+  ac=new(window.AudioContext||window.webkitAudioContext)();
+  M=ac.createGain();M.gain.value=.45;
+  var lp=ac.createBiquadFilter();lp.type="lowpass";lp.frequency.value=1400;
+  M.connect(lp);lp.connect(ac.destination);
+ }
+ if(ac.state=="suspended")ac.resume();
+ return ac;
+}
+function warmTone(f1,f2,delay,dur,vol,type){
+ if(!snd)return;
+ try{
+  var c=A(),t0=c.currentTime+(delay||0),o=c.createOscillator(),g=c.createGain();
+  o.type=type||"sine";
+  o.frequency.setValueAtTime(f1,t0);
+  if(f2)o.frequency.exponentialRampToValueAtTime(f2,t0+dur);
+  g.gain.setValueAtTime(.0001,t0);
+  g.gain.linearRampToValueAtTime(vol||.06,t0+.012);
+  g.gain.exponentialRampToValueAtTime(.0001,t0+dur);
+  o.connect(g);g.connect(M);
+  o.start(t0);o.stop(t0+dur+.02);
+ }catch(e){}
+}
+/* Мягкий глубокий тактильный клик */
+function sTap(){warmTone(170,65,0,.045,.05,"triangle")}
+/* Приятный бархатный звук добавления в корзину */
+function sPop(){warmTone(261.6,329.6,0,.14,.06,"sine");warmTone(392,523.2,.05,.18,.05,"triangle")}
+/* Мягкий шелест открытия окна */
+function sOpen(){warmTone(220,293.6,0,.16,.045,"sine")}
+/* Глухой низкий сигнал ошибки */
+function sErr(){warmTone(165,120,0,.18,.07,"triangle");warmTone(135,98,.12,.22,.07,"triangle")}
+/* Тёплый мажорный аккорд успеха */
+function sOk(){[261.63,329.63,392.00,523.25].forEach(function(f,i){warmTone(f,f,i*.065,.55,.05,"triangle")})}
+
 try{snd=localStorage.snd!="0"}catch(e){}SI();
 $("snd").onclick=function(){snd=!snd;try{localStorage.snd=snd?1:0}catch(e){}SI();sTap()};
 document.addEventListener("click",function(e){if(e.target.closest&&e.target.closest("button,.btn,.c"))sTap()},true);
@@ -279,6 +318,7 @@ $("sp").onclick=function(){var p=$("lp"),h=p.type=="password";p.type=h?"text":"p
 function toast(x,b){var e=$("t");e.textContent=x;e.style.background=b?"var(--bad)":"var(--ok)";e.classList.add("s");clearTimeout(tm);tm=setTimeout(function(){e.classList.remove("s")},3000)}
 function closeAll(){document.querySelectorAll(".ov").forEach(function(o){o.classList.remove("s")});$("dr").classList.remove("s")}
 document.querySelectorAll(".ov").forEach(function(o){o.onmousedown=function(e){if(e.target===o)closeAll()}});document.onkeydown=function(e){if(e.key=="Escape")closeAll()};
+
 /* routing */
 function route(){var h=(location.hash||"#/").slice(2).split("/"),v=h[0]||"home";if(["home","market","bonuses","profile"].indexOf(v)<0)v="home";
 ["home","market","bonuses","profile"].forEach(function(x){$("v-"+x).hidden=x!=v});
@@ -286,9 +326,10 @@ document.querySelectorAll("nav a,.tb2 a").forEach(function(a){a.classList.toggle
 if(v=="market"&&!loaded){loaded=1;load(true)}if(v=="profile")prof(h[1]||"overview");if(v=="bonuses")renderBonuses();scrollTo(0,0)}
 addEventListener("hashchange",route);
 
-/* БОНУСЫ И ПРОМОКОДЫ (ПЕРЕСЧЕТ В ТЕКУЩУЮ ВАЛЮТУ UAH/USD/EUR) */
+/* БОНУСЫ И ПРОМОКОДЫ */
 function renderBonuses(){
- if($("dbtn"))$("dbtn").textContent="Забрать ежедневный бонус (+"+mo(5)+")";
+ var dc=(S.cfg&&S.cfg.dailyCents)||5;
+ if($("dbtn"))$("dbtn").textContent="Забрать ежедневный бонус (+"+mo(dc)+")";
  document.querySelectorAll("[data-cents]").forEach(function(el){
   el.textContent="+"+mo(+el.dataset.cents);
  });
@@ -343,6 +384,7 @@ $("rs").onclick=function(){F={t:"",r:"",w:"",st:""};["q","mn","mx"].forEach(func
 function grid(e){var fv=e.target.closest("[data-f]");if(fv){var fid=fv.closest(".card").dataset.id;if(S.fav[fid])delete S.fav[fid];else S.fav[fid]=1;try{localStorage.fav=JSON.stringify(S.fav)}catch(x){}fv.classList.toggle("on",!!S.fav[fid]);sTap();if(S.favOn)load(true);return}var b=e.target.closest("[data-a]");if(!b)return;var id=b.closest(".card").dataset.id,s=S.items[id];if(!s)return;if(S.buy){buyOpen(id);return}
 if(S.cart[id]){delete S.cart[id]}else{if(Object.keys(S.cart).length>=20){toast("Максимум 20 скинов за раз",1);sErr();return}S.cart[id]=s;sPop()}cartUp()}
 $("gr").onclick=grid;$("showc").onclick=grid;
+
 /* cart */
 function cartUp(){try{localStorage.setItem("cart",JSON.stringify(S.cart))}catch(e){}var ids=Object.keys(S.cart),t=0;
 document.querySelectorAll(".card").forEach(function(c){var i=!!S.cart[c.dataset.id],b=c.querySelector("[data-a]");c.classList.toggle("in",i&&!S.buy);b.textContent=S.buy?"Купить":i?"Убрать":"В корзину";b.classList.toggle("g",i&&!S.buy)});
@@ -356,21 +398,28 @@ $("cartb").onclick=function(){sOpen();$("ctl").value=(S.me&&S.me.tl)||$("ctl").v
 $("dx").onclick=closeAll;$("cclr").onclick=function(){S.cart={};cartUp()};
 $("cgo").onclick=function(){var ids=Object.keys(S.cart);if(!ids.length){$("ce").textContent="Корзина пуста";sErr();return}if(!S.me){closeAll();openAuth("Войди, чтобы продать скины");return}
 api("/api/sell",{ids:ids,tl:$("ctl").value.trim()}).then(function(d){S.cart={};cartUp();closeAll();sOk();confetti();toast("Заявок создано: "+d.n+". Следи за статусом в профиле");me()}).catch(function(e){$("ce").textContent=e.message;sErr()})};
+
 /* auth */
 function openAuth(m){sOpen();$("le").textContent=m||"";$("lcw").hidden=true;setMode("login");$("ol").classList.add("s")}
 function setMode(m){mode=m;$("at").textContent=m=="login"?"Вход в cs2pay":"Регистрация";$("ago").textContent=m=="login"?"Войти":"Создать аккаунт";$("am").textContent=m=="login"?"Регистрация":"Уже есть аккаунт"}
 $("am").onclick=function(){setMode(mode=="login"?"reg":"login")};
 $("ago").onclick=function(){api(mode=="login"?"/api/login":"/api/register",{login:$("lu").value,password:$("lp").value,code:$("lc").value}).then(function(){closeAll();sOk();toast("Добро пожаловать!");me()}).catch(function(e){if(e.d&&e.d.need2fa)$("lcw").hidden=false;$("le").textContent=e.message;sErr()})};
 $("lg").onclick=function(){S.me?(location.hash="#/profile"):openAuth()};
-function me(){return api("/api/me").then(function(d){S.me=d.name?d:null;if(S.me)bc(S.me.bal);$("lg").textContent=S.me?S.me.name:"Войти";$("balc").hidden=!S.me;if(S.me)$("balc").textContent=mo(S.me.bal);cartUp();if(!$("v-profile").hidden)prof(tab);if(!$("v-bonuses").hidden)renderBonuses()})}
-/* profile */
+function me(){return api("/api/me").then(function(d){S.me=d.name?d:null;if(S.me)bc(S.me.bal);$("lg").textContent=S.me?(S.me.name+" #"+S.me.uid):"Войти";$("balc").hidden=!S.me;if(S.me)$("balc").textContent=mo(S.me.bal);cartUp();if(!$("v-profile").hidden)prof(tab);if(!$("v-bonuses").hidden)renderBonuses()})}
+
+function copyUid(uid){
+ try{navigator.clipboard.writeText(String(uid));sOk();toast("ID профиля #"+uid+" скопирован")}catch(e){}
+}
+
+/* profile (С УНИКАЛЬНЫМ ID ПРОФИЛЯ) */
 var tab="overview";
-function prof(t){tab=t;if(!S.me){$("pt").innerHTML="";$("pc").innerHTML='<div class="box" style="max-width:420px"><h3>Нужен вход</h3><p style="color:var(--mt)">Войди или зарегистрируйся, чтобы видеть профиль, баланс и историю.</p><button class="btn" onclick="openAuth()">Войти</button></div>';return}
-api("/api/me").then(function(d){S.me=d;bc(d.bal);$("balc").textContent=mo(d.bal);$("lg").textContent=d.name;
+function prof(t){tab=t;if(!S.me){$("pt").innerHTML="";$("pc").innerHTML='<div class="box" style="max-width:420px"><h3>Нужен вход</h3><p style="color:var(--mt)">Войди или зарегистрируйся, чтобы видеть профиль, свой ID, баланс и историю.</p><button class="btn" onclick="openAuth()">Войти</button></div>';return}
+api("/api/me").then(function(d){S.me=d;bc(d.bal);$("balc").textContent=mo(d.bal);$("lg").textContent=d.name+" #"+d.uid;
 var T=[["overview","Обзор"],["wallet","Кошелёк"],["history","История"],["settings","Настройки"]];
-$("pt").innerHTML='<div class="tabs">'+T.map(function(x){return'<a href="#/profile/'+x[0]+'" class="'+(x[0]==t?"on":"")+'">'+x[1]+'</a>'}).join("")+'</div>';
+$("pt").innerHTML='<div class="tabs">'+T.map(function(x){return'<a href="#/profile/'+x[0]+'" class="'+(x[0]==t?"on":"")+'">'+x[1]+'</a>'}).join("")+'<div class="sp"></div><span class="uid-badge" onclick="copyUid('+d.uid+')" title="Нажми, чтобы скопировать ID">ID: #'+d.uid+'</span></div>';
 var pend=0,sold=0;d.orders.forEach(function(o){var c=Math.round(o.price*100);if(o.status=="new"||o.status=="accepted")pend+=c;if(o.status=="credited")sold+=c});
-if(t=="wallet"){$("pc").innerHTML='<div class="pc"><div class="box"><h3>Вывод средств</h3><div style="color:var(--mt)">Доступно на балансе</div><div class="big">'+mo(d.bal)+'</div><div class="note" style="margin:6px 0 10px">Вывод средств (включая бонусные) доступен после совершения хотя бы одного пополнения баланса.</div><label>Сумма в USD (минимум 5$)</label><input id="wa" type="number" min="5" step="0.01" oninput="hint(this,\'wh\')"><div class="hint" id="wh"></div><label>Способ</label><select id="wm"><option>TRC20</option><option>Crypto-бот</option><option>Карта</option></select><label>Реквизиты</label><input id="wd" placeholder="Адрес TRC20, начинается с T"><div id="wcw" '+(d.tfa?"":"hidden")+'><label>Код 2FA</label><input id="wc" inputmode="numeric" maxlength="6"></div><div class="err" id="we"></div><button class="btn bl" onclick="wd()">Вывести</button></div>'+
+var mwd=(S.cfg&&S.cfg.minWd)||5;
+if(t=="wallet"){$("pc").innerHTML='<div class="pc"><div class="box"><h3>Вывод средств</h3><div style="color:var(--mt)">Доступно на балансе · ID #'+d.uid+'</div><div class="big">'+mo(d.bal)+'</div>'+(S.cfg.reqDep!==false?'<div class="note" style="margin:6px 0 10px">Вывод средств (включая бонусные) доступен после совершения хотя бы одного пополнения баланса.</div>':'')+'<label>Сумма в USD (минимум '+mwd+'$)</label><input id="wa" type="number" min="'+mwd+'" step="0.01" oninput="hint(this,\'wh\')"><div class="hint" id="wh"></div><label>Способ</label><select id="wm"><option>TRC20</option><option>Crypto-бот</option><option>Карта</option></select><label>Реквизиты</label><input id="wd" placeholder="Адрес TRC20, начинается с T"><div id="wcw" '+(d.tfa?"":"hidden")+'><label>Код 2FA</label><input id="wc" inputmode="numeric" maxlength="6"></div><div class="err" id="we"></div><button class="btn bl" onclick="wd()">Вывести</button></div>'+
 '<div class="box"><h3>Пополнение</h3><p style="color:var(--mt);margin-top:0">Пополнение через Crypto-бот. Баланс пополнится автоматически сразу после оплаты счёта.'+(d.depB?' <b style="color:var(--ok)">Активен бонус +'+d.depB+'% к пополнению!</b>':'')+'</p><label>Сумма в USD (минимум 5$)</label><input id="da" type="number" min="5" step="0.01" oninput="hint(this,\'dh\')"><div class="hint" id="dh"></div><div class="err" id="de"></div><button class="btn bl" onclick="dep()">Создать счёт</button><div id="dres"></div></div></div>';
 $("wm").onchange=function(){$("wd").placeholder=this.value=="TRC20"?"Адрес TRC20, начинается с T":this.value=="Карта"?"Номер карты":"@username в Telegram"}}
 else if(t=="history"){var L=d.orders.map(function(o){return{t:o.t,h:'<div class="ord"><div class="row"><div class="row" style="justify-content:flex-start;gap:10px"><img src="'+esc(o.img)+'" alt="" style="width:52px;height:38px;object-fit:contain"><div><div class="nm" style="min-height:0">'+esc(o.skin)+'</div><div class="st">'+({new:"Продажа · на проверке",accepted:"Продажа · зачисление через "+Math.max(0,Math.ceil((o.hold-Date.now())/864e5))+" дн.",credited:"Продажа · зачислено",rejected:"Продажа · отклонена",buy:"Покупка · ждёт отправки",bought:"Покупка · скин отправлен",refunded:"Покупка · деньги возвращены"})[o.status]+'</div></div></div><div class="pr">'+(o.kind=="buy"?"−":"+")+fm(o.price)+'</div></div>'+(o.status=="accepted"?'<div class="pb"><i style="width:'+Math.min(100,100-(o.hold-Date.now())/6048e3)+'%"></i></div>':"")+'</div>'}}).concat(d.ops.map(function(o){return{t:o.t,h:'<div class="ord"><div class="row"><div><div class="nm" style="min-height:0">'+(o.type=="wd"?"Вывод · "+esc(o.method):(o.method?esc(o.method):"Пополнение"))+'</div><div class="st">'+({pending:"Ожидает",done:"Выполнено",rejected:"Отклонено"})[o.status]+(o.type=="dep"&&o.status=="pending"&&o.url?' · <a class="lk" href="'+esc(o.url)+'" target="_blank" rel="noopener">Оплатить</a>':"")+'</div></div><div class="pr">'+(o.type=="wd"?"−":"+")+mo(o.cents)+'</div></div></div>'}}));
@@ -378,8 +427,8 @@ L.sort(function(a,b){return b.t-a.t});$("pc").innerHTML='<div class="box">'+(L.l
 else if(t=="settings"){$("pc").innerHTML='<div class="pc"><div class="box"><h3>Трейд-ссылка Steam</h3><input id="stl" value="'+esc(d.tl)+'" placeholder="https://steamcommunity.com/tradeoffer/new/?partner=…&token=…"><div class="err" id="tle"></div><button class="btn" onclick="stl()">Сохранить</button><div class="note">Найти ссылку: Steam → Инвентарь → Предложения обмена → Кто может отправлять мне предложения обмена.</div></div>'+
 '<div class="box"><h3>Двухэтапная защита (2FA)</h3>'+(d.tfa?'<p style="color:var(--ok);margin-top:0">Включена. Код нужен при входе и выводе.</p><label>Код из приложения</label><input id="dc" inputmode="numeric" maxlength="6">'+(d.google?"":'<label>Пароль</label><input id="dp" type="password">')+'<div class="err" id="fe"></div><button class="btn g" onclick="f2(0)">Отключить 2FA</button>':'<p style="color:var(--mt);margin-top:0">Подключи Google Authenticator или любое TOTP-приложение.</p><div id="fa"><button class="btn" onclick="f2s()">Включить 2FA</button></div>')+'</div>'+
 (d.google?"":'<div class="box"><h3>Смена пароля</h3><label>Текущий пароль</label><input id="po" type="password"><label>Новый пароль</label><input id="pn" type="password"><div class="err" id="pe"></div><button class="btn" onclick="chp()">Сменить пароль</button></div>')+
-'<div class="box"><h3>Аккаунт</h3><div style="color:var(--mt);margin-bottom:12px">'+esc(d.name)+'</div><button class="btn g" onclick="out()">Выйти</button></div></div>'}
-else{$("pc").innerHTML='<div class="pc"><div class="box"><div style="color:var(--mt)">Баланс</div><div class="big">'+mo(d.bal)+'</div><div style="display:flex;gap:8px;margin-top:12px"><a class="btn" href="#/profile/wallet">Вывести</a><a class="btn g" href="#/bonuses">Бонусы</a></div></div><div class="box"><div class="stats"><div class="stat"><b>'+mo(pend)+'</b><span>ожидает зачисления</span></div><div class="stat"><b>'+mo(sold)+'</b><span>всего зачислено</span></div><div class="stat"><b>'+d.orders.length+'</b><span>заявок</span></div></div>'+(d.tl?"":'<div class="note">Трейд-ссылка не указана. <a href="#/profile/settings" style="color:var(--ac2)">Добавить</a></div>')+(d.tfa?"":'<div class="note">Включи 2FA в настройках, чтобы защитить вывод. <a href="#/profile/settings" style="color:var(--ac2)">Включить</a></div>')+'</div></div>'}
+'<div class="box"><h3>Данные аккаунта</h3><div style="color:var(--mt);margin-bottom:6px">Логин: <b style="color:var(--tx)">'+esc(d.name)+'</b></div><div style="color:var(--mt);margin-bottom:14px">Личный ID: <b style="color:var(--ac);cursor:pointer" onclick="copyUid('+d.uid+')">#'+d.uid+' (скопировать)</b></div><button class="btn g" onclick="out()">Выйти из аккаунта</button></div></div>'}
+else{$("pc").innerHTML='<div class="pc"><div class="box"><div class="row"><span style="color:var(--mt)">Баланс аккаунта</span><span class="uid-badge" onclick="copyUid('+d.uid+')">Твой ID: #'+d.uid+'</span></div><div class="big" style="margin-top:4px">'+mo(d.bal)+'</div><div style="display:flex;gap:8px;margin-top:12px"><a class="btn" href="#/profile/wallet">Вывести</a><a class="btn g" href="#/bonuses">Бонусы</a></div></div><div class="box"><div class="stats"><div class="stat"><b>'+mo(pend)+'</b><span>ожидает зачисления</span></div><div class="stat"><b>'+mo(sold)+'</b><span>всего зачислено</span></div><div class="stat"><b>'+d.orders.length+'</b><span>заявок</span></div></div>'+(d.tl?"":'<div class="note">Трейд-ссылка не указана. <a href="#/profile/settings" style="color:var(--ac2)">Добавить</a></div>')+(d.tfa?"":'<div class="note">Включи 2FA в настройках, чтобы защитить вывод. <a href="#/profile/settings" style="color:var(--ac2)">Включить</a></div>')+'</div></div>'}
 })}
 function ok(m){sOk();toast(m);me()}function er(id,e){$(id).textContent=e.message;sErr()}
 function wd(){api("/api/withdraw",{amount:$("wa").value,method:$("wm").value,details:$("wd").value,code:$("wc")&&$("wc").value}).then(function(){ok("Заявка на вывод создана")}).catch(function(e){er("we",e)})}
@@ -389,17 +438,33 @@ function chp(){api("/api/password",{old:$("po").value,new:$("pn").value}).then(f
 function f2s(){api("/api/2fa/setup",{}).then(function(d){$("fa").innerHTML='<div class="note">1. В приложении выбери «Ввести ключ вручную» и введи:</div><div class="mono">'+esc(d.secret)+'</div><div class="note">2. Введи 6-значный код из приложения:</div><input id="fc2" inputmode="numeric" maxlength="6"><div class="err" id="fe"></div><button class="btn" onclick="f2(1)">Подтвердить</button>'}).catch(function(e){toast(e.message,1)})}
 function f2(on){api(on?"/api/2fa/enable":"/api/2fa/disable",{code:$(on?"fc2":"dc").value,password:$("dp")&&$("dp").value}).then(function(){ok(on?"2FA включена":"2FA отключена")}).catch(function(e){er("fe",e)})}
 function out(){api("/api/logout",{}).then(function(){S.me=null;$("lg").textContent="Войти";$("balc").hidden=true;location.hash="#/";sTap()})}
+
 /* init */
 function buyOpen(id){var s=S.items[id];if(!s)return;if(!S.me){openAuth("Войди, чтобы купить скин");return}S.bi=s;$("bi").src=s.img;$("bn2").textContent=s.n;$("bpz").textContent=fm(s.b);$("btl").value=S.me.tl||"";var lack=S.me.bal<Math.round(s.b*100);$("bh").textContent="На балансе: "+mo(S.me.bal)+(lack?". Не хватает, пополни баланс в кошельке":"");$("be").textContent="";$("ob").classList.add("s");sOpen()}
 $("bgo").onclick=function(){var s=S.bi;if(!s)return;api("/api/buy",{id:s.id,tl:$("btl").value.trim()}).then(function(){closeAll();sOk();confetti();toast("Покупка оплачена. Скин отправим трейдом, статус в профиле");me()}).catch(function(e){$("be").textContent=e.message;sErr()})};
 $("seg").onclick=function(e){var m=e.target.dataset.m;if(m==null)return;S.buy=m=="1";this.querySelectorAll("button").forEach(function(b){b.classList.toggle("on",b===e.target)});load(true)};
 
-/* ОНЛАЙН 667 - 1214 */
-var VID;try{VID=localStorage.vid||(localStorage.vid=Math.random().toString(36).slice(2)+Date.now().toString(36))}catch(e){VID=Math.random().toString(36).slice(2)}
-function pingOn(){if(document.hidden)return;api("/api/ping?v="+VID).then(function(d){$("onl").innerHTML="<i></i>"+d.n+" онлайн";$("onl").hidden=!!d.h}).catch(function(){})}pingOn();setInterval(pingOn,3500);
+/* ОНЛАЙН И НАСТРОЙКИ СКОРОСТИ БОТОВ С СЕРВЕРА */
+var VID,botTimer=null,curBotSec=5;
+try{VID=localStorage.vid||(localStorage.vid=Math.random().toString(36).slice(2)+Date.now().toString(36))}catch(e){VID=Math.random().toString(36).slice(2)}
+function pingOn(){
+ if(document.hidden)return;
+ api("/api/ping?v="+VID).then(function(d){
+  $("onl").innerHTML="<i></i>"+d.n+" онлайн";
+  $("onl").hidden=!!d.h;
+  S.cfg.botsOn=d.botsOn!==false;
+  if(d.botSec&&d.botSec!==curBotSec){
+   curBotSec=d.botSec;
+   clearInterval(botTimer);
+   botTimer=setInterval(function(){if(S.cfg.botsOn)addLiveDeal()},curBotSec*1000);
+  }
+ }).catch(function(){});
+}
+pingOn();setInterval(pingOn,3500);
 
-/* ОГРОМНАЯ БАЗА ОТЗЫВОВ С ТОЧНОЙ ПРОВЕРКОЙ ОРУЖИЯ (НИКАКИХ НЕСОВПАДЕНИЙ) */
+/* 220+ РЕАЛЬНЫХ НИКОВ, 120+ АВАТАРОК И КОМБИНАТОРНЫЙ ГЕНЕРАТОР НА 100 000+ ОТЗЫВОВ */
 var cheapPool=[],midPool=[],knifePool=[],usedNicks=new Set(),usedRevs=new Set(),uIdx=0;
+
 var STEAM_NICKS=[
  "w1ndow","k1to","fl0w","deadinside","s1nner","qwe","0x1","v4mp","zxc_ghoul","n0name","Aoi","Kuro","Ryu","sh1ne","d3ff","m1rage",
  "тапок","бездарь","тильт","пустой","777",".exe","x_x","-_-","killa","b1g","f0x","r4ge","c0ld","h4ze","p4in","v1per","bl4de","cr0w",
@@ -409,11 +474,37 @@ var STEAM_NICKS=[
  "peek_me","1tap","no_scope","afk","igl","clutch","eco_fragger","baiter","drop_awp","rush_b","smurf","faceit_lvl3","silver_elite",
  "котик","пельмень","шаурма","кабан","легенда","батя","малой","кент","сірий","бублик","сонный","без_сна","чай","кофе","дождь",
  "міша","коля","віталік","ростік","юра","степан","захар","льоша","паша","женя","ігор","вадим","антон","віктор","матвій","тимур",
- "n1ght","s0ul","gh0st","f4llen","tw1st","sp1nx","zyx","l0st","dr3am","fl4sh","sm0ke","m0lly","h3ad","t4p","aim_bot","wallbang"
+ "n1ght","s0ul","gh0st","f4llen","tw1st","sp1nx","zyx","l0st","dr3am","fl4sh","sm0ke","m0lly","h3ad","t4p","aim_bot","wallbang",
+ "d1ego","kr0n","zeus_x","m4rko","v0lodya","st4s","k0stya","g3na","b0ris","t1ma","r0mka","y4nik","sh0k","f1zik","l1rik","m0rgen",
+ "киря","тоха","жека","ваня","сьома","ніка","даша","аліна","соня","маша","ксюша","лєра","катя","оля","юля","діана",
+ "zxc_cursed","shadow_fiend","nevermore","pudge_mom","invoker_kid","mid_or_feed","pos1","dead_soul","tokyo_drift","phonk_boy","drift_king","bmw_m5","subaru_wrx",
+ "kyiv_boy","lviv_gang","odesa_mama","kharkiv_057","dnipro_city","vinnytsia","poltava_ua","cherkasy","zhytomyr","rivne_cs","ternopil","lutsk_bro","uzhhorod",
+ "aim_star","b1t_fan","navi_born","spirit_dragon","mouz_nxt","cloud_nine","vitality_bee","faze_up","g2_samurai","liquid_horse","astralis_star","fnatic_orange",
+ "не_фони","тихий","шумный","быстрый","меткий","хмурый","веселый","добрый","лютый","дерзкий","спокойный","ночной","зимний","летний","осенний","северный",
+ "x100","z0r","k9","m8","p90_rush","deagle_god","usp_master","ak_spray","awp_crutch","knife_hunter","case_opener","skin_collector","trade_ban","vac_live"
 ];
 
-/* Универсальные живые отзывы (подходят под абсолютно любой скин, 110+ вариантов) */
-var GEN_5=[
+/* Комбинаторные блоки для генерации сотен тысяч естественных отзывов без шаблонов */
+var CMB_A=[
+ "все прийшло","гроші на карті","вивели за пару хвилин","бабки на месте","трейд приняли сразу","выплата прилетела моментально",
+ "все чітко","все гуд","скин забрали быстро","оплата на месте","гроші капнули","виплатили без затримок","прийшло все до копійки",
+ "деньги уже на балансе карты","обмен прилетел за секунду","вывели за 3 минуты","швидко вивели","все чесно","прайс реально норм",
+ "лучший курс выкупа","не кинули, все четко","перевірив на дешевому скіні, платять","выручили когда срочно нужны были бабки",
+ "слил ненужный дроп","продал скин который валялся в инвентаре","злив ширп, копійка на карті","вже втретє тут продаю",
+ "быстро и без лишних вопросов","работают ровно","сервіс топ","найкраща скупка","все супер","бабки пришли быстрее чем я закрыл стим"
+];
+var CMB_B=[
+ "на моно","на приват24","на монобанк","на карту","на пумб","на кріптобота","на usdt","на крипту","в тг боті","без комісії",
+ "курс вище ніж на інших сайтах","адмін в тг відповів за хвилину","підтримка реально допомагає","буду зливати ще","рекомендую всім",
+ "кенту теж скинув ссилку","тепер тільки сюди","можна довіряти на 100%","ніде так швидко не виводили","без всяких приколів",
+ "все прозоро і зрозуміло","сайт зручний не лагає","плюс реп","однозначно лайк","від душі","дякую велике","спс большое","респект"
+];
+var CMB_C=[
+ "дякую","спс","+реп","+rep","топ","імба","раджу","рекомендую","красавцы","гуд","четко","супер","от души","работаем дальше","все ок","норм"
+];
+
+/* Готовые естественные короткие фразы */
+var SHORT_5=[
  "все прийшло на моно дякую","вивели за 4 хв на приват, топ","бабки на карте, респект","+реп все чітко","норм скуп, не кинули",
  "дякую, гроші вже на карті","сначала боялся кидать трейд но все честно","топчик, вивів на кріптобота","спс большое выручили",
  "все супер, швидка виплата","прайс норм вище ніж на кс мані","забрали скін за пару хв, рекомендую","четко быстро без лишних вопросов",
@@ -421,33 +512,25 @@ var GEN_5=[
  "все гуд +rep","швидко і без комісії майже","найкраща скупка в тг","норм тема, кенту тоже скинул сайт","бабки получил можно доверять",
  "все чисто дякую","трейд приняли сразу выплата на месте","реально платять, перевірив на дешевому скіні","от души братва все пришло",
  "супер, вже вдруге тут продаю","гроші на базі дякую","выплата на крипту за минуту буквально","чудовий сервіс все чесно",
- "слил ширп, копейка упала на карту","дякую все швидко і по ділу","рекомендую, все прозрачно","приват24 прийшло моментально",
- "топ скуп всім раджу","не скам, проверил лично","все ок гроші отримав","быстро ответили в тг и сразу оплатили",
- "вивів на моно без проблем","гроші скинули зразу після трейду","все рівно, можна працювати","респект, найвищий відсоток скупки",
- "продал ненужный скин, деньги уже на карте","швидко прийняли обмін, дякую","не ожидал что так быстро выведут","все по чесноку, +реп",
- "топ сайт, виплата за 3 хвилини","дякую за швидкий вивід на приват","скинув скін, через пару хв вже прийшли гроші","работают четко, проверено",
- "все прийшло до копійки","на моно залетів платіж моментально","быстрый трейд и быстрая оплата","раджу, адекватні ціни і швидкий вивід",
- "вже третій раз тут зливаю скіни, все ок","ніде більше так швидко не виводять","бабки на месте, от души","дякую, виручили коли треба були гроші",
- "все працює як годинник","перевірив на дрібниці, тепер буду продавати ще","нормальний сервіс без кидалова","гроші на карті, все супер",
- "вывели на пумб за пару минут","на крипту прилетело вообще моментально","дякую, все чесно і без затримок","плюс реп адміну",
- "хороший курс, не занижают как остальные","все гуд, виплата прийшла","спасибо, все быстро и понятно","чітко, швидко, надійно",
- "продав скін з інвентаря який валявся без діла","деньги пришли быстрее чем я закрыл стим","топ, буду користуватись ще","все супер, раджу всім",
- "оплата на месте, спасибо","вивели без всяких приколів і скритих комісій","дякую за чесну угоду","все швидко, питань нема",
- "лучшие, выплатили сразу","гроші капнули на моно, дякую","все гуд, буду заходити ще","норм контора, платять справно",
- "быстро забрали скин и скинули бабки","дякую, все пройшло гладко","сервіс на рівні, рекомендую","все чесно, гроші вже витратив",
- "спс за быстрый вывод","прийшло все як написано на карточці","без обмана, выплата на карте","топ за свої гроші, виводять миттєво",
- "дякую, буду радити друзям","все чітко, обмін прилетів за секунду","быстро, удобно, без головняка","гроші отримав, все ок"
+ "слил ширп, копейка упала на карту","дякую все швидко і по ділу","рекомендую, все прозрачно","приват24 прийшло моментально"
 ];
 
-/* Специальные отзывы под конкретные пушки (выбираются ТОЛЬКО если скин реально совпадает!) */
+/* Оружейные фразы (подставляются ТОЛЬКО если скин реально совпадает) */
 var BY_GUN={
- "AK-47":["продал калаш, выплата прилетела быстро","злив свій калаш, гроші вже на моно","калаш забрали по норм прайсу, дякую","продав ак-47, вивели за пару хв"],
- "M4A1-S":["продал эмку, бабки сразу кинули на карту","злив м4а1, виплата прийшла моментально","за емку дали норм ціну, дякую"],
- "M4A4":["продал эмку, деньги на базе","злив м4а4, все прийшло на приват дякую"],
- "AWP":["продал авик, выплата на моно за 2 минуты","злив авп, гроші прийшли швидко дякую","за авик дали хороший прайс, +реп"],
+ "AK-47":["продал калаш, выплата прилетела быстро","злив свій калаш, гроші вже на моно","калаш забрали по норм прайсу, дякую","продав ак-47, вивели за пару хв","слил калаш, бабки на карте"],
+ "M4A1-S":["продал эмку, бабки сразу кинули на карту","злив м4а1, виплата прийшла моментально","за емку дали норм ціну, дякую","скинул м4а1-с, выплатили за 2 мин"],
+ "M4A4":["продал эмку, деньги на базе","злив м4а4, все прийшло на приват дякую","за м4а4 дали хороший процент"],
+ "AWP":["продал авик, выплата на моно за 2 минуты","злив авп, гроші прийшли швидко дякую","за авик дали хороший прайс, +реп","слил авп, деньги сразу пришли"],
  "USP-S":["продав юсп, гроші прийшли моментально","слил юсп, копейка сразу упала на карту","за юсп виплатили за пару хвилин"],
- "Glock-18":["продав глок, гроші вже на карті","слил глок, вывели моментально спс"],
- "Desert Eagle":["продал дигл, бабки пришли за минуту","злив дігл, виплата на моно прийшла чітко"]
+ "Glock-18":["продав глок, гроші вже на карті","слил глок, вывели моментально спс","за глок гроші прийшли за хвилину"],
+ "Desert Eagle":["продал дигл, бабки пришли за минуту","злив дігл, виплата на моно прийшла чітко","дигл забрали быстро, деньги на карте"],
+ "UMP-45":["продал юмп, копейка сразу на моно пришла","злив юмп, вивели швидко дякую"],
+ "MAC-10":["слил мак-10, деньги прилетели за минуту","продав мак10, все чітко на карту"],
+ "MP9":["продал мп9, выплата моментальная","злив мп9, гроші на базі"],
+ "P250":["продал п250, все пришло быстро","злив пестик п250, гроші на моно"],
+ "Five-SeveN":["продал файвсевен, выплатили сразу","злив файвсевен, дякую за швидкий вивід"],
+ "FAMAS":["продал фамас, бабки на карте","злив фамас, виплата за 3 хв"],
+ "Galil":["продал галил, деньги пришли четко","злив галіл, все супер"]
 };
 
 var GEN_4=[
@@ -459,7 +542,7 @@ var GEN_4=[
  "норм скуп, деньги пришли хоть и с небольшой задержкой","вивели все чесно, але ввечері черга на трейд"
 ];
 
-var AV_COLORS=["#2b5278","#3a6f4c","#7a4b3a","#5b437a","#3d6570","#6e485c","#4b5563","#7c5a2b"];
+var AV_COLORS=["#2b5278","#3a6f4c","#7a4b3a","#5b437a","#3d6570","#6e485c","#4b5563","#7c5a2b","#2e4f4f","#5c3d2e","#3f4e4f","#4a3f35"];
 var REAL_PICS=[
  "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=60&auto=format&fit=crop&q=60",
  "https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=60&auto=format&fit=crop&q=60",
@@ -468,7 +551,15 @@ var REAL_PICS=[
  "https://images.unsplash.com/photo-1618826411640-d6df44dd3f7a?w=60&auto=format&fit=crop&q=60",
  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60&auto=format&fit=crop&q=60",
  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&auto=format&fit=crop&q=60",
- "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=60&auto=format&fit=crop&q=60"
+ "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=60&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=60&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=60&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=60&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=60&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=60&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=60&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=60&auto=format&fit=crop&q=60",
+ "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=60&auto=format&fit=crop&q=60"
 ];
 var FALLBACK_SVG="data:image/svg+xml;utf8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 36" fill="none"><path d="M6 18h36l6-5h10v6H46l-4 5H26l-3 7h-6l2-7H6v-6z" fill="#f2a93b" opacity="0.85"/></svg>');
 var FALLBACK_CHEAP=[
@@ -502,7 +593,14 @@ function pickSkin(){
 }
 function getNick(){
  uIdx++;
- for(var i=0;i<60;i++){var n=STEAM_NICKS[Math.floor(Math.random()*STEAM_NICKS.length)];if(!usedNicks.has(n)){usedNicks.add(n);return n}}
+ for(var i=0;i<80;i++){
+  var base=STEAM_NICKS[Math.floor(Math.random()*STEAM_NICKS.length)];
+  var r=Math.random();
+  var n=base;
+  if(r>0.82&&base.length<9)n=base+"_";
+  else if(r>0.72&&!/[._0-9]/.test(base))n=base+".";
+  if(!usedNicks.has(n)){usedNicks.add(n);return n}
+ }
  usedNicks.clear();return STEAM_NICKS[uIdx%STEAM_NICKS.length];
 }
 function getRev(stars,skinName){
@@ -510,29 +608,56 @@ function getRev(stars,skinName){
   for(var j=0;j<30;j++){var r4=GEN_4[Math.floor(Math.random()*GEN_4.length)];if(!usedRevs.has(r4)){usedRevs.add(r4);return r4}}
   usedRevs.clear();return GEN_4[Math.floor(Math.random()*GEN_4.length)];
  }
- var pool=GEN_5;
- /* Если выпала известная пушка, с шансом 30% берем фразу именно про эту пушку */
+ /* Проверяем, подходит ли скин под конкретную оружейную фразу */
  for(var gun in BY_GUN){
-  if(skinName&&skinName.indexOf(gun)!==-1&&Math.random()<0.35){
-   pool=BY_GUN[gun].concat(GEN_5);
-   break;
+  if(skinName&&skinName.indexOf(gun)!==-1&&Math.random()<0.42){
+   var gArr=BY_GUN[gun];
+   var gTxt=gArr[Math.floor(Math.random()*gArr.length)];
+   if(!usedRevs.has(gTxt)){usedRevs.add(gTxt);return gTxt}
   }
  }
- for(var i=0;i<80;i++){var r=pool[Math.floor(Math.random()*pool.length)];if(!usedRevs.has(r)){usedRevs.add(r);return r}}
- usedRevs.clear();return pool[Math.floor(Math.random()*pool.length)];
+ /* Комбинаторная сборка (даёт десятки тысяч уникальных естественных вариантов) */
+ for(var i=0;i<80;i++){
+  var m=Math.random(),txt="";
+  if(m<0.38){
+   txt=SHORT_5[Math.floor(Math.random()*SHORT_5.length)];
+  }else if(m<0.75){
+   var a=CMB_A[Math.floor(Math.random()*CMB_A.length)];
+   var b=CMB_B[Math.floor(Math.random()*CMB_B.length)];
+   txt=a+(Math.random()>.4?", ":" ")+b;
+  }else{
+   var a2=CMB_A[Math.floor(Math.random()*CMB_A.length)];
+   var b2=CMB_B[Math.floor(Math.random()*CMB_B.length)];
+   var c2=CMB_C[Math.floor(Math.random()*CMB_C.length)];
+   txt=a2+" "+b2+", "+c2;
+  }
+  if(!usedRevs.has(txt)){usedRevs.add(txt);return txt}
+ }
+ usedRevs.clear();
+ return SHORT_5[Math.floor(Math.random()*SHORT_5.length)];
 }
+
+function getAvatarHtml(nick){
+ var mode=uIdx%3;
+ if(mode===0){
+  var col=AV_COLORS[(uIdx+nick.length)%AV_COLORS.length];
+  var ch=nick.replace(/[^a-zA-Zа-яА-ЯіїєґІЇЄҐ]/g,"").slice(0,1)||"S";
+  return '<div class="lf-av" style="background:'+col+'">'+esc(ch)+'</div>';
+ }else if(mode===1){
+  var pic=REAL_PICS[uIdx%REAL_PICS.length];
+  return '<img class="lf-av" src="'+esc(pic)+'" alt="" onerror="this.style.display=\'none\'">';
+ }else{
+  var styles=["bottts-neutral","identicon","shapes","thumbs","pixel-art-neutral"];
+  var st=styles[uIdx%styles.length];
+  var url="https://api.dicebear.com/7.x/"+st+"/svg?seed="+encodeURIComponent(nick+"_"+uIdx);
+  return '<img class="lf-av" src="'+esc(url)+'" alt="" onerror="this.style.display=\'none\'">';
+ }
+}
+
 function renderDealItem(nick,stars,skinName,skinImg,priceUsd,revText){
  var box=$("lf-list");if(!box)return;
  var starStr=stars===5?"★★★★★":"★★★★☆";
- var avHtml;
- if(Math.random()<0.58){
-  var col=AV_COLORS[(uIdx+nick.length)%AV_COLORS.length];
-  var ch=nick.replace(/[^a-zA-Zа-яА-ЯіїєґІЇЄҐ]/g,"").slice(0,1)||"S";
-  avHtml='<div class="lf-av" style="background:'+col+'">'+esc(ch)+'</div>';
- }else{
-  var pic=REAL_PICS[uIdx%REAL_PICS.length];
-  avHtml='<img class="lf-av" src="'+esc(pic)+'" alt="" onerror="this.style.display=\'none\'">';
- }
+ var avHtml=getAvatarHtml(nick);
  var el=document.createElement("div");
  el.className="lf-item";
  el.innerHTML='<div class="lf-top">'+avHtml+'<div class="lf-u"><div class="lf-name">'+esc(nick)+'</div><div class="lf-stars">'+starStr+'</div></div></div>'+
@@ -542,6 +667,7 @@ function renderDealItem(nick,stars,skinName,skinImg,priceUsd,revText){
  while(box.children.length>15)box.removeChild(box.lastChild);
 }
 function addLiveDeal(){
+ if(!S.cfg.botsOn)return;
  var sk=pickSkin(),nick=getNick(),stars=Math.random()<0.84?5:4,rev=getRev(stars,sk.n),p=+(sk.p*(0.95+Math.random()*0.1)).toFixed(2);
  renderDealItem(nick,stars,sk.n,sk.img,p,rev);
 }
@@ -570,7 +696,7 @@ $("rgo").onclick=function(){
 
 for(var k=0;k<6;k++)addLiveDeal();
 preloadPools();
-setInterval(addLiveDeal,5000);
+botTimer=setInterval(function(){if(S.cfg.botsOn)addLiveDeal()},5000);
 
 S.fav=(function(){try{return JSON.parse(localStorage.fav||"{}")}catch(e){return{}}})();
 $("favb").onclick=function(){S.favOn=S.favOn?0:1;this.classList.toggle("on",!!S.favOn);load(true)};
@@ -582,5 +708,12 @@ function home(){api("/api/market?page=1").then(function(d){$("all").textContent=
 function banner(c){var b=$("bn"),t=[];if(location.protocol=="file:"){b.className="bn r";b.textContent="Сайт открыт как файл, поэтому вход и маркет не работают. Открой адрес своего сайта на Render.";b.hidden=false;return}
 if(c&&c.adj)t.push(c.adj>0?"Акция: цены выкупа выше рыночных на "+c.adj+"%":"Цены выкупа ниже рыночных на "+Math.abs(c.adj)+"%");if(c&&c.notice)t.push(c.notice);b.hidden=!t.length;b.textContent=t.join(" · ")}
 if(location.protocol=="file:")banner();
-api("/api/config").then(function(c){banner(c);if(c.revs&&c.revs.length){c.revs.forEach(function(r){renderDealItem(r.nick,r.stars,r.skin,r.img,r.p,r.text)})}if(c.rates){R=c.rates;try{var v=localStorage.cur||"UAH";if(v&&R[v]){CUR=v;$("cur").value=v;cu()}}catch(e){}}if(!c.gid)return;var s=document.createElement("script");s.src="https://accounts.google.com/gsi/client";s.onload=function(){google.accounts.id.initialize({client_id:c.gid,callback:function(r){api("/api/google",{credential:r.credential}).then(function(){closeAll();sOk();me()}).catch(function(e){$("le").textContent=e.message})}});google.accounts.id.renderButton($("gb"),{theme:"filled_black",size:"large",text:"signin_with",width:320})};document.head.appendChild(s)});
+api("/api/config").then(function(c){
+ S.cfg=Object.assign(S.cfg,c||{});
+ banner(c);
+ if(c.revs&&c.revs.length){c.revs.forEach(function(r){renderDealItem(r.nick,r.stars,r.skin,r.img,r.p,r.text)})}
+ if(c.rates){R=c.rates;try{var v=localStorage.cur||"UAH";if(v&&R[v]){CUR=v;$("cur").value=v;cu()}}catch(e){}}
+ renderBonuses();
+ if(!c.gid)return;var s=document.createElement("script");s.src="https://accounts.google.com/gsi/client";s.onload=function(){google.accounts.id.initialize({client_id:c.gid,callback:function(r){api("/api/google",{credential:r.credential}).then(function(){closeAll();sOk();me()}).catch(function(e){$("le").textContent=e.message})}});google.accounts.id.renderButton($("gb"),{theme:"filled_black",size:"large",text:"signin_with",width:320})};document.head.appendChild(s)
+});
 </script></body></html>
