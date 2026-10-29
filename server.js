@@ -36,7 +36,7 @@ function b32d(s){let b='';for(const c of s)b+=b32.indexOf(c).toString(2).padStar
 function totp(sec,t=Date.now()){const c=Buffer.alloc(8);c.writeBigUInt64BE(BigInt(Math.floor(t/30000)));const h=crypto.createHmac('sha1',b32d(sec)).update(c).digest(),o=h[19]&15;return String((h.readUInt32BE(o)&0x7fffffff)%1e6).padStart(6,'0')}
 const chk=(sec,code)=>[-1,0,1].some(d=>totp(sec,Date.now()+d*3e4)===String(code||'').trim());
 
-/* telegram: полное управление всем сайтом */
+/* telegram: полное управление + сообщения клиентам по заявкам */
 const tg=(m,b)=>fetch(`https://api.telegram.org/bot${TOKEN}/${m}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(r=>r.json());
 const esc=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const OS={buy:'покупка, ждёт отправки',bought:'отправлено',refunded:'деньги возвращены',new:'новая',accepted:'принята, hold 7 дней',credited:'зачислена',rejected:'отклонена'},PS={pending:'ожидает',done:'выполнено',rejected:'отклонено'};
@@ -56,11 +56,34 @@ setInterval(()=>{
 const buyTxt=()=>{const a=db.cfg.buyAdj??10;return a?(a>0?'+':'')+a+'% к рынку':'рыночные'};
 const usd=c=>'$'+(c/100).toFixed(2);
 const adjTxt=()=>db.cfg.adj?(db.cfg.adj>0?'+':'')+db.cfg.adj+'% к рынку':'рыночные';
-const uBtn=l=>[{text:'Профиль '+l+' (#'+(db.users[l]?.uid||0)+')',callback_data:'u:'+l}];
-const fmtO=o=>`<b>${o.kind=='buy'?'Покупка':'Продажа'} #${o.id}</b> · ${OS[o.status]}\n${esc(o.skin)}\n<b>${usd(Math.round(o.price*100))}</b>\nКлиент: ${esc(o.user)} (ID #${db.users[o.user]?.uid||0})\n<code>${esc(o.tl)}</code>`;
-const fmtP=p=>`${p.type=='dep'?'<b>Пополнение':'<b>Вывод'} #${p.id}</b> · ${PS[p.status]}\n<b>${usd(p.cents)}</b>${p.method?'\n'+esc(p.method)+(p.details?': <code>'+esc(p.details)+'</code>':''):''}\nКлиент: ${esc(p.user)} (ID #${db.users[p.user]?.uid||0})`;
-const kbO=o=>({inline_keyboard:[...(o.status=='new'?[[{text:'Принять',callback_data:'o:accepted:'+o.id},{text:'Сразу зачислить $',callback_data:'o:credited:'+o.id}],[{text:'Отклонить',callback_data:'o:rejected:'+o.id}]]:o.status=='buy'?[[{text:'Отправил скин',callback_data:'o:bought:'+o.id},{text:'Отказ + возврат $',callback_data:'o:refunded:'+o.id}]]:[]),uBtn(o.user)]});
-const kbP=p=>({inline_keyboard:[...(p.status=='pending'&&p.type=='wd'?[[{text:'Выплачено',callback_data:'p:done:'+p.id},{text:'Отклонить + возврат $',callback_data:'p:rejected:'+p.id}]]:[]),uBtn(p.user)]});
+const uBtn=l=>[{text:'Профиль '+(db.users[l]?.nick||l)+' (#'+(db.users[l]?.uid||0)+')',callback_data:'u:'+l}];
+const fmtO=o=>`<b>${o.kind=='buy'?'Покупка':'Продажа'} #${o.id}</b> · ${OS[o.status]}\n${esc(o.skin)}\n<b>${usd(Math.round(o.price*100))}</b>\nКлиент: ${esc(db.users[o.user]?.nick||o.user)} (${esc(o.user)} · ID #${db.users[o.user]?.uid||0})\n<code>${esc(o.tl)}</code>${o.msg?'\nСообщение: <i>'+esc(o.msg)+'</i>':''}`;
+const fmtP=p=>`${p.type=='dep'?'<b>Пополнение':'<b>Вывод'} #${p.id}</b> · ${PS[p.status]}\n<b>${usd(p.cents)}</b>${p.method?'\n'+esc(p.method)+(p.details?': <code>'+esc(p.details)+'</code>':''):''}\nКлиент: ${esc(db.users[p.user]?.nick||p.user)} (${esc(p.user)} · ID #${db.users[p.user]?.uid||0})${p.msg?'\nСообщение: <i>'+esc(p.msg)+'</i>':''}`;
+
+const kbO=o=>({inline_keyboard:[
+ ...(o.status=='new'?[
+  [{text:'Принять',callback_data:'o:accepted:'+o.id},{text:'Сразу зачислить $',callback_data:'o:credited:'+o.id}],
+  [{text:'Принять + написать',callback_data:'om:accepted:'+o.id},{text:'Отклонить + написать',callback_data:'om:rejected:'+o.id}],
+  [{text:'Отклонить без текста',callback_data:'o:rejected:'+o.id}]
+ ]:o.status=='buy'?[
+  [{text:'Отправил скин',callback_data:'o:bought:'+o.id},{text:'Отправил + написать',callback_data:'om:bought:'+o.id}],
+  [{text:'Отказ + возврат $',callback_data:'o:refunded:'+o.id},{text:'Отказ + написать',callback_data:'om:refunded:'+o.id}]
+ ]:[
+  [{text:'Написать / изменить сообщение к заявке',callback_data:'om:'+o.status+':'+o.id}]
+ ]),
+ uBtn(o.user)
+]});
+
+const kbP=p=>({inline_keyboard:[
+ ...(p.status=='pending'&&p.type=='wd'?[
+  [{text:'Выплачено',callback_data:'p:done:'+p.id},{text:'Выплачено + написать',callback_data:'pm:done:'+p.id}],
+  [{text:'Отклонить + возврат $',callback_data:'p:rejected:'+p.id},{text:'Отклонить + написать',callback_data:'pm:rejected:'+p.id}]
+ ]:[
+  [{text:'Написать комментарий к выплате',callback_data:'pm:'+p.status+':'+p.id}]
+ ]),
+ uBtn(p.user)
+]});
+
 const note=async(t,k,img)=>{if(!(TOKEN&&ADMIN))return;const b={chat_id:ADMIN,parse_mode:'HTML',reply_markup:k};try{if(img){const r=await tg('sendPhoto',{...b,photo:img,caption:t});if(r.ok)return}await tg('sendMessage',{...b,text:t,link_preview_options:{is_disabled:true}})}catch(e){}};
 const kb=r=>({inline_keyboard:r}),BACK=[{text:'← В главное меню',callback_data:'m:main'}],CANCEL=kb([[{text:'Отмена',callback_data:'m:main'}]]),MENU='Меню управления',wait={};
 
@@ -73,7 +96,7 @@ const cnt=(k)=>db.orders.filter(o=>o.status==k).length,pendP=()=>db.ops.filter(o
 function mainScr(){
  const n=cnt('new')+cnt('buy'),w=pendP().length,pCnt=Object.keys(db.promos||{}).length;
  return{
-  t:`<b>CS2PAY · ГЛАВНЫЙ ПУЛЬТ УПРАВЛЕНИЯ</b>\n\nЗаявок ждёт: <b>${n}</b> · Выводов ждёт: <b>${w}</b>\nЦены выкупа: <b>${adjTxt()}</b> · Продажи: <b>${buyTxt()}</b>\nОнлайн: <b>${db.cfg.minOn}–${db.cfg.maxOn}</b> (${db.cfg.hideOn?'скрыт':'виден'})\nБоты-отзывы: <b>${db.cfg.botsOn?'ВКЛ (каждые '+db.cfg.botSec+'с)':'ВЫКЛ'}</b>\nВывод без депа: <b>${db.cfg.reqDep?'ЗАПРЕЩЁН':'РАЗРЕШЁН'}</b>\nМин. вывод: <b>$${db.cfg.minWd}</b> · Ежедневка: <b>${usd(db.cfg.dailyCents)}</b>`,
+  t:`<b>CS2PAY · ГЛАВНЫЙ ПУЛЬТ УПРАВЛЕНИЯ</b>\n\nЗаявок ждёт: <b>${n}</b> · Выводов ждёт: <b>${w}</b>\nЦены выкупа: <b>${adjTxt()}</b> · Продажи: <b>${buyTxt()}</b>\nОнлайн: <b>${db.cfg.minOn}–${db.cfg.maxOn}</b> (${db.cfg.hideOn?'скрыт':'виден'})\nБоты-отзывы: <b>${db.cfg.botsOn?'ВКЛ':'ВЫКЛ'}</b>\nВывод без депа: <b>${db.cfg.reqDep?'ЗАПРЕЩЁН':'РАЗРЕШЁН'}</b>\nМин. вывод: <b>$${db.cfg.minWd}</b> · Ежедневка: <b>${usd(db.cfg.dailyCents)}</b>`,
   k:kb([
    [{text:'Заявки и выводы'+(n+w?` (${n+w})`:''),callback_data:'m:pend'},{text:'Полная статистика',callback_data:'m:stats'}],
    [{text:'Пользователи ('+Object.keys(db.users).length+')',callback_data:'m:users:0'},{text:'Поиск по ID / логину',callback_data:'m:find'}],
@@ -88,11 +111,10 @@ function mainScr(){
 
 function botsScr(m){
  return{
-  t:`<b>Управление онлайном и ботами</b>${m?'\n\n'+m:''}\n\nТекущий онлайн на сайте: <b>${fakeOnl}</b>\nДиапазон скачков: <b>${db.cfg.minOn} – ${db.cfg.maxOn}</b>\nОтображение онлайна: <b>${db.cfg.hideOn?'Скрыт':'Виден всем'}</b>\nАвто-отзывы ботов: <b>${db.cfg.botsOn?'Включены':'Выключены'}</b>\nСкорость ботов: <b>1 отзыв каждые ${db.cfg.botSec} сек</b> (2 за ${db.cfg.botSec*2}с)`,
+  t:`<b>Управление онлайном и ботами</b>${m?'\n\n'+m:''}\n\nТекущий онлайн на сайте: <b>${fakeOnl}</b>\nДиапазон скачков: <b>${db.cfg.minOn} – ${db.cfg.maxOn}</b>\nОтображение онлайна: <b>${db.cfg.hideOn?'Скрыт':'Виден всем'}</b>\nАвто-отзывы ботов: <b>${db.cfg.botsOn?'Включены':'Выключены'}</b>`,
   k:kb([
    [{text:db.cfg.hideOn?'Показать онлайн':'Скрыть онлайн',callback_data:'b:hon'},{text:'Задать диапазон онлайна',callback_data:'b:rng'}],
-   [{text:db.cfg.botsOn?'Выключить ботов':'Включить ботов',callback_data:'b:bon'},{text:'Скорость: 3 сек',callback_data:'b:sp:3'},{text:'5 сек',callback_data:'b:sp:5'},{text:'10 сек',callback_data:'b:sp:10'}],
-   [{text:'Задать свою скорость (сек)',callback_data:'b:spc'}],
+   [{text:db.cfg.botsOn?'Выключить ботов':'Включить ботов',callback_data:'b:bon'}],
    BACK
   ])
  }
@@ -112,7 +134,7 @@ function wcfgScr(m){
 
 function revsScr(m){
  const R=(db.revs||[]).slice(-8).reverse();
- const list=R.length?R.map((r,i)=>`• <b>${esc(r.nick)}</b> (${r.stars}★): ${esc(r.text)}`).join('\n'):'<i>Кастомных отзывов в базе нет (крутятся авто-боты)</i>';
+ const list=R.length?R.map((r)=>`• <b>${esc(r.nick)}</b> (${r.stars}★): ${esc(r.text)}`).join('\n'):'<i>Кастомных отзывов в базе нет (крутятся авто-боты)</i>';
  return{
   t:`<b>Управление отзывами на сайте</b>${m?'\n\n'+m:''}\n\nПоследние сохранённые отзывы:\n${list}\n\nТы можешь отправить в ленту сайта свой кастомный отзыв от любого имени:`,
   k:kb([
@@ -140,15 +162,15 @@ function statsScr(){const sum=(l,f)=>l.reduce((t,x)=>t+f(x),0),W=pendP(),D=db.op
 
 function usersScr(pg){const L=Object.entries(db.users).sort((a,b)=>(b[1].created||0)-(a[1].created||0)),per=8,N=Math.max(1,Math.ceil(L.length/per));pg=Math.min(Math.max(0,pg),N-1);
  const nav=[];if(pg>0)nav.push({text:'←',callback_data:'m:users:'+(pg-1)});nav.push({text:`${pg+1}/${N}`,callback_data:'noop'});if(pg<N-1)nav.push({text:'→',callback_data:'m:users:'+(pg+1)});
- return{t:`<b>Пользователи</b> · всего ${L.length}\nУ каждого свой уникальный ID. Нажми для полного управления:`,k:kb([...L.slice(pg*per,pg*per+per).map(([l,x])=>[{text:`#${x.uid||0} · ${x.ban?'[БАН] ':''}${l} · ${usd(x.bal||0)}`,callback_data:'u:'+l}]),nav,BACK])}}
+ return{t:`<b>Пользователи</b> · всего ${L.length}\nУ каждого свой уникальный ID. Нажми для полного управления:`,k:kb([...L.slice(pg*per,pg*per+per).map(([l,x])=>[{text:`#${x.uid||0} · ${x.ban?'[БАН] ':''}${x.nick||l} · ${usd(x.bal||0)}`,callback_data:'u:'+l}]),nav,BACK])}}
 
 function userScr(l,m){const x=db.users[l];if(!x)return{t:'Пользователь не найден',k:kb([BACK])};
  const hasDep=db.ops.some(o=>o.user==l&&o.type=='dep'&&o.status=='done');
- return{t:`<b>Профиль: ${esc(l)}</b> · ID: <code>#${x.uid||0}</code>${x.ban?' · <b>ЗАБЛОКИРОВАН</b>':''}${m?'\n\n'+m:''}\n\nБаланс: <b>${usd(x.bal||0)}</b>\nБонус к продаже: <b>+${x.sellB||0}%</b> · к депу: <b>+${x.depB||0}%</b>\nРеальный депозит: <b>${hasDep?'Был (вывод открыт)':'Не было'}</b>\n2FA: <b>${x.totp?'Включена':'Нет'}</b>\nТрейд-ссылка: ${x.tl?'<code>'+esc(x.tl)+'</code>':'не указана'}\nЗаявок: ${db.orders.filter(o=>o.user==l).length} · Операций: ${db.ops.filter(o=>o.user==l).length}`,
+ return{t:`<b>Профиль: ${esc(x.nick||l)}</b> (${esc(l)}) · ID: <code>#${x.uid||0}</code>${x.ban?' · <b>ЗАБЛОКИРОВАН</b>':''}${m?'\n\n'+m:''}\n\nБаланс: <b>${usd(x.bal||0)}</b>\nБонус к продаже: <b>+${x.sellB||0}%</b> · к депу: <b>+${x.depB||0}%</b>\nРеальный депозит: <b>${hasDep?'Был (вывод открыт)':'Не было'}</b>\n2FA: <b>${x.totp?'Включена':'Нет'}</b>\nТрейд-ссылка: ${x.tl?'<code>'+esc(x.tl)+'</code>':'не указана'}\nЗаявок: ${db.orders.filter(o=>o.user==l).length} · Операций: ${db.ops.filter(o=>o.user==l).length}`,
  k:kb([
-  [{text:'Изменить баланс ($)',callback_data:'ab:'+l},{text:'Дать % бонус юзеру',callback_data:'ub:'+l}],
-  [{text:x.ban?'Разблокировать':'Заблокировать',callback_data:'ban:'+l},{text:'Разрешить вывод без депа',callback_data:'ufd:'+l}],
-  [...(x.totp?[[{text:'Сбросить 2FA юзеру',callback_data:'u2fa:'+l}]]:[])],
+  [{text:'Изменить баланс ($)',callback_data:'ab:'+l},{text:'Написать сообщение юзеру',callback_data:'umsg:'+l}],
+  [{text:'Дать % бонус юзеру',callback_data:'ub:'+l},{text:'Разрешить вывод без депа',callback_data:'ufd:'+l}],
+  [{text:x.ban?'Разблокировать':'Заблокировать',callback_data:'ban:'+l},...(x.totp?[{text:'Сбросить 2FA',callback_data:'u2fa:'+l}]:[])],
   [{text:'← К списку пользователей',callback_data:'m:users:0'}],
   BACK
  ])}}
@@ -174,6 +196,38 @@ function noticeScr(){return{t:`<b>Объявление (баннер сверх�
 function setBal(l,v,al){const x=db.users[l];if(!x||!v)return;if((x.bal||0)+v*100<0){al.t='Баланс не может уйти в минус';return}
  x.bal=(x.bal||0)+Math.round(v*100);db.ops.push({id:db.ops.length+1,user:l,type:v>0?'dep':'wd',cents:Math.round(Math.abs(v)*100),method:'Корректировка',details:'admin',status:'done',t:Date.now()});save()}
 
+function applyOrderAction(o,st,msg){
+ if(!o)return;
+ const prev=o.status;
+ o.status=st;
+ if(msg)o.msg=msg;
+ const u=db.users[o.user];
+ if(prev=='new'&&st=='accepted')o.hold=Date.now()+7*864e5;
+ else if(prev=='new'&&st=='credited'&&u)u.bal=(u.bal||0)+Math.round(o.price*100);
+ else if(prev=='buy'&&st=='refunded'&&u)u.bal=(u.bal||0)+Math.round(o.price*100);
+ if(u&&msg){
+  u.notes=u.notes||[];
+  u.notes.push({id:Date.now(),text:`По заявке #${o.id} (${o.skin}): ${msg}`,t:Date.now()});
+ }
+ save();
+}
+
+function applyOpAction(q,st,msg){
+ if(!q)return;
+ const prev=q.status;
+ q.status=st;
+ if(msg)q.msg=msg;
+ const u=db.users[q.user];
+ if(prev=='pending'&&u&&((st=='done'&&q.type=='dep')||(st=='rejected'&&q.type=='wd'))){
+  u.bal=(u.bal||0)+q.cents;
+ }
+ if(u&&msg){
+  u.notes=u.notes||[];
+  u.notes.push({id:Date.now(),text:`По выплате #${q.id}: ${msg}`,t:Date.now()});
+ }
+ save();
+}
+
 async function pending(chat,mid){const O=db.orders.filter(o=>o.status=='new'||o.status=='buy').slice(0,12),P=pendP().slice(0,12);
  if(!O.length&&!P.length)return screen(chat,mid,'<b>Ожидающих заявок и выводов нет</b>',kb([[{text:'Обновить',callback_data:'m:pend'}],BACK]));
  await screen(chat,mid,`<b>Ждут решения</b>: заявок ${O.length}, выводов ${P.length}`,kb([BACK]));
@@ -187,9 +241,26 @@ async function onInput(chat,w,t){
  if(w.k=='find'){
   const q=t.trim().replace(/^#/,'').toLowerCase();
   if(db.users[q])return show(chat,0,userScr(q));
-  const byId=Object.entries(db.users).find(([k,v])=>String(v.uid)===q||k.includes(q));
+  const byId=Object.entries(db.users).find(([k,v])=>String(v.uid)===q||k.includes(q)||(v.nick&&v.nick.toLowerCase().includes(q)));
   if(byId)return show(chat,0,userScr(byId[0]));
-  return show(chat,0,{t:'Пользователь с таким логином или ID не найден',k:kb([BACK])});
+  return show(chat,0,{t:'Пользователь с таким логином, ником или ID не найден',k:kb([BACK])});
+ }
+ if(w.k=='ord_msg'){
+  const o=db.orders.find(x=>x.id==w.id);
+  if(!o)return show(chat,0,mainScr());
+  applyOrderAction(o,w.st,t);
+  return screen(chat,0,`Статус заявки #${o.id} обновлён и сообщение отправлено клиенту:\n\n${fmtO(o)}`,kbO(o));
+ }
+ if(w.k=='op_msg'){
+  const q=db.ops.find(x=>x.id==w.id);
+  if(!q)return show(chat,0,mainScr());
+  applyOpAction(q,w.st,t);
+  return screen(chat,0,`Статус операции #${q.id} обновлён и сообщение отправлено клиенту:\n\n${fmtP(q)}`,kbP(q));
+ }
+ if(w.k=='umsg'){
+  const u=db.users[w.l];
+  if(u){u.notes=u.notes||[];u.notes.push({id:Date.now(),text:t,t:Date.now()});save()}
+  return show(chat,0,userScr(w.l,'Сообщение отправлено пользователю на сайт'));
  }
  if(w.k=='pcode'){
   const parts=t.trim().split(/\s+/);
@@ -223,7 +294,6 @@ async function onInput(chat,w,t){
   let c=0;for(const k in db.users){db.users[k].bal=Math.max(0,(db.users[k].bal||0)+Math.round(v*100));c++}
   save();return show(chat,0,massScr(`Начислено по $${v} всем (${c} чел.)`))
  }
- if(w.k=='botsp'){db.cfg.botSec=Math.max(1,Math.min(120,Math.round(v)));save();return show(chat,0,botsScr('Скорость обновлена'))}
  if(w.k=='minwd'){db.cfg.minWd=Math.max(0.1,v);save();return show(chat,0,wcfgScr('Мин. вывод обновлён'))}
  if(w.k=='dlc'){db.cfg.dailyCents=Math.max(1,Math.round(v*100));save();return show(chat,0,wcfgScr('Ежедневный бонус обновлён'))}
  if(w.k=='buyp'){if(v<-99||v>50000){wait[chat]=w;return screen(chat,0,'Допустимо от -99 до 50000',CANCEL)}db.cfg.buyAdj=v;save();return show(chat,0,buyScr('Установлено '+v+'%'))}
@@ -241,7 +311,7 @@ async function onUpdate(u){const m=u.message,c=u.callback_query;
   return show(chat,0,mainScr())}
  if(!c||String(c.message.chat.id)!==String(ADMIN))return;
  const chat=c.message.chat.id,mid=c.message.message_id,p=(c.data||'').split(':'),k=p[0],al={};
- if(k!='o'&&k!='p'&&k!='noop')delete wait[chat];
+ if(k!='o'&&k!='p'&&k!='om'&&k!='pm'&&k!='noop')delete wait[chat];
  if(k=='m'){
   const s=p[1];
   if(s=='main')await show(chat,mid,mainScr());
@@ -258,13 +328,11 @@ async function onUpdate(u){const m=u.message,c=u.callback_query;
   else if(s=='bk'){await backup(chat);al.t='Бэкап отправлен'}
   else if(s=='onl'){db.cfg.hideOn=!db.cfg.hideOn;save();await show(chat,mid,mainScr())}
   else if(s=='notice')await show(chat,mid,noticeScr());
-  else if(s=='find'){wait[chat]={k:'find'};await screen(chat,mid,'Отправь логин или ID пользователя (например <code>10001</code> или <code>vlad</code>):',CANCEL)}
+  else if(s=='find'){wait[chat]={k:'find'};await screen(chat,mid,'Отправь логин, ник или ID пользователя (например <code>10002</code>):',CANCEL)}
  }
  else if(k=='b'){
   if(p[1]=='hon'){db.cfg.hideOn=!db.cfg.hideOn;save();await show(chat,mid,botsScr())}
   else if(p[1]=='bon'){db.cfg.botsOn=!db.cfg.botsOn;save();await show(chat,mid,botsScr())}
-  else if(p[1]=='sp'){db.cfg.botSec=+p[2];save();await show(chat,mid,botsScr('Скорость: каждые '+p[2]+' сек'))}
-  else if(p[1]=='spc'){wait[chat]={k:'botsp'};await screen(chat,mid,'Отправь интервал появления ботов в секундах (от 1 до 120):',CANCEL)}
   else if(p[1]=='rng'){wait[chat]={k:'onrng'};await screen(chat,mid,'Отправь мин и макс онлайн через пробел, например: <code>667 1214</code>',CANCEL)}
  }
  else if(k=='w'){
@@ -275,7 +343,7 @@ async function onUpdate(u){const m=u.message,c=u.callback_query;
   else if(p[1]=='dlc'){wait[chat]={k:'dlc'};await screen(chat,mid,'Отправь сумму ежедневного бонуса в $, например <code>0.15</code>:',CANCEL)}
  }
  else if(k=='rv'){
-  if(p[1]=='add'){wait[chat]={k:'addrev'};await screen(chat,mid,'Отправь ник и текст отзыва через вертикальную черту <code>|</code>\nНапример:\n<code>s1mple | продал нож, бабки пришли за минуту на моно</code>',CANCEL)}
+  if(p[1]=='add'){wait[chat]={k:'addrev'};await screen(chat,mid,'Отправь ник и текст отзыва через вертикальную черту <code>|</code>\nНапример:\n<code>w1ndow | продал нож, бабки пришли за минуту на моно</code>',CANCEL)}
   else if(p[1]=='clr'){db.revs=[];save();await show(chat,mid,revsScr('Сохранённые отзывы очищены'))}
  }
  else if(k=='ms'){
@@ -290,6 +358,7 @@ async function onUpdate(u){const m=u.message,c=u.callback_query;
  }
  else if(k=='pd'){delete db.promos[p[1]];save();await show(chat,mid,promosScr('Удалён '+p[1]))}
  else if(k=='u')await show(chat,mid,userScr(p[1]));
+ else if(k=='umsg'){wait[chat]={k:'umsg',l:p[1]};await screen(chat,mid,'Напиши сообщение для пользователя <b>'+esc(p[1])+'</b> (оно всплывёт у него на экране сайта):',CANCEL)}
  else if(k=='ban'){const x=db.users[p[1]];if(x){x.ban=!x.ban;save()}await show(chat,mid,userScr(p[1]))}
  else if(k=='u2fa'){const x=db.users[p[1]];if(x){delete x.totp;save()}await show(chat,mid,userScr(p[1],'2FA сброшена'))}
  else if(k=='ufd'){const l=p[1];db.ops.push({id:db.ops.length+1,user:l,type:'dep',cents:0,method:'Доступ к выводу (admin)',inv:'admin_unlock',status:'done',t:Date.now()});save();await show(chat,mid,userScr(l,'Вывод без депа открыт для этого юзера'))}
@@ -301,24 +370,27 @@ async function onUpdate(u){const m=u.message,c=u.callback_query;
  else if(k=='pr'){if(p[1]=='c'){wait[chat]={k:'price'};await screen(chat,mid,'Отправь любой процент (например -45 или 120):',CANCEL)}else{db.cfg.adj=+p[1];save();await show(chat,mid,priceScr('Установлено '+p[1]+'%'))}}
  else if(k=='bp'){if(p[1]=='c'){wait[chat]={k:'buyp'};await screen(chat,mid,'Отправь любой процент для цен покупки (например -30 или 150):',CANCEL)}else{db.cfg.buyAdj=+p[1];save();await show(chat,mid,buyScr('Установлено '+p[1]+'%'))}}
  else if(k=='n'){if(p[1]=='e'){wait[chat]={k:'notice'};await screen(chat,mid,'Отправь текст объявления сообщением',CANCEL)}else{db.cfg.notice='';save();await show(chat,mid,noticeScr())}}
- else if(k=='o'||k=='p'){const id=+p[2];let txt,kk;
+ else if(k=='om'){
+  const id=+p[2],st=p[1];
+  wait[chat]={k:'ord_msg',id,st};
+  await tg('sendMessage',{chat_id:chat,text:`Напиши сообщение для клиента по заявке <b>#${id}</b> (статус станет: <b>${OS[st]||st}</b>):`,parse_mode:'HTML',reply_markup:CANCEL});
+ }
+ else if(k=='pm'){
+  const id=+p[2],st=p[1];
+  wait[chat]={k:'op_msg',id,st};
+  await tg('sendMessage',{chat_id:chat,text:`Напиши сообщение для клиента по выплате <b>#${id}</b> (статус станет: <b>${PS[st]||st}</b>):`,parse_mode:'HTML',reply_markup:CANCEL});
+ }
+ else if(k=='o'||k=='p'){
+  const id=+p[2];let txt,kk;
   if(k=='o'){
    const o=db.orders.find(x=>x.id==id);
-   if(o&&o.status=='new'){
-    o.status=p[1];
-    if(p[1]=='accepted')o.hold=Date.now()+7*864e5;
-    else if(p[1]=='credited'){const us=db.users[o.user];if(us)us.bal=(us.bal||0)+Math.round(o.price*100)}
-    save();
-   }else if(o&&o.status=='buy'&&(p[1]=='bought'||p[1]=='refunded')){
-    o.status=p[1];if(p[1]=='refunded'){const us=db.users[o.user];if(us)us.bal=(us.bal||0)+Math.round(o.price*100)}save();
-   }
-   if(o){txt=fmtO(o);kk=kbO(o)}
+   if(o){applyOrderAction(o,p[1],'');txt=fmtO(o);kk=kbO(o)}
   }else{
    const q=db.ops.find(x=>x.id==id);
-   if(q&&q.status=='pending'){q.status=p[1];const us=db.users[q.user];if(us&&((p[1]=='done'&&q.type=='dep')||(p[1]=='rejected'&&q.type=='wd')))us.bal=(us.bal||0)+q.cents;save()}
-   if(q){txt=fmtP(q);kk=kbP(q)}
+   if(q){applyOpAction(q,p[1],'');txt=fmtP(q);kk=kbP(q)}
   }
-  if(txt)await(c.message.photo?tg('editMessageCaption',{chat_id:chat,message_id:mid,caption:txt,parse_mode:'HTML',reply_markup:kk}):tg('editMessageText',{chat_id:chat,message_id:mid,text:txt,parse_mode:'HTML',link_preview_options:{is_disabled:true},reply_markup:kk}))}
+  if(txt)await(c.message.photo?tg('editMessageCaption',{chat_id:chat,message_id:mid,caption:txt,parse_mode:'HTML',reply_markup:kk}):tg('editMessageText',{chat_id:chat,message_id:mid,text:txt,parse_mode:'HTML',link_preview_options:{is_disabled:true},reply_markup:kk}));
+ }
  await tg('answerCallbackQuery',{callback_query_id:c.id,text:al.t,show_alert:!!al.t})}
 
 let off=0;(async()=>{if(!TOKEN)return console.log('BOT_TOKEN не задан: бот выключен');tg('setMyCommands',{commands:[{command:'menu',description:'Открыть пульт управления cs2pay'}]}).catch(()=>{});
@@ -343,12 +415,33 @@ async function loadRates(){try{const j=await fetch('https://open.er-api.com/v6/l
 
 /* http */
 const hash=(p,s)=>crypto.scryptSync(p,s,32).toString('hex');
-const body=req=>new Promise(r=>{let d='';req.on('data',c=>{d+=c;if(d.length>1e5)req.destroy()});req.on('end',()=>{try{r(JSON.parse(d||'{}'))}catch{r({})}})});
+const body=req=>new Promise(r=>{let d='';req.on('data',c=>{d+=c;if(d.length>3e5)req.destroy()});req.on('end',()=>{try{r(JSON.parse(d||'{}'))}catch{r({})}})});
 const send=(res,c,o,h)=>{res.writeHead(c,{'Content-Type':'application/json',...h});res.end(JSON.stringify(o))};
 const bad=(res,m,c=400,x)=>send(res,c,{error:m,...x});
 const me=req=>{const sid=(/sid=(\w+)/.exec(req.headers.cookie||'')||[])[1],s=sid&&db.sess[sid];return s&&Date.now()-s.t<30*864e5&&db.users[s.n]&&!db.users[s.n].ban?s.n:null};
 const start=(req,res,n)=>{const sid=crypto.randomBytes(24).toString('hex');db.sess[sid]={n,t:Date.now()};save();send(res,200,{name:n},{'Set-Cookie':`sid=${sid}; HttpOnly; SameSite=Lax; Path=/; Max-Age=2592000${req.headers['x-forwarded-proto']=='https'?'; Secure':''}`})};
-const pub=n=>{const u=db.users[n];return{name:n,uid:u.uid||10001,bal:u.bal||0,tl:u.tl||'',tfa:!!u.totp,google:!!u.google,sellB:u.sellB||0,depB:u.depB||0,tasks:u.tasks||{},dailyAt:u.dailyAt||0,orders:db.orders.filter(o=>o.user==n).map(({id,skin,img,price,status,hold,t,kind})=>({id,skin,img,price,status,hold,t,kind})),ops:db.ops.filter(o=>o.user==n)}};
+const pub=n=>{
+ const u=db.users[n];
+ const notes=u.notes||[];
+ u.notes=[];if(notes.length)save();
+ return{
+  name:n,
+  nick:u.nick||n.split('@')[0],
+  av:u.av||'',
+  uid:u.uid||10001,
+  bal:u.bal||0,
+  tl:u.tl||'',
+  tfa:!!u.totp,
+  google:!!u.google,
+  sellB:u.sellB||0,
+  depB:u.depB||0,
+  tasks:u.tasks||{},
+  dailyAt:u.dailyAt||0,
+  notes,
+  orders:db.orders.filter(o=>o.user==n).map(({id,skin,img,price,status,hold,t,kind,msg})=>({id,skin,img,price,status,hold,t,kind,msg:msg||''})),
+  ops:db.ops.filter(o=>o.user==n)
+ }
+};
 const fails={};const lim=k=>{const f=fails[k]=(fails[k]||[]).filter(t=>Date.now()-t<6e5);return f.length>=8};
 const TL=/^https:\/\/steamcommunity\.com\/tradeoffer\/new\/\?partner=\d+&token=[\w-]+$/;
 
@@ -370,7 +463,7 @@ http.createServer(async(req,res)=>{try{
   if(db.users[l])return bad(res,'Такой логин уже занят',409);
   const s=crypto.randomBytes(8).toString('hex');
   db.nextUid=(db.nextUid||10001)+1;
-  db.users[l]={uid:db.nextUid,s,h:hash(pw,s),bal:0,created:Date.now(),tasks:{}};save();return start(req,res,l)}
+  db.users[l]={uid:db.nextUid,nick:l.split('@')[0],av:'',s,h:hash(pw,s),bal:0,created:Date.now(),tasks:{}};save();return start(req,res,l)}
  if(p=='/api/login'){const b=await body(req),l=String(b.login||'').trim().toLowerCase(),x=db.users[l];
   if(lim(l))return bad(res,'Слишком много попыток, подожди 10 минут',429);
   if(!x||!x.h||x.h!==hash(String(b.password||''),x.s)){(fails[l]=fails[l]||[]).push(Date.now());return bad(res,'Неверный логин или пароль',401)}
@@ -379,7 +472,7 @@ http.createServer(async(req,res)=>{try{
   return start(req,res,l)}
  if(p=='/api/google'){const b=await body(req);const j=await fetch('https://oauth2.googleapis.com/tokeninfo?id_token='+encodeURIComponent(b.credential||'')).then(r=>r.json());
   if(!GID||j.aud!==GID||!j.email)return bad(res,'Google-вход не прошёл',401);const l=j.email.toLowerCase();
-  if(!db.users[l]){db.nextUid=(db.nextUid||10001)+1;db.users[l]={uid:db.nextUid,google:true,bal:0,created:Date.now(),tasks:{}};save()}return start(req,res,l)}
+  if(!db.users[l]){db.nextUid=(db.nextUid||10001)+1;db.users[l]={uid:db.nextUid,nick:j.given_name||l.split('@')[0],av:j.picture||'',google:true,bal:0,created:Date.now(),tasks:{}};save()}return start(req,res,l)}
  if(p=='/api/logout'){const sid=(/sid=(\w+)/.exec(req.headers.cookie||'')||[])[1];if(sid){delete db.sess[sid];save()}return send(res,200,{},{'Set-Cookie':'sid=; Max-Age=0; Path=/'})}
  const n=me(req);
  if(p=='/api/recent'){const C=db.orders.filter(o=>o.status=='credited'),paid=C.reduce((t,o)=>t+o.price,0);return send(res,200,{paid:+paid.toFixed(2),n:C.length,items:C.slice(-8).reverse().map(o=>({n:o.skin,img:o.img,p:o.price}))})}
@@ -388,6 +481,20 @@ http.createServer(async(req,res)=>{try{
  if(!n)return bad(res,'Войди в аккаунт',401);
  const x=db.users[n],b=req.method=='POST'?await body(req):{};
  x.tasks=x.tasks||{};
+ if(p=='/api/profile'){
+  if(b.nick!==undefined){
+   const nk=String(b.nick||'').trim();
+   if(nk.length<2||nk.length>24)return bad(res,'Никнейм должен быть от 2 до 24 символов');
+   x.nick=nk;
+  }
+  if(b.av!==undefined){
+   const av=String(b.av||'').trim();
+   if(av&&!av.startsWith('https://')&&!av.startsWith('data:image/'))return bad(res,'Неверный формат картинки');
+   if(av.length>220000)return bad(res,'Картинка слишком большая');
+   x.av=av;
+  }
+  save();return send(res,200,{ok:true,nick:x.nick,av:x.av})
+ }
  if(p=='/api/promo'){
   const code=String(b.code||'').trim().toUpperCase();
   const prm=(db.promos||{})[code];
@@ -409,7 +516,7 @@ http.createServer(async(req,res)=>{try{
    x.depB=(x.depB||0)+prm.val;
    msg=`Промокод активирован! Бонус +${prm.val}% к следующему пополнению`;
   }
-  save();note(`<b>Активирован промокод</b>\nКод: <code>${esc(code)}</code>\nПользователь: ${esc(n)} (#${x.uid||0})`);
+  save();note(`<b>Активирован промокод</b>\nКод: <code>${esc(code)}</code>\nПользователь: ${esc(x.nick||n)} (#${x.uid||0})`);
   return send(res,200,{ok:true,msg,cents})
  }
  if(p=='/api/task'){
@@ -439,7 +546,7 @@ http.createServer(async(req,res)=>{try{
   const text=String(b.text||'').trim().slice(0,180);
   if(text.length<3)return bad(res,'Напиши хотя бы пару слов в отзыве');
   const lastOrd=myOrders[myOrders.length-1];
-  const rev={nick:n.split('@')[0],stars,skin:lastOrd.skin,img:lastOrd.img,p:lastOrd.price,text,t:Date.now()};
+  const rev={nick:x.nick||n.split('@')[0],av:x.av||'',stars,skin:lastOrd.skin,img:lastOrd.img,p:lastOrd.price,text,t:Date.now()};
   db.revs=db.revs||[];db.revs.push(rev);if(db.revs.length>30)db.revs.shift();
   save();return send(res,200,{ok:true,rev})
  }
