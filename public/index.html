@@ -275,8 +275,7 @@ function api(u,b){return api0(u,b).catch(function(e){if(!e.d)e.message="Нет �
 function api0(u,b){return fetch(u,b!==undefined?{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}:{}).then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok){var e=new Error(j.error||"Ошибка");e.d=j;throw e}return j})})}
 
 /* =========================================================================
-   ПРЕМИАЛЬНЫЙ САУНД-ДИЗАЙН (ГЛУБОКИЙ SUB-BASS, МЕХАНИЧЕСКИЙ THOCK, SWOOSH)
-   Никакого высокочастотного писка — все частоты ниже 400 Гц
+   ПРЕМИАЛЬНЫЙ САУНД-ДИЗАЙН (SUB-BASS, МЕХАНИЧЕСКИЙ THOCK, SWOOSH)
    ========================================================================= */
 var IO='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg>',IF='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>';function SI(){$("snd").innerHTML=snd?IO:IF}
 function A(){
@@ -286,7 +285,6 @@ function A(){
   var comp=ac.createDynamicsCompressor();
   comp.threshold.value=-18;comp.ratio.value=4;
   M.connect(comp);comp.connect(ac.destination);
-  /* Буфер мягкого розового шума для механических переключателей и воздушных свушей */
   var sz=ac.sampleRate*0.5;
   noiseBuf=ac.createBuffer(1,sz,ac.sampleRate);
   var out=noiseBuf.getChannelData(0),b0=0,b1=0,b2=0;
@@ -299,12 +297,10 @@ function A(){
  if(ac.state=="suspended")ac.resume();
  return ac;
 }
-/* Глухой механический щелчок (Mechanical Keyboard Thock) при нажатии кнопок */
 function sTap(){
  if(!snd)return;
  try{
   var c=A(),t=c.currentTime;
-  /* 1. Короткий глухой стук корпуса (105 Гц -> 36 Гц за 28 мс) */
   var o=c.createOscillator(),g=c.createGain();
   o.type="sine";
   o.frequency.setValueAtTime(105,t);
@@ -313,7 +309,6 @@ function sTap(){
   g.gain.exponentialRampToValueAtTime(0.001,t+0.032);
   o.connect(g);g.connect(M);
   o.start(t);o.stop(t+0.035);
-  /* 2. Мягкий матовый текстурный свитч через фильтр 320 Гц */
   var ns=c.createBufferSource(),nf=c.createBiquadFilter(),ng=c.createGain();
   ns.buffer=noiseBuf;
   nf.type="bandpass";nf.frequency.value=320;nf.Q.value=1.8;
@@ -323,7 +318,6 @@ function sTap(){
   ns.start(t);ns.stop(t+0.02);
  }catch(e){}
 }
-/* Двойной глубокий басовый тук при добавлении скина в корзину */
 function sPop(){
  if(!snd)return;
  try{
@@ -341,7 +335,6 @@ function sPop(){
   });
  }catch(e){}
 }
-/* Мягкий воздушный свуш (Whoosh) при открытии модалок и корзины */
 function sOpen(){
  if(!snd)return;
  try{
@@ -358,7 +351,6 @@ function sOpen(){
   ns.start(t);ns.stop(t+0.14);
  }catch(e){}
 }
-/* Низкий глухой саб-пульс при ошибке */
 function sErr(){
  if(!snd)return;
  try{
@@ -376,12 +368,10 @@ function sErr(){
   });
  }catch(e){}
 }
-/* Кинематографический глубокий тёплый аккорд при успешной сделке / бонусе */
 function sOk(){
  if(!snd)return;
  try{
   var c=A(),t=c.currentTime;
-  /* Тёплый низкий пад C2 - G2 - B2 - E3 через мягкий фильтр 360 Гц */
   [65.41,98.00,123.47,164.81].forEach(function(freq,idx){
    var o=c.createOscillator(),f=c.createBiquadFilter(),g=c.createGain();
    o.type="triangle";
@@ -543,47 +533,65 @@ function pingOn(){
 pingOn();setInterval(pingOn,3500);
 
 /* =========================================================================
-   ПРОЦЕДУРНЫЙ ГЕНЕРАТОР УНИКАЛЬНЫХ ЛЮДЕЙ, PINTEREST-АВАТАРОК И РВАНОГО ПОТОКА
+   ЧИСТЫЙ ГЕНЕРАТОР АУТЕНТИЧНЫХ CS2 / FACEIT / STEAM НИКОВ (БЕЗ КОЛХОЗА)
+   Никаких "антон", "кабан", "ваня" — только реальные игровые теги на латинице
    ========================================================================= */
 var cheapPool=[],midPool=[],knifePool=[],usedNicks=new Set(),usedAvs=new Set(),usedRevs=new Set(),uIdx=0;
 
-/* Огромная база корней для процедурной сборки тысяч живых ников без повторов */
-var NK_CYR_NAMES=["Влад","Макс","Богдан","Саня","Діма","Артем","Денис","Назар","Тарас","Олег","Андрій","Ярик","Рома","Гліб","Ілля","Даня","Руслан","міша","коля","віталік","ростік","юра","степан","захар","льоша","паша","женя","ігор","вадим","антон","матвій","тимур","бодя","максим","владик","санек","дімон","денчик","олежа","андрюха","русік","жека","кіріл","тоха","ваня","сьома","ніка","даша","аліна","соня","ксюша","лєра","катя","юля"];
-var NK_SLANG=["тапок","бездарь","тильт","пустой","котик","пельмень","шаурма","кабан","легенда","батя","малой","кент","сірий","бублик","сонный","без_сна","чай","кофе","дождь","не_фони","тихий","шумный","меткий","хмурый","дерзкий","спокойный","ночной","зимний","северный","призрак","пажилой","гуль","туман","пепел","ворон","шторм","мираж","холод","пульс","тень"];
-var NK_STEAM_A=["w1ndow","k1to","fl0w","s1nner","qwe","0x1","v4mp","n0name","sh1ne","d3ff","m1rage","killa","b1g","f0x","r4ge","c0ld","h4ze","p4in","v1per","bl4de","cr0w","n1ght","s0ul","gh0st","f4llen","tw1st","sp1nx","zyx","l0st","dr3am","fl4sh","sm0ke","m0lly","h3ad","t4p","d1ego","kr0n","m4rko","st4s","t1ma","sh0k","f1zik","l1rik","z0r","x100","k9","m8","r0nin","v3nom","k4rma","nyx","z3ro","ph4ntom","gl1tch","v0id","s4vage","hybr1d","str1ke","cl0ud","fr0st","bl1tz","스카이","लहर"];
-var NK_ANIME=["kaneki","itachi","obito","hisoka","killua","chrollo","toji","gojo","sukuna","makima","denji","aki","power","rei","shinji","eren","mikasa","levi","zoro","luffy","sanji","law","naruto","sasuke","kakashi","garou","genos","dazai","chuuya","alucard","guts","griffith","thorfinn","musashi","baki","hanma","kira","lLawliet","ryuk","aoi","kuro","ryu","ren","haru","sora","akira","yuta","megumi","nanami","mahito"];
-var NK_LAT_NAMES=["sanya","vlad","maks","bohdan","dima","artem","denys","nazar","taras","oleh","andriy","yarik","roma","gleb","illia","danylo","ruslan","misha","kolya","vitalik","rostik","yura","stepan","zahar","pasha","zhenya","ihor","vadym","anton","matviy","timur","kirill","nikita","egor"];
-var NK_MODS=["",".","_","..","_x","_z","_ua","_cs","_mk","_kyiv","_lviv","_od","_kh","_zp","_dp","99","07","08","09","77","13","21","1337","420","_aim","_peek","_tap","_off","_gg","_qq","_zz"];
+/* 1. Чистые Faceit / Premier / Steam ники */
+varPRO_ROOTS=[
+ "w1ndow","k1to","fl0w","s1nner","qwe","0x1","v4mp","n0name","sh1ne","d3ff","m1rage","killa","b1g","f0x","r4ge","c0ld","h4ze","p4in",
+ "v1per","bl4de","cr0w","n1ght","s0ul","gh0st","f4llen","tw1st","sp1nx","zyx","l0st","dr3am","fl4sh","sm0ke","m0lly","h3ad","t4p",
+ "kr0n","sh0k","f1zik","l1rik","z0r","x100","r0nin","v3nom","k4rma","nyx","z3ro","ph4ntom","gl1tch","v0id","s4vage","hybr1d","str1ke",
+ "cl0ud","fr0st","bl1tz","xert1on","j1mpphat","t0rzsi","br0ky","fr0zen","m0nesy","w0nderful","b1t","donk","sh1ro","z0rte","deko",
+ "tr4vis","senzu","bl1tz","mzinho","ins4ni","sk0llz","kscerato","v1ni","ol0f","fl0sha","k3nnys","scr3am","f0rest","allu","gu4rdian",
+ "yek1ndar","n4fany","alm4zer","xsep0wer","s1n","k1ng","v3x","n0x","l3x","r1ze","f4ze","z1n","q1k","w3st","d4rk","k0re","sl4sh",
+ "h1ko","st4vn","j4bbi","c4lyx","kr1mbo","br0llan","s1uhy","sp1nx","fl4mez","m3zii","ap3x","zywoo","n1ko","r0pz","r4in","el1ge"
+];
 
-/* Генерирует 100% уникальный человеческий ник при каждом вызове */
+/* 2. Аниме / Японские / Dark-эстетика теги в Steam */
+var DARK_ROOTS=[
+ "kaneki","itachi","obito","hisoka","killua","chrollo","toji","gojo","sukuna","makima","denji","aki","power","rei","shinji","eren",
+ "mikasa","levi","zoro","sanji","law","sasuke","kakashi","garou","genos","dazai","chuuya","alucard","guts","griffith","thorfinn",
+ "musashi","baki","hanma","ryuk","aoi","kuro","ryu","ren","haru","sora","akira","yuta","megumi","nanami","mahito","ken","shin",
+ "kurapika","feitan","illumi","meruem","pitou","shanks","mihawk","doflamingo","katakuri","pain","madara","shisui","minato","gaara",
+ "ulquiorra","grimmjow","aizen","ichigo","byakuya","zaraki","kisuke","yhwach","dio","jotaro","giorno","kira","diavolo","pucci"
+];
+
+/* 3. Слоги для процедурной генерации тысяч новых киберспортивных ников */
+var SYL_1=["v1","k1","s1","f0","r4","d3","sh1","bl4","cr0","gh0","tw1","sp1","dr3","fl4","sm0","ph4","gl1","str1","fr0","tr4","sk0","sc3","gu4","n4","al","x3","z0","q1","w3","sl4","st4","br0","kl0","pr1","tr1","pl4","gr1","ch1","vl4","kr1"];
+var SYL_2=["ndow","to","nner","mp","ne","ff","rage","lla","ge","ld","ze","per","de","ul","st","nx","am","sh","ke","lly","ad","nin","nom","rma","ro","ntom","tch","id","vage","brid","ud","tz","rtex","zy","xk","vn","bbi","lyx","mbo","llan","uhy","mez"];
+
+/* 4. Аккуратные суффиксы, какие реально ставят в CS2 */
+var CLEAN_MODS=["","","",".","_","-","x","z","_cs","_ua","_peek","_tap","_aim","_1337","_zxc","77","99","07","08","13","21","666","777"];
+
 function getNick(){
  uIdx++;
- for(var i=0;i<150;i++){
+ for(var i=0;i<180;i++){
   var style=Math.random(),n="";
-  if(style<0.24){
-   n=NK_CYR_NAMES[Math.floor(Math.random()*NK_CYR_NAMES.length)];
-   if(Math.random()<0.25)n=n.toLowerCase();
-  }else if(style<0.44){
-   n=NK_SLANG[Math.floor(Math.random()*NK_SLANG.length)];
-  }else if(style<0.66){
-   n=NK_STEAM_A[Math.floor(Math.random()*NK_STEAM_A.length)];
-   if(Math.random()<0.3)n+=NK_MODS[Math.floor(Math.random()*6)];
-  }else if(style<0.84){
-   n=NK_ANIME[Math.floor(Math.random()*NK_ANIME.length)];
-   if(Math.random()<0.35)n+=NK_MODS[Math.floor(Math.random()*10)];
+  if(style<0.42){
+   var b1=varPRO_ROOTS[Math.floor(Math.random()*varPRO_ROOTS.length)];
+   var m1=CLEAN_MODS[Math.floor(Math.random()*CLEAN_MODS.length)];
+   n=b1+m1;
+  }else if(style<0.74){
+   var b2=DARK_ROOTS[Math.floor(Math.random()*DARK_ROOTS.length)];
+   var m2=CLEAN_MODS[Math.floor(Math.random()*CLEAN_MODS.length)];
+   n=b2+m2;
   }else{
-   var base=NK_LAT_NAMES[Math.floor(Math.random()*NK_LAT_NAMES.length)];
-   var mod=NK_MODS[Math.floor(Math.random()*NK_MODS.length)];
-   n=base+mod;
+   /* Процедурный киберспортивный ник из слогов */
+   var s1=SYL_1[Math.floor(Math.random()*SYL_1.length)];
+   var s2=SYL_2[Math.floor(Math.random()*SYL_2.length)];
+   var m3=Math.random()<0.35?CLEAN_MODS[Math.floor(Math.random()*12)]:"";
+   n=s1+s2+m3;
   }
   if(!usedNicks.has(n)){usedNicks.add(n);return n}
  }
- var fallback=NK_STEAM_A[uIdx%NK_STEAM_A.length]+"_"+uIdx;
- usedNicks.add(fallback);
- return fallback;
+ var fb=varPRO_ROOTS[uIdx%varPRO_ROOTS.length]+"_"+uIdx;
+ usedNicks.add(fb);
+ return fb;
 }
 
-/* Большой пул эстетичных дарк/пинтерест фото (тачки ночью, коты, стритвир, неон, силуэты) + генератор без единого повтора */
+/* Огромный пул эстетичных дарк/пинтерест аватарок */
 var PINTEREST_PICS=[
  "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=70&auto=format&fit=crop&q=65",
  "https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=70&auto=format&fit=crop&q=65",
@@ -629,28 +637,25 @@ var PINTEREST_PICS=[
 var AV_COLORS=["#2b5278","#3a6f4c","#7a4b3a","#5b437a","#3d6570","#6e485c","#4b5563","#7c5a2b","#2e4f4f","#5c3d2e","#3f4e4f","#4a3f35","#1e3a5f","#4a2545","#2d4a3e"];
 
 function getAvatarHtml(nick){
- /* Сначала отдаем неповторяющиеся эстетичные фото из пула Pinterest/Unsplash */
  var unusedPics=PINTEREST_PICS.filter(function(p){return !usedAvs.has(p)});
  var r=Math.random();
- if(unusedPics.length&&r<0.62){
+ if(unusedPics.length&&r<0.65){
   var p=unusedPics[Math.floor(Math.random()*unusedPics.length)];
   usedAvs.add(p);
   return '<img class="lf-av" src="'+esc(p)+'" alt="" onerror="this.style.display=\'none\'">';
  }
- /* Уникальная буква в стиле Telegram с неповторяющимся градиентом */
  if(r<0.82){
   var col=AV_COLORS[(uIdx*3+nick.length)%AV_COLORS.length];
-  var ch=nick.replace(/[^a-zA-Zа-яА-ЯіїєґІЇЄҐ0-9]/g,"").slice(0,1)||"S";
+  var ch=nick.replace(/[^a-zA-Z0-9]/g,"").slice(0,1).toUpperCase()||"S";
   return '<div class="lf-av" style="background:'+col+'">'+esc(ch)+'</div>';
  }
- /* Или уникальный арт-аватар по хэшу */
- var styles=["adventurer-neutral","avataaars-neutral","lorelei-neutral","notionists-neutral","pixel-art-neutral"];
+ var styles=["bottts-neutral","shapes","identicon","pixel-art-neutral"];
  var st=styles[uIdx%styles.length];
  var url="https://api.dicebear.com/7.x/"+st+"/svg?seed="+encodeURIComponent(nick+"_"+uIdx+"_"+Date.now());
  return '<img class="lf-av" src="'+esc(url)+'" alt="" onerror="this.style.display=\'none\'">';
 }
 
-/* Ультра-разнообразный генератор человеческих отзывов (учитывает оружие и точную сумму) */
+/* Огромный комбинаторный движок естественных человеческих отзывов */
 var ULTRA_SHORT=["прийшло","все чітко","+реп","дякую","норм","імба","бабки на карті","вивели швидко","спс","все гуд","топ","+rep","рекомендую","не скам","все чесно","гроші прийшли"];
 
 var CMB_A=[
@@ -734,7 +739,6 @@ function getRev(stars,skinName,priceUsd){
   return GEN_4[uIdx%GEN_4.length];
  }
  var uahVal=Math.round(priceUsd*(R.UAH||41.5));
- /* 18% шанс что человек напишет конкретную сумму в грн, которую только что получил */
  if(Math.random()<0.18){
   var priceLines=[
    "вивели "+uahVal+" грн на моно за хвилину",
@@ -746,7 +750,6 @@ function getRev(stars,skinName,priceUsd){
   var pl=priceLines[Math.floor(Math.random()*priceLines.length)];
   if(!usedRevs.has(pl)){usedRevs.add(pl);return pl}
  }
- /* Если скин совпадает с известной пушкой */
  for(var gun in BY_GUN){
   if(skinName&&skinName.indexOf(gun)!==-1&&Math.random()<0.4){
    var gArr=BY_GUN[gun];
@@ -754,12 +757,10 @@ function getRev(stars,skinName,priceUsd){
    if(!usedRevs.has(gTxt)){usedRevs.add(gTxt);return gTxt}
   }
  }
- /* 16% шанс на ультра-короткий человеческий коммент в 1-2 слова */
  if(Math.random()<0.16){
   var us=ULTRA_SHORT[Math.floor(Math.random()*ULTRA_SHORT.length)];
   if(!usedRevs.has(us)){usedRevs.add(us);return us}
  }
- /* Комбинаторная сборка */
  for(var i=0;i<100;i++){
   var a=CMB_A[Math.floor(Math.random()*CMB_A.length)];
   var b=CMB_B[Math.floor(Math.random()*CMB_B.length)];
@@ -789,20 +790,15 @@ function addLiveDeal(){
  renderDealItem(nick,stars,sk.n,sk.img,p,rev);
 }
 
-/* =========================================================================
-   РВАНЫЙ РЕАЛИСТИЧНЫЙ ГРАФИК ПОЯВЛЕНИЯ ОТЗЫВОВ (ПАЧКИ / ОДИНОЧНЫЕ / ПАУЗЫ)
-   ========================================================================= */
+/* РВАНЫЙ РЕАЛИСТИЧНЫЙ ГРАФИК ПОЯВЛЕНИЯ ОТЗЫВОВ */
 function scheduleNextWave(){
  var r=Math.random();
  if(r<0.28){
-  /* ПАУЗА ТИШИНЫ: 10–17 секунд вообще никто не пишет */
   setTimeout(scheduleNextWave,10000+Math.floor(Math.random()*7000));
  }else if(r<0.68){
-  /* ОДИНОЧНЫЙ ОТЗЫВ через 2.5–6.5 секунд */
   addLiveDeal();
   setTimeout(scheduleNextWave,2500+Math.floor(Math.random()*4000));
  }else{
-  /* ПРОРЫВ ПАЧКОЙ: сразу 3–5 отзывов подряд с микро-задержкой, потом пауза */
   var burstCount=3+Math.floor(Math.random()*3);
   for(var b=0;b<burstCount;b++){
    setTimeout(addLiveDeal,b*(450+Math.floor(Math.random()*650)));
@@ -811,7 +807,6 @@ function scheduleNextWave(){
  }
 }
 
-/* ПРОВЕРКА ПЕРЕД ОТЗЫВОМ: ТОЛЬКО ПОСЛЕ ПОКУПКИ ИЛИ ПРОДАЖИ */
 $("revBtn").onclick=function(){
  if(!S.me){openAuth("Войди в аккаунт, чтобы оставить отзыв");return}
  if(!S.me.orders||!S.me.orders.length){
