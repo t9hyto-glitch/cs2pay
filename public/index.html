@@ -22,12 +22,14 @@ body{
  padding-left:220px;
  min-height:100vh;
 }
-a{color:inherit;text-decoration:none}.w{max-width:1240px;margin:0 auto;padding:0 18px}
+a{color:inherit;text-decoration:none}
+.w{max-width:1340px;margin:0 auto;padding:0 16px}
 header{position:sticky;top:0;z-index:30;background:#080b10d9;backdrop-filter:blur(16px);border-bottom:1px solid var(--ln);margin-left:-220px;padding-left:220px}
-.bar{display:flex;align-items:center;gap:6px;height:60px}
-.logo{font-family:Unbounded,Onest,sans-serif;font-weight:900;font-size:20px;letter-spacing:-.5px;margin-right:8px;transition:transform .2s var(--ease)}
+.bar{display:flex;align-items:center;gap:6px;height:60px;flex-wrap:nowrap}
+.logo{font-family:Unbounded,Onest,sans-serif;font-weight:900;font-size:20px;letter-spacing:-.5px;margin-right:4px;transition:transform .2s var(--ease);flex-shrink:0}
 .logo:hover{transform:scale(1.03)}.logo b,.gr{color:var(--ac)}
-nav a{padding:8px 13px;border-radius:10px;color:var(--mt);font-weight:700;font-size:13.5px;transition:background .2s var(--ease),color .2s var(--ease);display:inline-flex;align-items:center;gap:6px}
+nav{display:flex;align-items:center;gap:4px;white-space:nowrap;flex-shrink:0}
+nav a{padding:7px 11px;border-radius:10px;color:var(--mt);font-weight:700;font-size:13px;transition:background .2s var(--ease),color .2s var(--ease);display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
 nav a svg{flex-shrink:0}
 nav a.on,nav a:hover{background:var(--p2);color:var(--tx)}
 nav a.whl-link{color:var(--ac);border:1px solid #f5a62344;background:#f5a62312}
@@ -35,13 +37,14 @@ nav a.whl-link.on,nav a.whl-link:hover{background:var(--ac);color:#171003;box-sh
 nav a.vip-link{color:#ffd166;border:1px solid #ffd16644;background:linear-gradient(135deg,#f5a6231f,#a855f71f)}
 nav a.vip-link.on,nav a.vip-link:hover{background:linear-gradient(135deg,#ffd166,#f5a623);color:#171003;box-shadow:0 0 20px -4px #ffd166aa}
 .sp{flex:1}
-.btn{border:0;border-radius:11px;padding:10px 18px;font:700 14px inherit;font-family:inherit;cursor:pointer;background:linear-gradient(180deg,#ffc04d,#e89314);color:#171003;transition:transform .2s var(--ease),filter .2s var(--ease),box-shadow .2s var(--ease);position:relative;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 4px 14px -4px #f5a62366}
+.btn{border:0;border-radius:11px;padding:9px 15px;font:700 13.5px inherit;font-family:inherit;cursor:pointer;background:linear-gradient(180deg,#ffc04d,#e89314);color:#171003;transition:transform .2s var(--ease),filter .2s var(--ease),box-shadow .2s var(--ease);position:relative;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 14px -4px #f5a62366;flex-shrink:0}
 .btn:hover{filter:brightness(1.07);transform:translateY(-1px);box-shadow:0 10px 24px -6px #f5a62399}.btn:active{transform:translateY(0) scale(.98)}
 .btn.g{background:var(--p2);color:var(--tx);border:1px solid var(--ln);box-shadow:none;backdrop-filter:blur(10px)}.btn.g:hover{border-color:#3d4d66;background:var(--p3);filter:none}
 .sm{padding:7px 12px;font-size:13px;border-radius:9px}.bl{width:100%}
+#lg{max-width:170px;overflow:hidden;text-overflow:ellipsis}
 .bdg{position:absolute;top:-6px;right:-6px;background:var(--ac);color:#1a1204;border-radius:99px;font:800 11px inherit;padding:1px 6px;font-style:normal}
 :focus-visible{outline:2px solid var(--ac2);outline-offset:2px}
-.chip{background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:8px 13px;font-weight:800;color:var(--ac);cursor:pointer;transition:border-color .2s}
+.chip{background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:7px 11px;font-weight:800;font-size:13px;color:var(--ac);cursor:pointer;transition:border-color .2s;white-space:nowrap;flex-shrink:0}
 .chip:hover{border-color:var(--ac)}
 .uid-badge{background:var(--p2);border:1px solid var(--ln);color:var(--mt);font:700 12px ui-monospace,monospace;padding:6px 11px;border-radius:9px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
 .uid-badge:hover{border-color:var(--ac);color:var(--tx);background:var(--p3)}
@@ -77,7 +80,7 @@ aside h4{margin:13px 0 6px;font-size:12.5px;color:var(--tx);font-weight:700}asid
 .c:hover{color:var(--tx)}.c.on{background:var(--ac);color:#1a1204}
 input:not([type="checkbox"]),select{background:var(--p2);border:1px solid var(--ln);color:var(--tx);border-radius:10px;padding:10px 12px;font:600 14px inherit;font-family:inherit;width:100%;transition:border-color .2s,background .2s}
 input:not([type="checkbox"]):focus,select:focus{border-color:var(--ac);background:var(--p3);outline:0}
-#cur{width:auto;padding:8px 10px;font-weight:700;cursor:pointer}#snd{padding:9px 11px}
+#cur{width:auto;padding:7px 9px;font-weight:700;font-size:13px;cursor:pointer;flex-shrink:0}#snd{padding:8px 10px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tb{display:flex;gap:8px;margin-bottom:14px}.tb input{flex:3}.tb select{flex:1;min-width:140px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:12px}
 .card{background:var(--p);backdrop-filter:blur(10px);border:1px solid var(--ln);border-radius:14px;overflow:hidden;transition:transform .25s var(--ease),border-color .25s var(--ease),box-shadow .25s var(--ease);--c:#888;position:relative;display:flex;flex-direction:column}
@@ -138,9 +141,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
 .b-tag{background:var(--bg);border:1px solid var(--ln);border-radius:6px;padding:3px 9px;font-size:11px;font-weight:700;color:var(--mt)}
 .b-tag.ok{color:var(--ok);border-color:#22c55e44;background:#22c55e12}
 
-/* =========================================================================
-   ПРЕМИУМ ВКЛАДКА: ПОКУПКА И ПРОКАЧКА VIP-СТАТУСА (#/vip) БЕЗ СМАЙЛИКОВ
-   ========================================================================= */
+/* ПРЕМИУМ ВКЛАДКА: ПОКУПКА И ПРОКАЧКА VIP-СТАТУСА (#/vip) */
 .vip-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0 22px}
 .vip-card{background:linear-gradient(165deg,#182030 0%,#101520 100%);border:1.5px solid var(--ln);border-radius:20px;padding:22px 18px;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:transform .28s var(--ease),border-color .28s,box-shadow .28s}
 .vip-card:hover{transform:translateY(-6px)}
@@ -158,9 +159,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
 .vip-perks li{display:grid;grid-template-columns:16px 1fr;align-items:start;gap:8px;line-height:1.35}
 .vip-perks li svg{color:var(--ok);margin-top:2px}
 
-/* =========================================================================
-   ПРЕМИУМ 3D КОЛЕСО ФОРТУНЫ (ОТДЕЛЬНАЯ ВКЛАДКА)
-   ========================================================================= */
+/* ПРЕМИУМ 3D КОЛЕСО ФОРТУНЫ */
 .whl-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:20px;align-items:stretch}
 .whl-stage{background:radial-gradient(circle at 50% 50%,rgba(245,166,35,.16) 0%,rgba(17,22,32,.95) 68%);border:1px solid #f5a62344;border-radius:22px;padding:28px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;box-shadow:0 20px 50px -15px #000c,inset 0 0 40px #f5a62312}
 .wheel-box{position:relative;width:350px;height:350px;display:grid;place-items:center;margin:8px 0 20px}
@@ -250,7 +249,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
 .md.cr{text-align:center;max-width:390px;display:flex;flex-direction:column;align-items:stretch;gap:6px}.md.cr h3{margin:4px 0}.md.cr p{color:var(--mt);margin:0 0 8px}.md.cr .big{color:var(--ac)}
 .tb2{display:none}#snd svg,#cartb svg{vertical-align:-4px}
 .seg{display:flex;background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:3px}.seg button{border:0;background:none;color:var(--mt);padding:7px 14px;border-radius:8px;font:700 13.5px Onest,sans-serif;cursor:pointer;transition:all .2s var(--ease)}.seg button.on{background:var(--ac);color:#1a1204}
-.on2{display:inline-flex;align-items:center;gap:5px;margin-left:8px;color:var(--mt);font-size:12.5px;font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}.on2 i{width:7px;height:7px;border-radius:50%;background:#3ccf7a;box-shadow:0 0 6px #3ccf7a}
+.on2{display:inline-flex;align-items:center;gap:5px;margin-left:4px;margin-right:4px;color:var(--mt);font-size:12px;font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums;flex-shrink:0}.on2 i{width:7px;height:7px;border-radius:50%;background:#3ccf7a;box-shadow:0 0 6px #3ccf7a}
 .fv{position:absolute;top:7px;right:7px;z-index:2;width:28px;height:28px;border-radius:50%;border:0;background:#0e1116cc;color:var(--mt);cursor:pointer;display:grid;place-items:center;transition:transform .2s var(--ease),color .2s}.fv:hover{transform:scale(1.12)}.fv.on{color:#ff6b6b}.fv.on svg{fill:currentColor}
 #favb.on{background:var(--ac);color:#1a1204}
 .pl{display:flex;gap:9px;overflow-x:auto;margin-top:10px;padding-bottom:4px}.pi{flex:0 0 185px;display:flex;align-items:center;gap:7px;background:var(--p2);border-radius:9px;padding:7px}.pi img{width:44px;height:32px;object-fit:contain}.pi span{font-size:11.5px;flex:1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.pi b{color:var(--ac);font-size:12.5px}
@@ -311,7 +310,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
 .ai-inp{display:flex;gap:6px;padding:10px;border-top:1px solid var(--ln);background:var(--p2)}
 .ai-inp input{padding:8px 11px;font-size:13px;background:var(--p)}
 
-@media(max-width:1020px){
+@media(max-width:1100px){
  body{padding-left:0}
  header{margin-left:0;padding-left:0}
  .lf-panel{position:static;width:100%;max-height:none;background:transparent;border:0;padding:0;margin:10px 0 18px}
@@ -321,10 +320,10 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
  .calc-box,.vip-grid{grid-template-columns:1fr 1fr}
  .pc,.whl-grid{grid-template-columns:1fr}
 }
-@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:16px}.main{grid-template-columns:1fr}aside{display:none;position:static;max-height:none}aside.o{display:block}.fb{display:inline-block}nav a{padding:8px 9px}}
-@media(max-width:700px){
+@media(max-width:920px){.hero{grid-template-columns:1fr;padding-top:16px}.main{grid-template-columns:1fr}aside{display:none;position:static;max-height:none}aside.o{display:block}.fb{display:inline-block}nav a{padding:7px 8px;font-size:12.5px}}
+@media(max-width:740px){
  body{padding-bottom:74px;font-size:14px}.w{padding:0 10px}nav:not(.tb2){display:none}.bar{height:52px;gap:5px}.logo{font-size:17px;margin-right:0}
- #cartb .tx,#balc{display:none}#cartb,#snd{padding:8px 9px}#cur{padding:7px 5px}#lg{max-width:110px;overflow:hidden;text-overflow:ellipsis}
+ #cartb .tx,#balc{display:none}#cartb,#snd{padding:8px 9px}#cur{padding:7px 5px}#lg{max-width:115px;overflow:hidden;text-overflow:ellipsis}
  .on2{margin-left:3px;font-size:11px}
  .tb2{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:#080b10f2;backdrop-filter:blur(12px);border-top:1px solid var(--ln);padding:5px 5px calc(5px + env(safe-area-inset-bottom))}
  .tb2 a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 0;border-radius:9px;color:var(--mt);font-size:10.5px;font-weight:700}.tb2 a.on{color:var(--ac);background:var(--p2)}
@@ -346,15 +345,15 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
  <nav>
   <a href="#/">Главная</a>
   <a href="#/market">Маркет</a>
-  <a href="#/wheel" class="whl-link"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 3v7M12 14v7M3 12h7M14 12h7"/></svg>Колесо Фортуны</a>
-  <a href="#/vip" class="vip-link"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M3 18h18M4 15l2-9 6 5 6-5 2 9z"/></svg>VIP-Клуб</a>
+  <a href="#/wheel" class="whl-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 3v7M12 14v7M3 12h7M14 12h7"/></svg>Колесо Фортуны</a>
+  <a href="#/vip" class="vip-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M3 18h18M4 15l2-9 6 5 6-5 2 9z"/></svg>VIP-Клуб</a>
   <a href="#/bonuses">Бонусы</a>
  </nav>
  <div class="sp"></div>
  <a class="chip" id="balc" href="#/profile/wallet" hidden></a>
  <select id="cur" aria-label="Валюта"><option value="USD">$ USD</option><option value="UAH" selected>₴ UAH</option><option value="EUR">€ EUR</option><option value="PLN">zł PLN</option><option value="GBP">£ GBP</option><option value="KZT">₸ KZT</option><option value="RUB">₽ RUB</option></select>
- <button class="btn g" id="cartb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.4a1 1 0 001 .8h9.2a1 1 0 001-.8L21 7H6"/></svg><span class="tx"> Корзина</span><i class="bdg" id="cc" hidden>0</i></button>
- <button class="btn g" id="snd" aria-label="Звук"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg></button>
+ <button class="btn g" id="cartb"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.4a1 1 0 001 .8h9.2a1 1 0 001-.8L21 7H6"/></svg><span class="tx"> Корзина</span><i class="bdg" id="cc" hidden>0</i></button>
+ <button class="btn g" id="snd" aria-label="Звук"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg></button>
  <button class="btn" id="lg">Войти</button>
 </div></header>
 <div id="bn" class="bn" hidden></div>
@@ -386,7 +385,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
  <div class="sec"><h2>Почему cs2pay</h2><div class="steps"><div class="adv"><b>Все скины CS2</b><span>От дешёвого ширпа до редких ножей и перчаток с фильтрами.</span></div><div class="adv"><b>Колесо Фортуны и VIP</b><span>Крути бесплатное колесо раз в сутки и прокачивай VIP-ранг до +5%.</span></div><div class="adv"><b>Официальная защита</b><span>Сертифицированный SSL/TLS протокол, двухфакторная аутентификация 2FA и верифицированные сделки.</span></div><div class="adv"><b>Удобные выплаты</b><span>Карта (UAH/USD), CryptoBot и USDT TRC-20 без задержек.</span></div></div></div>
  </section>
 
- <!-- 2. ОТДЕЛЬНАЯ ВКЛАДКА: VIP-КЛУБ (БЕЗ СМАЙЛИКОВ, СТРОГИЕ SVG ИКОНКИ) -->
+ <!-- 2. ОТДЕЛЬНАЯ ВКЛАДКА: VIP-КЛУБ -->
  <section id="v-vip" hidden style="padding:14px 0 44px">
   <div class="row" style="margin-bottom:10px;flex-wrap:wrap">
    <div>
@@ -835,9 +834,7 @@ function wb(w){var T={"Factory New":.07,"Minimal Wear":.08,"Field-Tested":.23,"W
 function api(u,b){return api0(u,b).catch(function(e){if(!e.d)e.message="Нет связи с сервером. Открывай сайт по адресу на Render, а не как файл";throw e})}
 function api0(u,b){return fetch(u,b!==undefined?{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}:{}).then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok){var e=new Error(j.error||"Ошибка");e.d=j;throw e}return j})})}
 
-/* =========================================================================
-   ЮРИДИЧЕСКИЕ ДОКУМЕНТЫ И СЕРТИФИКАТ САЙТА
-   ========================================================================= */
+/* ЮРИДИЧЕСКИЕ ДОКУМЕНТЫ И СЕРТИФИКАТ САЙТА */
 function openCert(){
  sOpen();
  $("ocert").classList.add("s");
@@ -871,10 +868,8 @@ function openDoc(k){
  $("odoc").classList.add("s");
 }
 
-/* =========================================================================
-   СОЧНЫЙ CASINO / ASMR САУНД-ДИЗАЙН
-   ========================================================================= */
-var IO='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg>',IF='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>';function SI(){$("snd").innerHTML=snd?IO:IF}
+/* САУНД-ДИЗАЙН */
+var IO='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg>',IF='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>';function SI(){$("snd").innerHTML=snd?IO:IF}
 function A(){
  if(!ac){
   ac=new(window.AudioContext||window.webkitAudioContext)();
@@ -1239,7 +1234,7 @@ $("dx").onclick=closeAll;$("cclr").onclick=function(){S.cart={};cartUp()};
 $("cgo").onclick=function(){var ids=Object.keys(S.cart);if(!ids.length){$("ce").textContent="Корзина пуста";sErr();return}if(!S.me){closeAll();openAuth("Войди, чтобы продать скины");return}
 api("/api/sell",{ids:ids,tl:$("ctl").value.trim()}).then(function(d){S.cart={};cartUp();closeAll();sOk();confetti();toast("Заявок создано: "+d.n+". Следи за статусом в профиле");me()}).catch(function(e){$("ce").textContent=e.message;sErr()})};
 
-/* АВТОРИЗАЦИЯ И РЕГИСТРАЦИЯ С ПРОВЕРКОЙ ПОЛЬЗОВАТЕЛЬСКОГО СОГЛАШЕНИЯ */
+/* АВТОРИЗАЦИЯ И РЕГИСТРАЦИЯ */
 function openAuth(m){sOpen();$("le").textContent=m||"";$("lcw").hidden=true;setMode("login");$("ol").classList.add("s")}
 function setMode(m){
  mode=m;
@@ -1363,9 +1358,7 @@ function saveProfile(){
  }).catch(function(e){er("pr-err",e)});
 }
 
-/* =========================================================================
-   ПРЕМИУМ ЛИЧНЫЙ КАБИНЕТ (БЕЗ СМАЙЛИКОВ)
-   ========================================================================= */
+/* ЛИЧНЫЙ КАБИНЕТ */
 var tab="overview";
 function prof(t){
  tab=t;
@@ -1856,8 +1849,13 @@ document.addEventListener("keydown",function(e){if(e.key=="/"&&!/INPUT|TEXTAREA|
 cartUp();me();route();calcUp();renderBonuses();renderVipTab();
 setInterval(function(){if(S.me)api("/api/me").then(function(d){if(d.name){bc(d.bal);checkAdminNotes(d);S.me.bal=d.bal;$("balc").textContent=mo(d.bal)}}).catch(function(){})},12000);
 function home(){api("/api/market?page=1").then(function(d){$("all").textContent=d.all.toLocaleString("ru");$("showc").innerHTML=d.items.slice(0,4).map(card).join("")}).catch(function(){});api("/api/recent").then(function(d){if(!d.n)return;$("paid").textContent="Выплачено: "+fm(d.paid);$("payl").innerHTML=d.items.map(function(i){return'<div class="pi"><img src="'+esc(i.img)+'" alt=""><span>'+esc(i.n)+'</span><b>+'+fm(i.p)+'</b></div>'}).join("");$("pay").hidden=false}).catch(function(){})}home();
-function banner(c){var b=$("bn"),t=[];if(location.protocol=="file:"){b.className="bn r";b.textContent="Сайт открыт как файл, поэтому вход и маркет не работают. Открой адрес своего сайта на Render.";b.hidden=false;return}
-if(c&&c.adj)t.push(c.adj>0?"Акция: цены выкупа выше рыночных на "+c.adj+"%":"Цены выкупа ниже рыночных на "+Math.abs(c.adj)+"%");if(c&&c.notice)t.push(c.notice);b.hidden=!t.length;b.textContent=t.join(" · ")}
+function banner(c){
+ var b=$("bn"),t=[];
+ if(location.protocol=="file:"){b.className="bn r";b.textContent="Сайт открыт как файл, поэтому вход и маркет не работают. Открой адрес своего сайта на Render.";b.hidden=false;return}
+ if(c&&c.notice)t.push(c.notice);
+ b.hidden=!t.length;
+ b.textContent=t.join(" · ");
+}
 if(location.protocol=="file:")banner();
 api("/api/config").then(function(c){
  S.cfg=Object.assign(S.cfg,c||{});
