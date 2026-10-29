@@ -28,10 +28,12 @@ header{position:sticky;top:0;z-index:30;background:#080b10d9;backdrop-filter:blu
 .bar{display:flex;align-items:center;gap:6px;height:60px}
 .logo{font-family:Unbounded,Onest,sans-serif;font-weight:900;font-size:20px;letter-spacing:-.5px;margin-right:8px;transition:transform .2s var(--ease)}
 .logo:hover{transform:scale(1.03)}.logo b,.gr{color:var(--ac)}
-nav a{padding:8px 14px;border-radius:10px;color:var(--mt);font-weight:700;font-size:14px;transition:background .2s var(--ease),color .2s var(--ease);display:inline-flex;align-items:center;gap:6px}
+nav a{padding:8px 13px;border-radius:10px;color:var(--mt);font-weight:700;font-size:13.5px;transition:background .2s var(--ease),color .2s var(--ease);display:inline-flex;align-items:center;gap:5px}
 nav a.on,nav a:hover{background:var(--p2);color:var(--tx)}
 nav a.whl-link{color:var(--ac);border:1px solid #f5a62344;background:#f5a62312}
 nav a.whl-link.on,nav a.whl-link:hover{background:var(--ac);color:#171003;box-shadow:0 0 18px -4px #f5a62399}
+nav a.vip-link{color:#ffd166;border:1px solid #ffd16644;background:linear-gradient(135deg,#f5a6231f,#a855f71f)}
+nav a.vip-link.on,nav a.vip-link:hover{background:linear-gradient(135deg,#ffd166,#f5a623);color:#171003;box-shadow:0 0 20px -4px #ffd166aa}
 .sp{flex:1}
 .btn{border:0;border-radius:11px;padding:10px 18px;font:700 14px inherit;font-family:inherit;cursor:pointer;background:linear-gradient(180deg,#ffc04d,#e89314);color:#171003;transition:transform .2s var(--ease),filter .2s var(--ease),box-shadow .2s var(--ease);position:relative;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 4px 14px -4px #f5a62366}
 .btn:hover{filter:brightness(1.07);transform:translateY(-1px);box-shadow:0 10px 24px -6px #f5a62399}.btn:active{transform:translateY(0) scale(.98)}
@@ -74,7 +76,7 @@ input:focus,select:focus{border-color:var(--ac);background:var(--p3);outline:0}
 .card{background:var(--p);backdrop-filter:blur(10px);border:1px solid var(--ln);border-radius:14px;overflow:hidden;transition:transform .25s var(--ease),border-color .25s var(--ease),box-shadow .25s var(--ease);--c:#888;position:relative;display:flex;flex-direction:column}
 .card:hover{transform:translateY(-4px);border-color:var(--c);box-shadow:0 14px 28px -14px var(--c)}.card.in{border-color:var(--ok);box-shadow:0 0 0 1px var(--ok)}
 .card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--c)}
-.art{height:132px;display:grid;place-items:center;background:radial-gradient(circle at 50% 110%,color-mix(in srgb,var(--c) 26%,var(--p2)),var(--p2) 75%);position:relative}
+.art{height:132px;display:grid;place-items:center;background:radial-gradient(circle at 50% 110%,color-mix(in srgb,var(--c) 26%,var(--p2)),var(--p2) 75%);position:relative;cursor:zoom-in}
 .art img{max-width:86%;max-height:114px;object-fit:contain;transition:transform .3s var(--ease);filter:drop-shadow(0 8px 12px #0006)}
 .card:hover .art img{transform:scale(1.08) translateY(-2px)}
 .bd{position:absolute;top:8px;left:8px;background:#0b0e13cc;backdrop-filter:blur(4px);border:1px solid var(--ln);border-radius:6px;padding:2px 7px;font-size:10.5px;font-weight:800;letter-spacing:.3px}
@@ -109,6 +111,26 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
 .buy-badges{display:flex;justify-content:center;gap:6px;margin-top:8px}
 .b-tag{background:var(--bg);border:1px solid var(--ln);border-radius:6px;padding:3px 9px;font-size:11px;font-weight:700;color:var(--mt)}
 .b-tag.ok{color:var(--ok);border-color:#22c55e44;background:#22c55e12}
+
+/* =========================================================================
+   ПРЕМИУМ ВКЛАДКА: ПОКУПКА И ПРОКАЧКА VIP-СТАТУСА (#/vip)
+   ========================================================================= */
+.vip-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0 22px}
+.vip-card{background:linear-gradient(165deg,#182030 0%,#101520 100%);border:1.5px solid var(--ln);border-radius:20px;padding:22px 18px;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:transform .28s var(--ease),border-color .28s,box-shadow .28s}
+.vip-card:hover{transform:translateY(-6px)}
+.vip-card.t2{--vc:#94a3b8}
+.vip-card.t3{--vc:#f5a623;border-color:#f5a62355}
+.vip-card.t4{--vc:#ef4444;border-color:#ef444466;box-shadow:0 16px 36px -18px #ef444466}
+.vip-card.t5{--vc:#a855f7;border-color:#a855f788;background:radial-gradient(circle at 50% 0%,rgba(168,85,247,.20),#111622 72%);box-shadow:0 18px 44px -16px #a855f777}
+.vip-top-tag{position:absolute;top:12px;right:12px;font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:99px;background:#ffffff12;color:var(--vc);border:1px solid color-mix(in srgb,var(--vc) 45%,transparent)}
+.vip-ico{width:48px;height:48px;border-radius:14px;background:color-mix(in srgb,var(--vc) 18%,#111620);border:1px solid color-mix(in srgb,var(--vc) 50%,transparent);display:grid;place-items:center;font-size:22px;color:var(--vc);margin-bottom:12px}
+.vip-nm{font:900 18px Unbounded,sans-serif;color:var(--tx);margin-bottom:2px}
+.vip-boost{font-size:13px;font-weight:800;color:var(--ok);margin-bottom:14px}
+.vip-price{font:900 26px Onest,sans-serif;color:var(--tx);margin-bottom:4px}
+.vip-price span{font-size:12px;color:var(--mt);font-weight:600}
+.vip-perks{list-style:none;padding:12px 0 0;margin:12px 0 18px;border-top:1px solid var(--ln);display:flex;flex-direction:column;gap:8px;flex:1;font-size:13px;color:#cfd6e4}
+.vip-perks li{display:flex;align-items:center;gap:8px}
+.vip-perks li i{color:var(--ok);font-style:normal;font-weight:900}
 
 /* =========================================================================
    ПРЕМИУМ 3D КОЛЕСО ФОРТУНЫ (ОТДЕЛЬНАЯ ВКЛАДКА)
@@ -270,7 +292,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
  .lf-head{padding:0 2px 8px;border:0}
  .lf-list{flex-direction:row;overflow-x:auto;overflow-y:hidden;gap:8px;padding-bottom:4px}
  .lf-item{flex:0 0 215px}
- .calc-box{grid-template-columns:1fr 1fr}
+ .calc-box,.vip-grid{grid-template-columns:1fr 1fr}
  .pc,.whl-grid{grid-template-columns:1fr}
 }
 @media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:16px}.main{grid-template-columns:1fr}aside{display:none;position:static;max-height:none}aside.o{display:block}.fb{display:inline-block}nav a{padding:8px 9px}}
@@ -285,7 +307,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
  .tb{flex-wrap:wrap}.tb input{flex:1 1 100%}.tb select{min-width:0;flex:1}.fb{flex:1}.seg{flex:1 1 100%}.seg button{flex:1}
  .big{font-size:26px}.dr{width:100%}.md{padding:16px}.rs{padding:18px 15px}.tabs a{padding:8px 10px;min-width:70px;font-size:12.5px}.sec{padding:18px 0}
  .toast{width:calc(100% - 20px);text-align:center;top:58px}.md.au{grid-template-columns:1fr}.ls{display:none}
- .calc-box{grid-template-columns:1fr}
+ .calc-box,.vip-grid{grid-template-columns:1fr}
  .prof-hero{padding:15px}
  .wheel-box{width:290px;height:290px}
  .ai-fab{bottom:74px;right:12px;height:46px;padding:0 14px}
@@ -299,6 +321,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
   <a href="#/">Главная</a>
   <a href="#/market">Маркет</a>
   <a href="#/wheel" class="whl-link">★ Колесо Фортуны</a>
+  <a href="#/vip" class="vip-link">👑 VIP-Клуб</a>
   <a href="#/bonuses">Бонусы</a>
  </nav>
  <div class="sp"></div>
@@ -322,7 +345,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
 
  <!-- 1. ГЛАВНАЯ -->
  <section id="v-home"><div class="hero"><div><h1>Продай скины CS2 <span class="gr">и выводи деньги</span></h1><p>Выбери скины, укажи трейд-ссылку и получи деньги на баланс. Выводи на карту (Моно / Приват), в Crypto-бот или на USDT TRC20.</p>
- <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="#/market" style="padding:13px 24px;font-size:15.5px">Открыть маркет</a><a class="btn g" href="#/wheel" style="padding:13px 18px;font-size:15px">★ Испытать удачу в Колесе</a></div>
+ <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="#/market" style="padding:13px 24px;font-size:15.5px">Открыть маркет</a><a class="btn g" href="#/wheel" style="padding:13px 18px;font-size:15px">★ Колесо Фортуны</a><a class="btn g" href="#/vip" style="padding:13px 18px;font-size:15px;border-color:#ffd16655;color:#ffd166">👑 Купить VIP</a></div>
  <div class="stats" style="margin-top:18px"><div class="stat"><b id="all">…</b><span>скинов в базе</span></div><div class="stat"><b>0%</b><span>скрытых комиссий</span></div><div class="stat"><b>VIP +5%</b><span>к цене продажи</span></div></div></div><div class="show" id="showc"></div></div>
 
  <div class="calc-box">
@@ -338,7 +361,110 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
  <div class="sec"><h2>Поддержка и контакты</h2><div class="steps"><div class="adv"><b>Менеджер в Telegram</b><span><a class="lk" href="https://t.me/cs2_pay" target="_blank">@cs2_pay</a> (оценка и сделки в ЛС)</span></div><div class="adv"><b>Наш Telegram-канал</b><span><a class="lk" href="https://t.me/SellSkin_cs2" target="_blank">@SellSkin_cs2</a> (раздачи промокодов и ножи)</span></div></div></div>
  </section>
 
- <!-- 2. ОТДЕЛЬНАЯ ВКЛАДКА: КОЛЕСО ФОРТУНЫ (CASINO EDITION) -->
+ <!-- 2. ОТДЕЛЬНАЯ ВКЛАДКА: VIP-КЛУБ (ПОКУПКА И ПРОКАЧКА ПРИВИЛЕГИЙ) -->
+ <section id="v-vip" hidden style="padding:14px 0 44px">
+  <div class="row" style="margin-bottom:10px;flex-wrap:wrap">
+   <div>
+    <h2 style="margin:0">👑 VIP-Клуб <span class="gr">cs2pay</span></h2>
+    <p style="color:var(--mt);margin:4px 0 0;font-size:14px">Покупай привилегию навсегда в 1 клик с баланса или открывай её бесплатно за счёт оборота сделок!</p>
+   </div>
+   <div id="vip-cur-badge" class="st-pill warn" style="font-size:13px;padding:7px 14px">Твой статус: BRONZE (0%)</div>
+  </div>
+
+  <div class="vip-grid">
+   <!-- SILVER -->
+   <div class="vip-card t2">
+    <span class="vip-top-tag">Уровень 2</span>
+    <div class="vip-ico">🥈</div>
+    <div class="vip-nm">SILVER</div>
+    <div class="vip-boost">+1% к цене продажи навсегда</div>
+    <div class="vip-price" data-vusd="1.99">$1.99 <span>/ навсегда</span></div>
+    <span style="font-size:11.5px;color:var(--mt)">или бесплатно при обороте $20</span>
+    <ul class="vip-perks">
+     <li><i>✓</i> Постоянный буст <b>+1%</b> ко всем продажам</li>
+     <li><i>✓</i> Ежедневный бонус увеличен в <b>1.5 раза</b></li>
+     <li><i>✓</i> Значок Silver в личном кабинете</li>
+     <li><i>✓</i> Доступ к быстрым выплатам</li>
+    </ul>
+    <button class="btn g bl" data-vlvl="2" onclick="buyVip(2)">Купить за $1.99</button>
+   </div>
+
+   <!-- GOLD -->
+   <div class="vip-card t3">
+    <span class="vip-top-tag">Популярный</span>
+    <div class="vip-ico">🥇</div>
+    <div class="vip-nm">GOLD</div>
+    <div class="vip-boost">+2% к цене продажи навсегда</div>
+    <div class="vip-price" data-vusd="4.99">$4.99 <span>/ навсегда</span></div>
+    <span style="font-size:11.5px;color:var(--mt)">или бесплатно при обороте $75</span>
+    <ul class="vip-perks">
+     <li><i>✓</i> Постоянный буст <b>+2%</b> ко всем продажам</li>
+     <li><i>✓</i> Ежедневный бонус увеличен в <b>2 раза</b></li>
+     <li><i>✓</i> Приоритетная обработка выплат на карту</li>
+     <li><i>✓</i> Золотой статус в профиле и отзывах</li>
+    </ul>
+    <button class="btn bl" data-vlvl="3" onclick="buyVip(3)">Купить за $4.99</button>
+   </div>
+
+   <!-- FACEIT 10 -->
+   <div class="vip-card t4">
+    <span class="vip-top-tag">PRO Выбор</span>
+    <div class="vip-ico">🔥</div>
+    <div class="vip-nm">FACEIT 10</div>
+    <div class="vip-boost">+3.5% к цене продажи навсегда</div>
+    <div class="vip-price" data-vusd="9.99">$9.99 <span>/ навсегда</span></div>
+    <span style="font-size:11.5px;color:var(--mt)">или бесплатно при обороте $200</span>
+    <ul class="vip-perks">
+     <li><i>✓</i> Постоянный буст <b>+3.5%</b> ко всем продажам</li>
+     <li><i>✓</i> Ежедневный бонус увеличен в <b>3 раза</b></li>
+     <li><i>✓</i> Моментальный вывод без очереди 24/7</li>
+     <li><i>✓</i> Суммируется с любыми промокодами</li>
+    </ul>
+    <button class="btn bl" data-vlvl="4" onclick="buyVip(4)">Купить за $9.99</button>
+   </div>
+
+   <!-- ELITE VIP -->
+   <div class="vip-card t5">
+    <span class="vip-top-tag">МАКСИМУМ</span>
+    <div class="vip-ico">👑</div>
+    <div class="vip-nm">ELITE VIP</div>
+    <div class="vip-boost">+5% к цене продажи навсегда</div>
+    <div class="vip-price" data-vusd="19.99">$19.99 <span>/ навсегда</span></div>
+    <span style="font-size:11.5px;color:var(--mt)">или бесплатно при обороте $500</span>
+    <ul class="vip-perks">
+     <li><i>✓</i> Максимальный буст <b>+5%</b> ко всем скинам</li>
+     <li><i>✓</i> Ежедневный бонус увеличен в <b>5 раз</b></li>
+     <li><i>✓</i> Персональный VIP-менеджер и инстант-вывод</li>
+     <li><i>✓</i> Корона ELITE VIP в профиле и ленте</li>
+    </ul>
+    <button class="btn bl" data-vlvl="5" onclick="buyVip(5)">Купить за $19.99</button>
+   </div>
+  </div>
+
+  <!-- КАЛЬКУЛЯТОР ОКУПАЕМОСТИ VIP -->
+  <div class="pc">
+   <div class="box">
+    <div class="box-head"><h3>Калькулятор твоей VIP-прибыли</h3><span class="st-pill ok">Суммируется с промокодами</span></div>
+    <label style="margin-top:0">На какую сумму планируешь продать скины ($ USD)?</label>
+    <input id="vcalc-in" type="number" value="150" min="10" oninput="vipCalc()">
+    <div class="receipt" style="margin-top:12px">
+     <div class="rc-row"><span>Обычная выплата (BRONZE 0%):</span><b id="vc-base" style="color:var(--tx)">$150.00</b></div>
+     <div class="rc-row"><span>С привилегией <b>GOLD (+2%)</b>:</span><b id="vc-g" style="color:var(--ac)">$153.00</b></div>
+     <div class="rc-row tot"><span>С привилегией <b>ELITE VIP (+5%)</b>:</span><b id="vc-e">$157.50</b></div>
+    </div>
+   </div>
+   <div class="box">
+    <div class="box-head"><h3>Как оплатить VIP-привилегию?</h3><span class="st-pill warn">Мгновенная активация</span></div>
+    <p style="color:var(--mt);font-size:13.5px;margin-top:0">Покупка списывается прямо с твоего баланса на сайте и закрепляется за твоим аккаунтом <b>навсегда</b>. Если на балансе не хватает средств — пополни кошелёк через CryptoBot или напиши администратору <a class="lk" href="https://t.me/cs2_pay" target="_blank"><b>@cs2_pay</b></a> для прямой активации с карты (Моно / Приват).</p>
+    <div style="display:flex;gap:10px;margin-top:14px">
+     <a class="btn" href="#/profile/wallet" style="flex:1">Пополнить баланс</a>
+     <a class="btn g" href="https://t.me/cs2_pay" target="_blank" style="flex:1">Купить через @cs2_pay</a>
+    </div>
+   </div>
+  </div>
+ </section>
+
+ <!-- 3. ОТДЕЛЬНАЯ ВКЛАДКА: КОЛЕСО ФОРТУНЫ (CASINO EDITION) -->
  <section id="v-wheel" hidden style="padding:14px 0 44px">
   <div class="row" style="margin-bottom:14px;flex-wrap:wrap">
    <div>
@@ -353,14 +479,12 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
    <div class="whl-stage">
     <div class="wheel-box">
      <div class="wheel-outer-ring"></div>
-     <!-- ЗОЛОТАЯ СТРЕЛКА-УКАЗАТЕЛЬ С АНИМАЦИЕЙ ОТСКОКА -->
      <svg class="wheel-ptr" id="wptr" viewBox="0 0 40 48">
       <defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffe082"/><stop offset="100%" stop-color="#d4810b"/></linearGradient></defs>
       <path d="M20 46 L4 12 A16 16 0 1 1 36 12 Z" fill="url(#pg)" stroke="#1a1204" stroke-width="3"/>
       <circle cx="20" cy="14" r="5" fill="#1a1204"/>
      </svg>
 
-     <!-- ВЕКТОРНОЕ КОЛЕСО КАЗИНО-УРОВНЯ -->
      <svg class="wheel-svg" id="wsvg" viewBox="0 0 320 320">
       <defs>
        <radialGradient id="secGold" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#33230c"/><stop offset="100%" stop-color="#5c3b09"/></radialGradient>
@@ -368,26 +492,16 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
        <radialGradient id="secBlue" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#102238"/><stop offset="100%" stop-color="#163554"/></radialGradient>
        <radialGradient id="secGreen" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#0f291e"/><stop offset="100%" stop-color="#143d2b"/></radialGradient>
       </defs>
-      <!-- Сектора (8 шт по 45 градусов, 0 градусов сверху) -->
       <g transform="translate(160,160) rotate(-90)">
-       <!-- 0: +$0.05 -->
        <path d="M0,0 L152,0 A152,152 0 0,1 107.48,107.48 Z" fill="url(#secDark)" stroke="#2e3d54" stroke-width="1.5"/>
-       <!-- 1: +3% Sell -->
        <path d="M0,0 L107.48,107.48 A152,152 0 0,1 0,152 Z" fill="url(#secGreen)" stroke="#2e3d54" stroke-width="1.5"/>
-       <!-- 2: +$0.10 -->
        <path d="M0,0 L0,152 A152,152 0 0,1 -107.48,107.48 Z" fill="url(#secBlue)" stroke="#2e3d54" stroke-width="1.5"/>
-       <!-- 3: +5% Sell -->
        <path d="M0,0 L-107.48,107.48 A152,152 0 0,1 -152,0 Z" fill="url(#secGreen)" stroke="#2e3d54" stroke-width="1.5"/>
-       <!-- 4: +$0.25 -->
        <path d="M0,0 L-152,0 A152,152 0 0,1 -107.48,-107.48 Z" fill="url(#secDark)" stroke="#2e3d54" stroke-width="1.5"/>
-       <!-- 5: +10% Dep -->
        <path d="M0,0 L-107.48,-107.48 A152,152 0 0,1 0,-152 Z" fill="url(#secBlue)" stroke="#2e3d54" stroke-width="1.5"/>
-       <!-- 6: +10% Sell -->
        <path d="M0,0 L0,-152 A152,152 0 0,1 107.48,-107.48 Z" fill="url(#secGreen)" stroke="#2e3d54" stroke-width="1.5"/>
-       <!-- 7: ДЖЕКПОТ $1.00 -->
        <path d="M0,0 L107.48,-107.48 A152,152 0 0,1 152,0 Z" fill="url(#secGold)" stroke="#f5a623" stroke-width="2"/>
 
-       <!-- Подписи секторов -->
        <g transform="rotate(22.5)"><text x="92" y="5" fill="#f5a623" font-family="Unbounded,sans-serif" font-size="13" font-weight="800" text-anchor="middle">+$0.05</text></g>
        <g transform="rotate(67.5)"><text x="92" y="5" fill="#22c55e" font-family="Unbounded,sans-serif" font-size="12" font-weight="800" text-anchor="middle">+3% SELL</text></g>
        <g transform="rotate(112.5)"><text x="92" y="5" fill="#38bdf8" font-family="Unbounded,sans-serif" font-size="13" font-weight="800" text-anchor="middle">+$0.10</text></g>
@@ -397,7 +511,6 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
        <g transform="rotate(292.5)"><text x="92" y="5" fill="#22c55e" font-family="Unbounded,sans-serif" font-size="11.5" font-weight="800" text-anchor="middle">+10% SELL</text></g>
        <g transform="rotate(337.5)"><text x="92" y="5" fill="#ffd166" font-family="Unbounded,sans-serif" font-size="13.5" font-weight="900" text-anchor="middle">★ $1.00</text></g>
 
-       <!-- Золотые штифты-разделители по ободу -->
        <circle cx="145" cy="0" r="3.5" fill="#ffd166"/>
        <circle cx="102.5" cy="102.5" r="3.5" fill="#ffd166"/>
        <circle cx="0" cy="145" r="3.5" fill="#ffd166"/>
@@ -415,7 +528,6 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
     <button class="btn" id="wbtn" style="padding:14px 36px;font-size:16px;border-radius:14px" onclick="spinWheel()">Крутить Колесо Фортуны</button>
    </div>
 
-   <!-- ПРАВАЯ КОЛОНКА: СПИСОК ПРИЗОВ И БЫСТРЫЙ ПРОМОКОД -->
    <div style="display:flex;flex-direction:column;gap:16px">
     <div class="box">
      <div class="box-head"><h3>Возможные награды в Колесе</h3><span class="st-pill warn">Без пустых секторов</span></div>
@@ -442,7 +554,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
   </div>
  </section>
 
- <!-- 3. РАЗДЕЛ: БОНУСЫ, ЗАДАНИЯ И ПРОМОКОДЫ -->
+ <!-- 4. РАЗДЕЛ: БОНУСЫ, ЗАДАНИЯ И ПРОМОКОДЫ -->
  <section id="v-bonuses" hidden style="padding:16px 0 40px">
   <h2>Бонусы, задания и промокоды</h2>
   <div id="b-active" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"></div>
@@ -455,7 +567,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
    </div>
    <div class="box">
     <div class="box-head"><h3>Ежедневная награда</h3><span class="st-pill ok">Каждые 24 часа</span></div>
-    <p style="color:var(--mt);margin-top:0;font-size:13.5px">Забирай гарантированный ежедневный бонус на свой баланс плюс к бесплатному прокруту в разделе <a class="lk" href="#/wheel"><b>Колесо Фортуны</b></a>.</p>
+    <p style="color:var(--mt);margin-top:0;font-size:13.5px">Забирай гарантированный ежедневный бонус на свой баланс (с <a class="lk" href="#/vip"><b>VIP-статусом</b></a> награда увеличивается до 5 раз!).</p>
     <button class="btn bl" id="dbtn" onclick="doTask('daily')">Забрать ежедневный бонус</button>
    </div>
   </div>
@@ -469,14 +581,14 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
   </div>
  </section>
 
- <!-- 4. МАРКЕТ -->
+ <!-- 5. МАРКЕТ -->
  <section id="v-market" hidden><div class="main"><aside id="as"><h4>Категория</h4><div class="ch" id="fc"></div><h4>Редкость</h4><div class="ch" id="fr"></div><h4>Износ</h4><div class="ch" id="fw"></div>
  <h4>Тип</h4><select id="st"><option value="">Все</option><option value="1">StatTrak™</option><option value="0">Без StatTrak</option></select>
  <h4 id="ph">Цена, ₴</h4><div class="two"><input id="mn" type="number" min="0" placeholder="от"><input id="mx" type="number" min="0" placeholder="до"></div><button class="btn g bl" style="margin-top:14px" id="rs">Сбросить фильтры</button></aside>
  <div><div class="tb"><div class="seg" id="seg"><button class="on" data-m="0">Продать скины</button><button data-m="1">Купить скины</button></div><button class="btn g" id="favb">Избранное</button><button class="btn g fb" id="fbt">Фильтры</button><input id="q" placeholder="Поиск: AK-47, M4A1-S, USP-S, Nomad Knife…" aria-label="Поиск"><select id="so" aria-label="Сортировка"><option value="">Сначала дороже</option><option value="asc">Сначала дешевле</option><option value="name">По названию</option></select></div>
  <div class="grid" id="gr"></div><button class="btn g more" id="mo" hidden>Показать ещё</button></div></div></section>
 
- <!-- 5. ЛИЧНЫЙ КАБИНЕТ -->
+ <!-- 6. ЛИЧНЫЙ КАБИНЕТ -->
  <section id="v-profile" hidden style="padding:14px 0 50px"><div id="pt"></div><div id="pc"></div></section>
 </main>
 
@@ -494,7 +606,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
   <button class="x" onclick="toggleAi()">×</button>
  </div>
  <div class="ai-log" id="ai-log">
-  <div class="ai-m b">Привет! Я умный ИИ-помощник <b>cs2pay</b>. Я вижу статус твоих сделок и могу:<br>• Проверить заявку на продажу или вывод<br>• Помочь с трейд-ссылкой и 2FA<br>• Начислить стартовый бонус новичку</div>
+  <div class="ai-m b">Привет! Я умный ИИ-помощник <b>cs2pay</b>. Я вижу статус твоих сделок и могу:<br>• Проверить заявку на продажу или вывод<br>• Помочь с VIP-статусом, трейд-ссылкой и 2FA<br>• Начислить стартовый бонус новичку</div>
  </div>
  <div class="ai-quick">
   <button class="ai-q" onclick="askAi('Проверь мои заявки и баланс')">Проверить мои заявки</button>
@@ -524,6 +636,28 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
  <div class="err" id="ce"></div>
  <div class="row" style="margin-top:4px"><button class="btn g" id="cclr">Очистить</button><button class="btn" style="flex:1" id="cgo">Отправить заявку на продажу</button></div>
  <div class="note">После подтверждения мы отправим трейд-оффер в Steam. Выплата зачисляется на баланс аккаунта.</div>
+</div>
+
+<!-- ОКНО ДЕТАЛЬНОГО 3D-ОСМОТРА СКИНА (SKIN INSPECT MODAL) -->
+<div class="ov" id="oinsp">
+ <div class="md cr" style="max-width:430px">
+  <div class="row" style="margin-bottom:6px"><span class="st-pill warn" id="in-cat">CS2 Предмет</span><button class="x" onclick="closeAll()">×</button></div>
+  <div class="buy-showcase" id="in-bg">
+   <img id="in-img" alt="" style="width:220px;height:150px">
+   <div class="buy-badges"><span class="b-tag" id="in-wear">Factory New</span><span class="b-tag ok" id="in-rar">Тайное</span></div>
+  </div>
+  <h3 id="in-nm" style="font-size:17px;margin:2px 0"></h3>
+  <div id="in-wb" style="margin:6px 0"></div>
+  <div class="receipt" style="text-align:left;margin:8px 0">
+   <div class="rc-row"><span>Базовая цена выкупа:</span><b id="in-p" style="color:var(--tx)"></b></div>
+   <div class="rc-row"><span>С привилегией <b>ELITE VIP (+5%)</b>:</span><b id="in-vip" style="color:var(--ok)"></b></div>
+   <div class="rc-row" style="margin:0"><span>Цена покупки на маркете:</span><b id="in-b" style="color:var(--ac)"></b></div>
+  </div>
+  <div class="row" style="margin-top:6px">
+   <button class="btn g" style="flex:1" id="in-buy-btn">Купить себе</button>
+   <button class="btn" style="flex:1.3" id="in-sell-btn">Продать этот скин</button>
+  </div>
+ </div>
 </div>
 
 <!-- ОКНО АВТОРИЗАЦИИ -->
@@ -576,11 +710,11 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
 <button class="btn bl" style="margin-top:10px" id="rgo">Опубликовать в ленту</button></div></div>
 
 <nav class="tb2">
- <a href="#/"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg>Главная</a>
- <a href="#/market"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Маркет</a>
- <a href="#/wheel"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 3v7M12 14v7M3 12h7M14 12h7"/></svg>Колесо</a>
- <a href="#/bonuses"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20 12v8H4v-8M2 7h20v5H2zM12 22V7"/></svg>Бонусы</a>
- <a href="#/profile"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Профиль</a>
+ <a href="#/"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg>Главная</a>
+ <a href="#/market"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Маркет</a>
+ <a href="#/wheel"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 3v7M12 14v7M3 12h7M14 12h7"/></svg>Колесо</a>
+ <a href="#/vip"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 18h18M4 15l2-9 6 5 6-5 2 9z"/></svg>VIP</a>
+ <a href="#/profile"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Профиль</a>
 </nav>
 <div class="toast" id="t"></div>
 <script>
@@ -599,7 +733,7 @@ function hint(i,id){
 }
 function cu(){
  $("ph").textContent="Цена, "+SY[CUR];
- cartUp();if(loaded)load(true);home();calcUp();renderBonuses();
+ cartUp();if(loaded)load(true);home();calcUp();renderBonuses();renderVipTab();
  if(S.me){$("balc").textContent=mo(S.me.bal);if(!$("v-profile").hidden)prof(tab)}
 }
 $("cur").onchange=function(){CUR=this.value;try{localStorage.cur=CUR}catch(e){}cu();sOpen()};
@@ -634,7 +768,6 @@ function A(){
  if(ac.state=="suspended")ac.resume();
  return ac;
 }
-/* Сочный бархатный клик с саб-панчем */
 function sTap(){
  if(!snd)return;
  try{
@@ -658,7 +791,6 @@ function sTap(){
   o2.start(t);o2.stop(t+0.016);
  }catch(e){}
 }
-/* Щелчок трещотки Колеса Фортуны по штифтам */
 function sTick(pitch){
  if(!snd)return;
  try{
@@ -673,7 +805,6 @@ function sTick(pitch){
   o.start(t);o.stop(t+0.028);
  }catch(e){}
 }
-/* Сочный двойной поп при добавлении скина в корзину */
 function sPop(){
  if(!snd)return;
  try{
@@ -691,7 +822,6 @@ function sPop(){
   });
  }catch(e){}
 }
-/* Мягкий воздушный вжух при открытии окон */
 function sOpen(){
  if(!snd)return;
  try{
@@ -725,17 +855,14 @@ function sErr(){
   });
  }catch(e){}
 }
-/* Сочный богатый аккорд победы / зачисления денег */
 function sOk(){
  if(!snd)return;
  try{
   var c=A(),t=c.currentTime;
-  /* Басовый фундамент */
   var sub=c.createOscillator(),sg=c.createGain();
   sub.type="sine";sub.frequency.setValueAtTime(130.81,t);
   sg.gain.setValueAtTime(0.32,t);sg.gain.exponentialRampToValueAtTime(0.001,t+0.65);
   sub.connect(sg);sg.connect(M);sub.start(t);sub.stop(t+0.68);
-  /* Кристальный перелив арпеджио */
   [261.63,329.63,392.00,523.25,659.25].forEach(function(freq,idx){
    var o=c.createOscillator(),f=c.createBiquadFilter(),g=c.createGain();
    o.type="triangle";
@@ -759,18 +886,63 @@ function toast(x,b){var e=$("t");e.textContent=x;e.style.background=b?"var(--bad
 function closeAll(){document.querySelectorAll(".ov").forEach(function(o){o.classList.remove("s")});$("dr").classList.remove("s")}
 document.querySelectorAll(".ov").forEach(function(o){o.onmousedown=function(e){if(e.target===o)closeAll()}});document.onkeydown=function(e){if(e.key=="Escape")closeAll()};
 
-/* РОУТИНГ С ОТДЕЛЬНОЙ ВКЛАДКОЙ КОЛЕСА */
+/* РОУТИНГ С ОТДЕЛЬНЫМИ ВКЛАДКАМИ VIP И КОЛЕСА */
 function route(){
  var h=(location.hash||"#/").slice(2).split("/"),v=h[0]||"home";
- if(["home","market","wheel","bonuses","profile"].indexOf(v)<0)v="home";
- ["home","market","wheel","bonuses","profile"].forEach(function(x){$("v-"+x).hidden=x!=v});
+ if(["home","market","wheel","vip","bonuses","profile"].indexOf(v)<0)v="home";
+ ["home","market","wheel","vip","bonuses","profile"].forEach(function(x){$("v-"+x).hidden=x!=v});
  document.querySelectorAll("nav a,.tb2 a").forEach(function(a){a.classList.toggle("on",a.getAttribute("href")=="#/"+(v=="home"?"":v))});
  if(v=="market"&&!loaded){loaded=1;load(true)}
  if(v=="profile")prof(h[1]||"overview");
  if(v=="bonuses"||v=="wheel")renderBonuses();
+ if(v=="vip")renderVipTab();
  scrollTo(0,0);
 }
 addEventListener("hashchange",route);
+
+/* =========================================================================
+   VIP-КЛУБ: ПОКУПКА ПРИВИЛЕГИИ И КАЛЬКУЛЯТОР
+   ========================================================================= */
+function vipCalc(){
+ var v=+($("vcalc-in")&&$("vcalc-in").value)||0;
+ if($("vc-base"))$("vc-base").textContent=fm(v);
+ if($("vc-g"))$("vc-g").textContent=fm(v*1.02);
+ if($("vc-e"))$("vc-e").textContent=fm(v*1.05);
+}
+function renderVipTab(){
+ vipCalc();
+ var curLvl=(S.me&&S.me.vip&&S.me.vip.lvl)||1;
+ var curNm=(S.me&&S.me.vip&&S.me.vip.name)||"BRONZE";
+ var curB=(S.me&&S.me.vip&&S.me.vip.b)||0;
+ if($("vip-cur-badge"))$("vip-cur-badge").textContent="Твой статус: "+curNm+" (+"+curB+"%)";
+ var prices={2:1.99,3:4.99,4:9.99,5:19.99};
+ document.querySelectorAll("[data-vusd]").forEach(function(el){
+  var u=+el.dataset.vusd;
+  el.innerHTML=fm(u)+' <span>/ навсегда ($'+u+')</span>';
+ });
+ document.querySelectorAll("[data-vlvl]").forEach(function(btn){
+  var lv=+btn.dataset.vlvl;
+  if(curLvl>=lv){
+   btn.textContent="Уже активно ✓";
+   btn.disabled=true;
+   btn.classList.add("g");
+  }else{
+   btn.textContent="Купить за "+fm(prices[lv]);
+   btn.disabled=false;
+   if(lv>2)btn.classList.remove("g");
+  }
+ });
+}
+function buyVip(lvl){
+ if(!S.me){openAuth("Войди в аккаунт, чтобы купить VIP-привилегию");return}
+ api("/api/vip/buy",{lvl:lvl}).then(function(d){
+  sOk();confetti();
+  toast("Поздравляем! Привилегия "+d.name+" (+"+d.b+"%) активирована навсегда!");
+  me().then(renderVipTab);
+ }).catch(function(e){
+  toast(e.message,1);sErr();
+ });
+}
 
 /* =========================================================================
    КОЛЕСО ФОРТУНЫ С РЕАЛИСТИЧНОЙ ТРЕЩОТКОЙ И ОТСКОКОМ СТРЕЛКИ
@@ -782,7 +954,6 @@ function spinWheel(){
  btn.disabled=true;
  api("/api/wheel",{}).then(function(d){
   var ptr=$("wptr");
-  /* Реалистичные замедляющиеся щелчки трещотки + дергание стрелки */
   var ticks=28,delay=45;
   for(var i=0;i<ticks;i++){
    (function(idx,dl){
@@ -811,7 +982,8 @@ function spinWheel(){
 
 function renderBonuses(){
  var dc=(S.cfg&&S.cfg.dailyCents)||5;
- if($("dbtn"))$("dbtn").textContent="Забрать ежедневный бонус (+"+mo(dc)+")";
+ var vipMult=(S.me&&S.me.vip&&S.me.vip.lvl>1)?S.me.vip.lvl:1;
+ if($("dbtn"))$("dbtn").textContent="Забрать ежедневный бонус (+"+mo(dc*vipMult)+")";
  document.querySelectorAll("[data-cents]").forEach(function(el){
   el.textContent="+"+mo(+el.dataset.cents);
  });
@@ -820,7 +992,7 @@ function renderBonuses(){
  if(!S.me){b.innerHTML='';return}
  var pills=[];
  var vb=(S.me.vip&&S.me.vip.b)||0;
- if(vb>0)pills.push('<div class="b-pill">VIP-статус '+S.me.vip.name+': постоянный бонус +'+vb+'% к продаже</div>');
+ if(vb>0)pills.push('<div class="b-pill">👑 VIP-статус '+S.me.vip.name+': постоянный бонус +'+vb+'% к продаже</div>');
  if(S.me.sellB>0)pills.push('<div class="b-pill">Активен промо-бонус +'+S.me.sellB+'% к следующей продаже</div>');
  if(S.me.depB>0)pills.push('<div class="b-pill">Активен промо-бонус +'+S.me.depB+'% к следующему пополнению</div>');
  b.innerHTML=pills.join("");
@@ -885,8 +1057,29 @@ function sendAi(){
  });
 }
 
-/* market */
-function card(s){S.items[s.id]=s;var w=WS[s.w]||s.w,i=S.cart[s.id];return'<div class="card'+(i&&!S.buy?" in":"")+'" data-id="'+esc(s.id)+'" style="--c:'+esc(s.c)+'"><button class="fv'+(S.fav[s.id]?" on":"")+'" data-f="1" aria-label="В избранное"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.8-8 11-8 11z"/></svg></button>'+(w?'<div class="bd">'+esc(w)+'</div>':"")+'<div class="art"><img loading="lazy" src="'+esc(s.img)+'" alt="'+esc(s.n)+'"></div><div class="cb"><div class="nm">'+esc(s.n)+'</div><div class="rr">'+esc(s.r)+'</div>'+wb(s.w)+'<div class="row"><div class="pr">'+fm(S.buy?s.b:s.p)+'</div><button class="btn sm'+(i&&!S.buy?" g":"")+'" data-a="1">'+(S.buy?"Купить скин":i?"В корзине ✓":"Продать")+'</button></div></div></div>'}
+/* market + 3D Осмотр скина */
+function inspectSkin(id){
+ var s=S.items[id];if(!s)return;
+ $("in-img").src=s.img;
+ $("in-nm").textContent=s.n;
+ $("in-cat").textContent=s.t||"CS2 Предмет";
+ $("in-wear").textContent=s.w||"Стандарт";
+ $("in-rar").textContent=s.r||"CS2";
+ $("in-wb").innerHTML=wb(s.w);
+ $("in-p").textContent=fm(s.p);
+ $("in-vip").textContent=fm(s.p*1.05);
+ $("in-b").textContent=fm(s.b);
+ $("in-buy-btn").onclick=function(){closeAll();buyOpen(id)};
+ $("in-sell-btn").onclick=function(){
+  if(!S.cart[id]){S.cart[id]=s;sPop();cartUp()}
+  closeAll();
+  $("cartb").click();
+ };
+ $("oinsp").classList.add("s");
+ sOpen();
+}
+
+function card(s){S.items[s.id]=s;var w=WS[s.w]||s.w,i=S.cart[s.id];return'<div class="card'+(i&&!S.buy?" in":"")+'" data-id="'+esc(s.id)+'" style="--c:'+esc(s.c)+'"><button class="fv'+(S.fav[s.id]?" on":"")+'" data-f="1" aria-label="В избранное"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.8-8 11-8 11z"/></svg></button>'+(w?'<div class="bd">'+esc(w)+'</div>':"")+'<div class="art" data-insp="1" title="Нажми для осмотра скина"><img loading="lazy" src="'+esc(s.img)+'" alt="'+esc(s.n)+'"></div><div class="cb"><div class="nm">'+esc(s.n)+'</div><div class="rr">'+esc(s.r)+'</div>'+wb(s.w)+'<div class="row"><div class="pr">'+fm(S.buy?s.b:s.p)+'</div><button class="btn sm'+(i&&!S.buy?" g":"")+'" data-a="1">'+(S.buy?"Купить скин":i?"В корзине ✓":"Продать")+'</button></div></div></div>'}
 function url(){return"/api/market?page="+page+"&q="+encodeURIComponent($("q").value)+"&sort="+$("so").value+"&min="+(+($("mn").value||0)/(R[CUR]||1))+"&max="+($("mx").value?$("mx").value/(R[CUR]||1):"")+(S.buy?"&buy=1":"")+(S.favOn?"&ids="+(Object.keys(S.fav).join(",")||"none"):"")+"&t="+encodeURIComponent(F.t)+"&r="+encodeURIComponent(F.r)+"&w="+encodeURIComponent(F.w)+"&st="+$("st").value}
 function load(reset){if(reset){page=1;$("gr").innerHTML=new Array(12).join('<div class="sk"></div>')}
 api(url()).then(function(d){$("all").textContent=d.all.toLocaleString("ru");
@@ -899,8 +1092,14 @@ function ld(){clearTimeout(qt);qt=setTimeout(function(){load(true)},300)}
 $("fbt").onclick=function(){$("as").classList.toggle("o")};
 $("as").onclick=function(e){var k=e.target.dataset.k;if(k==null)return;F[k]=e.target.dataset.v;e.target.parentNode.querySelectorAll(".c").forEach(function(b){b.classList.toggle("on",b===e.target)});load(true)};
 $("rs").onclick=function(){F={t:"",r:"",w:"",st:""};["q","mn","mx"].forEach(function(i){$(i).value=""});$("st").value="";document.querySelectorAll("aside .c").forEach(function(b){b.classList.toggle("on",!b.dataset.v)});load(true)};
-function grid(e){var fv=e.target.closest("[data-f]");if(fv){var fid=fv.closest(".card").dataset.id;if(S.fav[fid])delete S.fav[fid];else S.fav[fid]=1;try{localStorage.fav=JSON.stringify(S.fav)}catch(x){}fv.classList.toggle("on",!!S.fav[fid]);sTap();if(S.favOn)load(true);return}var b=e.target.closest("[data-a]");if(!b)return;var id=b.closest(".card").dataset.id,s=S.items[id];if(!s)return;if(S.buy){buyOpen(id);return}
-if(S.cart[id]){delete S.cart[id]}else{if(Object.keys(S.cart).length>=20){toast("Максимум 20 скинов за раз",1);sErr();return}S.cart[id]=s;sPop()}cartUp()}
+function grid(e){
+ var fv=e.target.closest("[data-f]");
+ if(fv){var fid=fv.closest(".card").dataset.id;if(S.fav[fid])delete S.fav[fid];else S.fav[fid]=1;try{localStorage.fav=JSON.stringify(S.fav)}catch(x){}fv.classList.toggle("on",!!S.fav[fid]);sTap();if(S.favOn)load(true);return}
+ var insp=e.target.closest("[data-insp]");
+ if(insp){inspectSkin(insp.closest(".card").dataset.id);return}
+ var b=e.target.closest("[data-a]");if(!b)return;var id=b.closest(".card").dataset.id,s=S.items[id];if(!s)return;if(S.buy){buyOpen(id);return}
+ if(S.cart[id]){delete S.cart[id]}else{if(Object.keys(S.cart).length>=20){toast("Максимум 20 скинов за раз",1);sErr();return}S.cart[id]=s;sPop()}cartUp()
+}
 $("gr").onclick=grid;$("showc").onclick=grid;
 
 /* cart */
@@ -941,12 +1140,13 @@ function me(){
    bc(S.me.bal);
    checkAdminNotes(S.me);
   }
-  $("lg").textContent=S.me?((S.me.nick||S.me.name)+" #"+S.me.uid):"Войти";
+  $("lg").textContent=S.me?((S.me.vip&&S.me.vip.lvl>1?"👑 ":"")+(S.me.nick||S.me.name)+" #"+S.me.uid):"Войти";
   $("balc").hidden=!S.me;
   if(S.me)$("balc").textContent=mo(S.me.bal);
   cartUp();
   if(!$("v-profile").hidden)prof(tab);
   if(!$("v-bonuses").hidden||!$("v-wheel").hidden)renderBonuses();
+  if(!$("v-vip").hidden)renderVipTab();
  });
 }
 
@@ -1044,14 +1244,14 @@ function prof(t){
   var dispNick=d.nick||d.name.split("@")[0];
   var vip=d.vip||{lvl:1,name:"BRONZE",b:0,next:20,vol:0};
   $("balc").textContent=mo(d.bal);
-  $("lg").textContent=dispNick+" #"+d.uid;
+  $("lg").textContent=(vip.lvl>1?"👑 ":"")+dispNick+" #"+d.uid;
   var T=[["overview","Обзор и VIP"],["wallet","Кошелёк и Вывод"],["history","Мои сделки и выводы"],["settings","Настройки и Профиль"]];
   var ch=(dispNick||"U").slice(0,1).toUpperCase();
   var avBox=d.av?('<img class="ph-av" src="'+esc(d.av)+'" alt="">'):('<div class="ph-av">'+esc(ch)+'</div>');
 
-  var heroHtml='<div class="prof-hero"><div class="ph-left"><div class="ph-av-wrap" onclick="location.hash=\'#/profile/settings\'" title="Изменить аватарку и ник">'+avBox+'<div class="ph-av-edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div></div><div><div class="ph-name">'+esc(dispNick)+' <span class="uid-badge" onclick="copyUid('+d.uid+')" title="Скопировать ID">ID: #'+d.uid+' <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></span></div>'+
-   '<div class="ph-sub"><span class="st-pill warn">★ Ранг: '+esc(vip.name)+' (+'+vip.b+'%)</span><span class="st-pill '+(d.tl?"ok":"warn")+'">'+(d.tl?"Трейд-ссылка подключена":"Трейд-ссылка не указана")+'</span><span class="st-pill '+(d.tfa?"ok":"warn")+'">'+(d.tfa?"2FA активна":"2FA выкл")+'</span></div></div></div>'+
-   '<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn" href="#/profile/wallet">Вывести средства</a><a class="btn g" href="#/profile/settings">Настроить профиль</a></div></div>';
+  var heroHtml='<div class="prof-hero"><div class="ph-left"><div class="ph-av-wrap" onclick="location.hash=\'#/profile/settings\'" title="Изменить аватарку и ник">'+avBox+'<div class="ph-av-edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div></div><div><div class="ph-name">'+(vip.lvl>1?'👑 ':'')+esc(dispNick)+' <span class="uid-badge" onclick="copyUid('+d.uid+')" title="Скопировать ID">ID: #'+d.uid+' <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></span></div>'+
+   '<div class="ph-sub"><a href="#/vip" class="st-pill warn">👑 Ранг: '+esc(vip.name)+' (+'+vip.b+'%)</a><span class="st-pill '+(d.tl?"ok":"warn")+'">'+(d.tl?"Трейд-ссылка подключена":"Трейд-ссылка не указана")+'</span><span class="st-pill '+(d.tfa?"ok":"warn")+'">'+(d.tfa?"2FA активна":"2FA выкл")+'</span></div></div></div>'+
+   '<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn" href="#/profile/wallet">Вывести средства</a><a class="btn g" href="#/vip" style="border-color:#ffd16655;color:#ffd166">👑 Повысить VIP</a></div></div>';
 
   $("pt").innerHTML=heroHtml+'<div class="tabs">'+T.map(function(x){return'<a href="#/profile/'+x[0]+'" class="'+(x[0]==t?"on":"")+'">'+x[1]+'</a>'}).join("")+'</div>';
 
@@ -1082,7 +1282,7 @@ function prof(t){
     '<button class="btn bl" style="padding:12px;margin-top:4px" onclick="wd()">Создать заявку на выплату</button></div>'+
 
     '<div class="box"><div class="box-head"><h3>Пополнение баланса</h3><span class="st-pill warn">Авто-зачисление</span></div>'+
-    '<p style="color:var(--mt);margin-top:0;font-size:13.5px">Пополнение работает через официальный <b>@CryptoBot</b> в Telegram (USDT). Сразу после оплаты счёта деньги автоматически начисляются на твой баланс и открывают доступ к выводу средств.'+(d.depB?'<br><b style="color:var(--ok)">Активен промо-бонус +'+d.depB+'% к сумме пополнения!</b>':'')+'</p>'+
+    '<p style="color:var(--mt);margin-top:0;font-size:13.5px">Пополнение работает через официальный <b>@CryptoBot</b> в Telegram (USDT). Сразу после оплаты счёта деньги автоматически начисляются на твой баланс и открывают доступ к выводу средств и покупке VIP.'+(d.depB?'<br><b style="color:var(--ok)">Активен промо-бонус +'+d.depB+'% к сумме пополнения!</b>':'')+'</p>'+
     '<label>Сумма пополнения в USD (минимум $5)</label>'+
     '<input id="da" type="number" min="5" step="1" value="5" oninput="hint(this,\'dh\')">'+
     '<div class="amt-chips"><button type="button" class="amt-chip" onclick="setDepAmt(5)">$5</button><button type="button" class="amt-chip" onclick="setDepAmt(10)">$10</button><button type="button" class="amt-chip" onclick="setDepAmt(25)">$25</button><button type="button" class="amt-chip" onclick="setDepAmt(50)">$50</button><button type="button" class="amt-chip" onclick="setDepAmt(100)">$100</button></div>'+
@@ -1090,7 +1290,7 @@ function prof(t){
     '<div class="err" id="de"></div>'+
     '<button class="btn bl" style="padding:12px;margin-top:6px" onclick="dep()">Перейти к оплате в CryptoBot</button>'+
     '<div id="dres"></div>'+
-    '<div class="note" style="margin-top:16px">Нужно пополнить с украинской карты (Моно / Приват) или купить скин напрямую? Напиши нашему менеджеру в Telegram: <a class="lk" href="https://t.me/cs2_pay" target="_blank"><b>@cs2_pay</b></a></div>'+
+    '<div class="note" style="margin-top:16px">Нужно пополнить с украинской карты (Моно / Приват) или купить VIP напрямую? Напиши нашему менеджеру в Telegram: <a class="lk" href="https://t.me/cs2_pay" target="_blank"><b>@cs2_pay</b></a></div>'+
     '</div></div>';
    setWdMethod(S.wMethod||"Карта");
   }
@@ -1130,15 +1330,15 @@ function prof(t){
     '<div class="kpi ac"><span>Доступный баланс</span><b>'+mo(d.bal)+'</b><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg></i></div>'+
     '<div class="kpi"><span>Ожидает зачисления (Hold)</span><b>'+mo(pend)+'</b><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></i></div>'+
     '<div class="kpi ok"><span>Успешно продано на</span><b>'+mo(sold)+'</b><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></i></div>'+
-    '<div class="kpi"><span>VIP-статус (+бонус к цене)</span><b>'+esc(vip.name)+' (+'+vip.b+'%)</b><i>★</i></div>'+
+    '<div class="kpi"><span>VIP-статус (+бонус к цене)</span><b>'+esc(vip.name)+' (+'+vip.b+'%)</b><i>👑</i></div>'+
    '</div>'+
    '<div class="pc">'+
     '<div class="box"><div class="box-head"><h3>Последние операции и сообщения</h3><a class="lk" href="#/profile/history" style="font-size:13px;font-weight:700">Вся история →</a></div>'+(recentL.length?'<div class="tx-list">'+recentL.map(renderTxCard).join("")+'</div>':'<div class="em" style="padding:22px">Пока нет активных сделок.<br><br><a class="btn sm" href="#/market">Открыть маркет</a></div>')+'</div>'+
     '<div style="display:flex;flex-direction:column;gap:16px">'+
-     '<div class="box"><div class="box-head"><h3>Прогресс VIP-уровня</h3><span class="st-pill warn">Уровень '+vip.lvl+'/5</span></div>'+
+     '<div class="box"><div class="box-head"><h3>Прогресс VIP-уровня</h3><a href="#/vip" class="lk" style="font-size:12.5px;font-weight:700">👑 Купить VIP мгновенно →</a></div>'+
       '<div class="row" style="font-size:13px"><span>Текущий оборот: <b>$'+vip.vol+'</b></span><span style="color:var(--mt)">Цель: $'+vip.next+'</span></div>'+
       '<div class="pb" style="height:8px;margin:8px 0"><i style="width:'+pct+'%"></i></div>'+
-      '<div style="font-size:12px;color:var(--mt)">Чем выше твой VIP-ранг, тем выше процент выкупа абсолютно всех твоих скинов (до <b>+5%</b> навсегда).</div>'+
+      '<div style="font-size:12px;color:var(--mt)">Чем выше твой VIP-ранг, тем выше процент выкупа всех скинов (до <b>+5%</b> навсегда).</div>'+
      '</div>'+
      '<div class="box"><div class="box-head"><h3>Реферальная программа</h3><span class="st-pill ok">Приглашено: '+(d.refs||0)+'</span></div>'+
       '<p style="color:var(--mt);margin-top:0;font-size:13px">Отправь другу свою ссылку — и ты, и друг получите по <b>+'+mo(10)+'</b> на баланс сразу после его регистрации!</p>'+
@@ -1176,8 +1376,8 @@ function buildHistoryList(d){
   };
  }).concat(d.ops.map(function(o){
   var st=opMap[o.status]||{tx:o.status,cl:"pend"};
-  var isWd=o.type=="wd";
-  var title=isWd?("Вывод средств · "+esc(o.method)):(o.method?esc(o.method):"Пополнение баланса");
+  var isWd=o.type=="wd"||o.type=="vip";
+  var title=o.type=="wd"?("Вывод средств · "+esc(o.method)):(o.method?esc(o.method):"Пополнение баланса");
   var ico=o.method=="Карта"?ICO_CARD:o.method=="Crypto-бот"?ICO_TG:o.method=="TRC20"?ICO_USDT:(isWd?ICO_CARD:ICO_USDT);
   var msgHtml=o.msg?'<div class="adm-msg"><b>Сообщение от администратора:</b>'+esc(o.msg)+'</div>':"";
   return{
@@ -1525,7 +1725,7 @@ S.fav=(function(){try{return JSON.parse(localStorage.fav||"{}")}catch(e){return{
 $("favb").onclick=function(){S.favOn=S.favOn?0:1;this.classList.toggle("on",!!S.favOn);load(true)};
 function confetti(){if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;var c=document.createElement("canvas");c.style.cssText="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:99";c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);var x=c.getContext("2d"),cl=["#f2a93b","#7db4e6","#3ccf7a","#e8ebf0","#ff6b6b"],P=[];for(var i=0;i<120;i++)P.push({x:innerWidth/2,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*13-3,r:Math.random()*5+3,c:cl[i%5],a:Math.random()*6});var f=0;(function t(){x.clearRect(0,0,c.width,c.height);P.forEach(function(p){p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.a+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r,-p.r/2,p.r*2,p.r);x.restore()});if(++f<110)requestAnimationFrame(t);else c.remove()})()}
 document.addEventListener("keydown",function(e){if(e.key=="/"&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();location.hash="#/market";setTimeout(function(){$("q").focus()},60)}});
-cartUp();me();route();calcUp();renderBonuses();
+cartUp();me();route();calcUp();renderBonuses();renderVipTab();
 setInterval(function(){if(S.me)api("/api/me").then(function(d){if(d.name){bc(d.bal);checkAdminNotes(d);S.me.bal=d.bal;$("balc").textContent=mo(d.bal)}}).catch(function(){})},12000);
 function home(){api("/api/market?page=1").then(function(d){$("all").textContent=d.all.toLocaleString("ru");$("showc").innerHTML=d.items.slice(0,4).map(card).join("")}).catch(function(){});api("/api/recent").then(function(d){if(!d.n)return;$("paid").textContent="Выплачено: "+fm(d.paid);$("payl").innerHTML=d.items.map(function(i){return'<div class="pi"><img src="'+esc(i.img)+'" alt=""><span>'+esc(i.n)+'</span><b>+'+fm(i.p)+'</b></div>'}).join("");$("pay").hidden=false}).catch(function(){})}home();
 function banner(c){var b=$("bn"),t=[];if(location.protocol=="file:"){b.className="bn r";b.textContent="Сайт открыт как файл, поэтому вход и маркет не работают. Открой адрес своего сайта на Render.";b.hidden=false;return}
@@ -1536,7 +1736,7 @@ api("/api/config").then(function(c){
  banner(c);
  if(c.revs&&c.revs.length){c.revs.forEach(function(r){renderDealItem(r.nick,r.stars,r.skin,r.img,r.p,r.text,r.av)})}
  if(c.rates){R=c.rates;try{var v=localStorage.cur||"UAH";if(v&&R[v]){CUR=v;$("cur").value=v;cu()}}catch(e){}}
- renderBonuses();
+ renderBonuses();renderVipTab();
  if(!c.gid)return;var s=document.createElement("script");s.src="https://accounts.google.com/gsi/client";s.onload=function(){google.accounts.id.initialize({client_id:c.gid,callback:function(r){api("/api/google",{credential:r.credential}).then(function(){closeAll();sOk();me()}).catch(function(e){$("le").textContent=e.message})}});google.accounts.id.renderButton($("gb"),{theme:"filled_black",size:"large",text:"signin_with",width:320})};document.head.appendChild(s)
 });
 </script></body></html>
