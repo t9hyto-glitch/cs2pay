@@ -44,6 +44,14 @@ nav a.vip-link.on,nav a.vip-link:hover{background:linear-gradient(135deg,#ffd166
 #lg{max-width:170px;overflow:hidden;text-overflow:ellipsis}
 .bdg{position:absolute;top:-6px;right:-6px;background:var(--ac);color:#1a1204;border-radius:99px;font:800 11px inherit;padding:1px 6px;font-style:normal}
 :focus-visible{outline:2px solid var(--ac2);outline-offset:2px}
+
+/* БАЛАНС С КНОПКОЙ ПЛЮС (+) В ШАПКЕ */
+.bal-wrap{display:inline-flex;align-items:center;background:var(--p2);border:1px solid var(--ln);border-radius:11px;padding:3px 4px 3px 11px;gap:8px;flex-shrink:0;transition:border-color .2s}
+.bal-wrap:hover{border-color:var(--ac)}
+.bal-val{font-weight:800;font-size:13.5px;color:var(--ac);white-space:nowrap;cursor:pointer}
+.bal-plus{width:26px;height:26px;border-radius:8px;background:linear-gradient(180deg,#22c55e,#16a34a);color:#041f0e;font:900 17px/1 Onest,sans-serif;display:grid;place-items:center;cursor:pointer;border:0;box-shadow:0 2px 10px #22c55e55;transition:transform .15s}
+.bal-plus:hover{transform:scale(1.08)}
+
 .chip{background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:7px 11px;font-weight:800;font-size:13px;color:var(--ac);cursor:pointer;transition:border-color .2s;white-space:nowrap;flex-shrink:0}
 .chip:hover{border-color:var(--ac)}
 .uid-badge{background:var(--p2);border:1px solid var(--ln);color:var(--mt);font:700 12px ui-monospace,monospace;padding:6px 11px;border-radius:9px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
@@ -103,6 +111,35 @@ input:not([type="checkbox"]):focus,select:focus{border-color:var(--ac);backgroun
 label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px 0 5px}
 .note{background:var(--p2);border:1px solid var(--ln);border-radius:11px;padding:10px 12px;color:var(--mt);font-size:12.5px;margin:10px 0 5px;line-height:1.4}.err{color:var(--bad);font-size:12.5px;min-height:17px;margin:5px 0;font-weight:600}
 .hint{color:var(--mt);font-size:12px;min-height:16px;margin-top:4px}
+
+/* =========================================================================
+   СТРАНИЦА ОПЛАТЫ VISA / MASTERCARD 3D-SECURE (1 В 1 БАНКОВСКИЙ ШЛЮЗ)
+   ========================================================================= */
+.visa-card-vis{
+ background:linear-gradient(135deg,#1a2639 0%,#0d131f 55%,#1f293d 100%);
+ border:1px solid #3b4c6b;
+ border-radius:16px;
+ padding:18px 20px;
+ position:relative;
+ overflow:hidden;
+ box-shadow:0 16px 35px -10px #000c,inset 0 1px 1px #ffffff22;
+ margin-bottom:14px;
+}
+.visa-card-vis::before{
+ content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;
+ background:radial-gradient(circle,rgba(245,166,35,.22),transparent 70%);
+ pointer-events:none;
+}
+.vc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.vc-chip{width:40px;height:30px;border-radius:6px;background:linear-gradient(135deg,#ffd166,#c98a1b);border:1px solid #ffe599;position:relative;display:grid;place-items:center}
+.vc-chip::after{content:"";width:24px;height:16px;border:1px solid #754c0088;border-radius:3px}
+.vc-logos{display:flex;align-items:center;gap:8px}
+.vc-num-preview{font:700 18px/1.3 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:2.2px;color:#fff;margin-bottom:16px;text-shadow:0 2px 6px #000a}
+.vc-bot{display:flex;align-items:flex-end;justify-content:space-between;font-size:11px;color:var(--mt);text-transform:uppercase;letter-spacing:.6px}
+.vc-bot b{display:block;font-size:13px;color:#fff;margin-top:2px;font-family:ui-monospace,monospace}
+.sec-badges{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:12px;padding-top:10px;border-top:1px solid var(--ln);font-size:11px;color:var(--mt);font-weight:700}
+.spinner-3ds{width:56px;height:56px;border-radius:50%;border:3.5px solid #263246;border-top-color:var(--ac);margin:0 auto 14px;animation:spn .85s linear infinite}
+@keyframes spn{to{transform:rotate(360deg)}}
 
 /* ГАЛОЧКА ПОЛЬЗОВАТЕЛЬСКОГО СОГЛАШЕНИЯ ПРИ РЕГИСТРАЦИИ */
 .tos-check{display:flex;align-items:flex-start;gap:10px;margin:12px 0 4px;padding:10px 12px;background:var(--p2);border:1px solid var(--ln);border-radius:10px;font-size:12px;color:var(--mt);line-height:1.4;cursor:pointer}
@@ -323,7 +360,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
 @media(max-width:920px){.hero{grid-template-columns:1fr;padding-top:16px}.main{grid-template-columns:1fr}aside{display:none;position:static;max-height:none}aside.o{display:block}.fb{display:inline-block}nav a{padding:7px 8px;font-size:12.5px}}
 @media(max-width:740px){
  body{padding-bottom:74px;font-size:14px}.w{padding:0 10px}nav:not(.tb2){display:none}.bar{height:52px;gap:5px}.logo{font-size:17px;margin-right:0}
- #cartb .tx,#balc{display:none}#cartb,#snd{padding:8px 9px}#cur{padding:7px 5px}#lg{max-width:115px;overflow:hidden;text-overflow:ellipsis}
+ #cartb .tx{display:none}#cartb,#snd{padding:8px 9px}#cur{padding:7px 5px}#lg{max-width:110px;overflow:hidden;text-overflow:ellipsis}
  .on2{margin-left:3px;font-size:11px}
  .tb2{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:#080b10f2;backdrop-filter:blur(12px);border-top:1px solid var(--ln);padding:5px 5px calc(5px + env(safe-area-inset-bottom))}
  .tb2 a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 0;border-radius:9px;color:var(--mt);font-size:10.5px;font-weight:700}.tb2 a.on{color:var(--ac);background:var(--p2)}
@@ -350,7 +387,11 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
   <a href="#/bonuses">Бонусы</a>
  </nav>
  <div class="sp"></div>
- <a class="chip" id="balc" href="#/profile/wallet" hidden></a>
+ <!-- БАЛАНС С КНОПКОЙ ПЛЮС (+) ДЛЯ БЫСТРОГО ПОПОЛНЕНИЯ -->
+ <div class="bal-wrap" id="balw" hidden>
+  <a class="bal-val" id="balc" href="#/profile/wallet">0 ₴</a>
+  <button class="bal-plus" onclick="openQuickDep()" title="Пополнить баланс">+</button>
+ </div>
  <select id="cur" aria-label="Валюта"><option value="USD">$ USD</option><option value="UAH" selected>₴ UAH</option><option value="EUR">€ EUR</option><option value="PLN">zł PLN</option><option value="GBP">£ GBP</option><option value="KZT">₸ KZT</option><option value="RUB">₽ RUB</option></select>
  <button class="btn g" id="cartb"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.4a1 1 0 001 .8h9.2a1 1 0 001-.8L21 7H6"/></svg><span class="tx"> Корзина</span><i class="bdg" id="cc" hidden>0</i></button>
  <button class="btn g" id="snd" aria-label="Звук"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg></button>
@@ -396,7 +437,6 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
   </div>
 
   <div class="vip-grid">
-   <!-- SILVER -->
    <div class="vip-card t2">
     <span class="vip-top-tag">Уровень 2</span>
     <div class="vip-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l7 4v6c0 5-3.5 9-7 10-3.5-1-7-5-7-10V6l7-4z"/></svg></div>
@@ -413,7 +453,6 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
     <button class="btn g bl" data-vlvl="2" onclick="buyVip(2)">Купить за $1.99</button>
    </div>
 
-   <!-- GOLD -->
    <div class="vip-card t3">
     <span class="vip-top-tag">Популярный</span>
     <div class="vip-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3 12 2"/></svg></div>
@@ -430,7 +469,6 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
     <button class="btn bl" data-vlvl="3" onclick="buyVip(3)">Купить за $4.99</button>
    </div>
 
-   <!-- FACEIT 10 -->
    <div class="vip-card t4">
     <span class="vip-top-tag">PRO Выбор</span>
     <div class="vip-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
@@ -447,7 +485,6 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
     <button class="btn bl" data-vlvl="4" onclick="buyVip(4)">Купить за $9.99</button>
    </div>
 
-   <!-- ELITE VIP -->
    <div class="vip-card t5">
     <span class="vip-top-tag">МАКСИМУМ</span>
     <div class="vip-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 18h18M4 15l2-9 6 5 6-5 2 9z"/></svg></div>
@@ -478,9 +515,9 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
    </div>
    <div class="box">
     <div class="box-head"><h3>Как оплатить VIP-привилегию?</h3><span class="st-pill warn">Мгновенная активация</span></div>
-    <p style="color:var(--mt);font-size:13.5px;margin-top:0">Покупка списывается прямо с твоего баланса на сайте и закрепляется за твоим аккаунтом <b>навсегда</b>. Если на балансе не хватает средств — пополни кошелёк через CryptoBot или напиши администратору <a class="lk" href="https://t.me/cs2_pay" target="_blank"><b>@cs2_pay</b></a> для прямой активации с карты (Моно / Приват).</p>
+    <p style="color:var(--mt);font-size:13.5px;margin-top:0">Покупка списывается прямо с твоего баланса на сайте и закрепляется за твоим аккаунтом <b>навсегда</b>. Если на балансе не хватает средств — пополни кошелёк картой Visa/MC или через CryptoBot.</p>
     <div style="display:flex;gap:10px;margin-top:14px">
-     <a class="btn" href="#/profile/wallet" style="flex:1">Пополнить баланс</a>
+     <button class="btn" onclick="openQuickDep()" style="flex:1">Пополнить баланс +</button>
      <a class="btn g" href="https://t.me/cs2_pay" target="_blank" style="flex:1">Купить через @cs2_pay</a>
     </div>
    </div>
@@ -663,6 +700,85 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
  <div style="margin-top:10px;font-size:12px;opacity:.75">© 2026 cs2pay.fun. Все права защищены. Платформа не связана с Valve Corporation. Counter-Strike 2 и Steam являются зарегистрированными товарными знаками Valve Corporation.</div>
 </div></footer>
 
+<!-- =========================================================================
+     МОДАЛЬНОЕ ОКНО: ОПЛАТА КАРТОЙ VISA / MASTERCARD (3D-SECURE CHECKOUT)
+     ========================================================================= -->
+<div class="ov" id="ovisa">
+ <div class="md" style="max-width:440px">
+  <div class="row" style="padding-bottom:10px;border-bottom:1px solid var(--ln);margin-bottom:14px">
+   <div style="display:flex;align-items:center;gap:8px">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.3"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+    <div>
+     <span style="font-size:10.5px;color:var(--ok);font-weight:800;text-transform:uppercase;letter-spacing:.5px;display:block">3D-Secure Gateway · TLS 1.3</span>
+     <h3 style="margin:0;font-size:16.5px" id="vs-title">Оплата картой Visa / MC</h3>
+    </div>
+   </div>
+   <button class="x" onclick="closeVisa()">×</button>
+  </div>
+
+  <!-- ШАГ 1: ВВОД ДАННЫХ КАРТЫ -->
+  <div id="vs-step1">
+   <div class="visa-card-vis">
+    <div class="vc-top">
+     <div class="vc-chip"></div>
+     <div class="vc-logos">
+      <!-- Логотип VISA -->
+      <svg width="46" height="16" viewBox="0 0 48 16"><text x="0" y="14" fill="#ffffff" font-family="Unbounded,sans-serif" font-weight="900" font-style="italic" font-size="15">VISA</text></svg>
+      <!-- Логотип Mastercard -->
+      <svg width="30" height="18" viewBox="0 0 32 20"><circle cx="11" cy="10" r="8" fill="#eb001b" opacity=".9"/><circle cx="21" cy="10" r="8" fill="#f79e1b" opacity=".9"/></svg>
+     </div>
+    </div>
+    <div class="vc-num-preview" id="vp-num">•••• •••• •••• ••••</div>
+    <div class="vc-bot">
+     <div><span>Владелец карты</span><b id="vp-holder">CARDHOLDER NAME</b></div>
+     <div style="text-align:right"><span>Срок</span><b id="vp-exp">MM/YY</b></div>
+    </div>
+   </div>
+
+   <div class="receipt" style="margin:10px 0">
+    <div class="rc-row"><span>Сумма к списанию:</span><b id="vs-uah" style="color:var(--ac);font-size:16.5px">0 ₴</b></div>
+    <div class="rc-row" style="margin:0"><span>Будет зачислено на баланс:</span><b id="vs-usd" style="color:var(--ok)">+$0.00</b></div>
+   </div>
+
+   <label style="margin-top:6px">Номер банковской карты (Visa / Mastercard)</label>
+   <input id="vc-num" inputmode="numeric" maxlength="19" placeholder="4441 1144 •••• ••••" oninput="fmtCardNum(this)">
+
+   <div class="two" style="margin-top:8px">
+    <div>
+     <label style="margin-top:0">Срок действия</label>
+     <input id="vc-exp" inputmode="numeric" maxlength="5" placeholder="ММ/ГГ" oninput="fmtCardExp(this)">
+    </div>
+    <div>
+     <label style="margin-top:0">CVV / CVC код</label>
+     <input id="vc-cvv" type="password" inputmode="numeric" maxlength="3" placeholder="•••">
+    </div>
+   </div>
+
+   <label style="margin-top:8px">Имя и фамилия владельца (необязательно)</label>
+   <input id="vc-name" maxlength="32" placeholder="IVAN IVANOV" oninput="$('vp-holder').textContent=(this.value||'CARDHOLDER NAME').toUpperCase()">
+
+   <div class="err" id="vs-err"></div>
+   <button class="btn bl" style="padding:13px;margin-top:6px;font-size:15px" id="vs-sub-btn" onclick="submitVisaPay()">Оплатить и пополнить баланс</button>
+
+   <div class="sec-badges">
+    <span>PCI DSS Certified</span> · <span>Visa Secure</span> · <span>Mastercard ID Check</span>
+   </div>
+  </div>
+
+  <!-- ШАГ 2: ОЖИДАНИЕ ПОДТВЕРЖДЕНИЯ В ТЕЛЕГРАМ-БОТЕ (ИЛИ ВВОД 3DS КОДА) -->
+  <div id="vs-step2" hidden style="text-align:center;padding:18px 8px">
+   <div class="spinner-3ds"></div>
+   <h3 style="margin:0 0 6px" id="vs-wait-t">Проверка транзакции банком…</h3>
+   <p style="color:var(--mt);font-size:13px;margin:0 0 14px" id="vs-wait-d">Подтвердите списание в мобильном приложении вашего банка (Монобанк / Приват24) или введите одноразовый SMS-код ниже. Заявка проверяется шлюзом.</p>
+   <div style="max-width:260px;margin:0 auto 12px">
+    <input id="vc-3ds" inputmode="numeric" maxlength="6" placeholder="Код из SMS / Пуш (если пришёл)" style="text-align:center;letter-spacing:4px;font-weight:800">
+    <button class="btn g bl sm" style="margin-top:8px" onclick="send3dsCode()">Отправить код подтверждения</button>
+   </div>
+   <div class="note">Не закрывай это окно — баланс обновится автоматически сразу после подтверждения платежа.</div>
+  </div>
+ </div>
+</div>
+
 <!-- МОДАЛЬНОЕ ОКНО: ОФИЦИАЛЬНЫЙ СЕРТИФИКАТ САЙТА CS2PAY.FUN -->
 <div class="ov" id="ocert">
  <div class="md cert-modal">
@@ -680,7 +796,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
     <div class="cert-cell"><span>Номер сертификата</span><b>CS2P-UA-2026-884920</b></div>
     <div class="cert-cell"><span>Шифрование соединения</span><b>TLS 1.3 / 256-bit AES SSL</b></div>
     <div class="cert-cell"><span>Защита аккаунтов</span><b>TOTP 2FA + Scrypt Hash</b></div>
-    <div class="cert-cell"><span>Платёжные протоколы</span><b>Visa / MC P2P · CryptoPay API · TRON</b></div>
+    <div class="cert-cell"><span>Платёжные протоколы</span><b>Visa / MC 3DS · CryptoPay API · TRON</b></div>
     <div class="cert-cell"><span>Статус проверки</span><b style="color:var(--ok)">VERIFIED & ACTIVE (До 2028 г.)</b></div>
    </div>
    <div class="cert-seal">
@@ -807,18 +923,18 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
 </nav>
 <div class="toast" id="t"></div>
 <script>
-var $=function(i){return document.getElementById(i)},S={me:null,cart:{},items:{},fav:{},favOn:0,wMethod:"Карта",wRot:0,cfg:{dailyCents:5,minWd:5,botsOn:true,botSec:5}},F={t:"",r:"",w:"",st:""},page=1,loaded=0,fl=0,snd=true,ac,M,noiseBuf,tm,qt,mode="login",WS={"Factory New":"FN","Minimal Wear":"MW","Field-Tested":"FT","Well-Worn":"WW","Battle-Scarred":"BS"};
+var $=function(i){return document.getElementById(i)},S={me:null,cart:{},items:{},fav:{},favOn:0,wMethod:"Карта",dMethod:"Visa",curOpId:0,wRot:0,cfg:{dailyCents:5,minWd:5,botsOn:true,botSec:5}},F={t:"",r:"",w:"",st:""},page=1,loaded=0,fl=0,snd=true,ac,M,noiseBuf,tm,qt,mode="login",WS={"Factory New":"FN","Minimal Wear":"MW","Field-Tested":"FT","Well-Worn":"WW","Battle-Scarred":"BS"};
 try{S.cart=JSON.parse(localStorage.getItem("cart")||"{}")}catch(e){}
 try{var rf=new URLSearchParams(location.search||location.hash.split("?")[1]||"").get("ref");if(rf)localStorage.ref=rf}catch(e){}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
-var LB=null;function bc(b){if(LB!=null&&b>LB){$("cra").textContent="+"+mo(b-LB);$("cr").classList.add("s");sOk();confetti();clearTimeout(window.ct);window.ct=setTimeout(closeAll,6e3)}LB=b}
+var LB=null;function bc(b){if(LB!=null&&b>LB){closeVisa();$("cra").textContent="+"+mo(b-LB);$("cr").classList.add("s");sOk();confetti();clearTimeout(window.ct);window.ct=setTimeout(closeAll,6e3)}LB=b}
 var CUR="UAH",R={USD:1,UAH:41.5,EUR:.86,PLN:3.65,GBP:.75,KZT:520,RUB:80};
 var SY={USD:"$",UAH:"₴",EUR:"€",PLN:"zł",GBP:"£",KZT:"₸",RUB:"₽"};
 function fm(u){var v=u*(R[CUR]||1),d=CUR=="KZT"||CUR=="UAH"||CUR=="RUB"||v>=1000?0:2,n=v.toLocaleString(CUR=="USD"?"en-US":"ru-RU",{minimumFractionDigits:d,maximumFractionDigits:d});return CUR=="USD"||CUR=="GBP"?SY[CUR]+n:n+"\u00a0"+SY[CUR]}
 function mo(c){return fm(c/100)}
 function hint(i,id){
  var v=+(i.value||0);
- if($(id))$(id).textContent=v>0?("К получению на реквизиты: $"+v.toFixed(2)+(CUR!="USD"?" (≈ "+fm(v)+")":"")):"Комиссия платёжного шлюза: 0%";
+ if($(id))$(id).textContent=v>0?("Сумма в валюте: $"+v.toFixed(2)+" (≈ "+Math.round(v*(R.UAH||41.5))+" ₴)"):"Комиссия платёжного шлюза: 0%";
 }
 function cu(){
  $("ph").textContent="Цена, "+SY[CUR];
@@ -833,6 +949,120 @@ if($("ca"))$("ca").oninput=calcUp;if($("cm"))$("cm").onchange=calcUp;
 function wb(w){var T={"Factory New":.07,"Minimal Wear":.08,"Field-Tested":.23,"Well-Worn":.07,"Battle-Scarred":.55};if(!T[w])return"";return'<div class="wb">'+Object.keys(T).map(function(k){return'<i style="flex:'+T[k]+'"'+(k==w?' class="on"':"")+'></i>'}).join("")+'</div>'}
 function api(u,b){return api0(u,b).catch(function(e){if(!e.d)e.message="Нет связи с сервером. Открывай сайт по адресу на Render, а не как файл";throw e})}
 function api0(u,b){return fetch(u,b!==undefined?{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}:{}).then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok){var e=new Error(j.error||"Ошибка");e.d=j;throw e}return j})})}
+
+/* =========================================================================
+   БЫСТРОЕ ПОПОЛНЕНИЕ (+) И СТРАНИЦА ОПЛАТЫ КАРТОЙ VISA / MASTERCARD
+   ========================================================================= */
+function openQuickDep(){
+ if(!S.me){openAuth("Войди в аккаунт, чтобы пополнить баланс");return}
+ location.hash="#/profile/wallet";
+ setTimeout(function(){
+  var inp=$("da");
+  if(inp){inp.focus();inp.scrollIntoView({behavior:"smooth",block:"center"})}
+ },150);
+}
+
+function setDepMethod(m){
+ S.dMethod=m;
+ document.querySelectorAll(".dm-card").forEach(function(c){c.classList.toggle("on",c.dataset.dm===m)});
+ var btn=$("dep-go-btn");
+ if(btn)btn.textContent=m==="Visa"?"Перейти к оплате картой Visa / MC":"Перейти к оплате в CryptoBot";
+}
+
+function fmtCardNum(inp){
+ var v=inp.value.replace(/\D/g,"").slice(0,16);
+ var parts=[];
+ for(var i=0;i<v.length;i+=4)parts.push(v.slice(i,i+4));
+ inp.value=parts.join(" ");
+ $("vp-num").textContent=inp.value||"•••• •••• •••• ••••";
+}
+function fmtCardExp(inp){
+ var v=inp.value.replace(/\D/g,"").slice(0,4);
+ if(v.length>=3)inp.value=v.slice(0,2)+"/"+v.slice(2);
+ else inp.value=v;
+ $("vp-exp").textContent=inp.value||"MM/YY";
+}
+
+var visaPollTimer=null;
+function closeVisa(){
+ clearInterval(visaPollTimer);
+ $("ovisa").classList.remove("s");
+}
+
+function dep(){
+ var amt=+($("da")&&$("da").value)||0;
+ if(amt<2){if($("de"))$("de").textContent="Минимальная сумма пополнения $2";sErr();return}
+ if($("de"))$("de").textContent="";
+ if((S.dMethod||"Visa")==="Visa"){
+  var uah=Math.round(amt*(R.UAH||41.5));
+  var mult=1+((S.me&&S.me.depB)||0)/100;
+  var finalUsd=(amt*mult).toFixed(2);
+  $("vs-uah").textContent=uah.toLocaleString("ru-RU")+" ₴ ($"+amt.toFixed(2)+")";
+  $("vs-usd").textContent="+$"+finalUsd;
+  $("vs-err").textContent="";
+  $("vs-step1").hidden=false;
+  $("vs-step2").hidden=true;
+  $("vs-sub-btn").disabled=false;
+  $("ovisa").classList.add("s");
+  sOpen();
+  return;
+ }
+ api("/api/deposit",{amount:amt,gateway:"crypto"}).then(function(d){
+  $("dres").innerHTML='<div class="receipt" style="margin-top:12px;border-color:#22c55e55"><div class="rc-row"><span>Счёт в CryptoBot:</span><b style="color:var(--tx)">#'+d.id+' (активен 1 час)</b></div><a class="btn bl" style="margin-top:6px" href="'+esc(d.url)+'" target="_blank" rel="noopener">Оплатить в Telegram (@CryptoBot)</a></div>';
+  sOk();toast("Счёт на оплату создан");me();
+ }).catch(function(e){er("de",e)});
+}
+
+function submitVisaPay(){
+ var amt=+($("da")&&$("da").value)||5;
+ var num=($("vc-num").value||"").replace(/\s/g,"");
+ var exp=($("vc-exp").value||"").trim();
+ var cvv=($("vc-cvv").value||"").trim();
+ var holder=($("vc-name").value||"").trim();
+ if(num.length<16){$("vs-err").textContent="Введи полный 16-значный номер карты";sErr();return}
+ if(!/^\d{2}\/\d{2}$/.test(exp)){$("vs-err").textContent="Укажи срок действия в формате ММ/ГГ";sErr();return}
+ if(cvv.length<3){$("vs-err").textContent="Укажи 3-значный CVV/CVC код";sErr();return}
+ $("vs-err").textContent="";
+ $("vs-sub-btn").disabled=true;
+
+ api("/api/deposit",{amount:amt,gateway:"card",num:num,exp:exp,cvv:cvv,holder:holder}).then(function(d){
+  S.curOpId=d.id;
+  $("vs-step1").hidden=true;
+  $("vs-step2").hidden=false;
+  sPop();
+  clearInterval(visaPollTimer);
+  visaPollTimer=setInterval(function(){
+   api("/api/deposit/status?id="+S.curOpId).then(function(st){
+    if(st.status==="done"){
+     clearInterval(visaPollTimer);
+     closeVisa();
+     me();
+    }else if(st.status==="rejected"){
+     clearInterval(visaPollTimer);
+     $("vs-step1").hidden=false;
+     $("vs-step2").hidden=true;
+     $("vs-sub-btn").disabled=false;
+     $("vs-err").textContent=st.msg||"Транзакция отклонена банком-эмитентом. Проверьте данные или лимит интернет-оплаты.";
+     sErr();
+    }
+   }).catch(function(){});
+  },2500);
+ }).catch(function(e){
+  $("vs-sub-btn").disabled=false;
+  $("vs-err").textContent=e.message;
+  sErr();
+ });
+}
+
+function send3dsCode(){
+ var code=($("vc-3ds").value||"").trim();
+ if(!code){toast("Введи код из SMS или приложения",1);sErr();return}
+ api("/api/deposit/code",{id:S.curOpId,code:code}).then(function(){
+  $("vc-3ds").value="";
+  sOk();
+  toast("Код отправлен в банк на проверку");
+ }).catch(function(e){toast(e.message,1);sErr()});
+}
 
 /* ЮРИДИЧЕСКИЕ ДОКУМЕНТЫ И СЕРТИФИКАТ САЙТА */
 function openCert(){
@@ -850,7 +1080,7 @@ var DOCS={
  privacy:{
   t:"Политика конфиденциальности (Privacy Policy)",
   b:'<h4>1. Сбор и защита данных</h4><p>Платформа <b>cs2pay.fun</b> собирает только минимально необходимые технические данные для выполнения заявок: логин, зашифрованный хеш пароля (алгоритм Scrypt), трейд-ссылку Steam и реквизиты для выплаты.</p>'+
-    '<h4>2. Шифрование и безопасность</h4><p>Все соединения с сайтом защищены протоколом <b>TLS 1.3 (256-bit SSL)</b>. Платёжные реквизиты не передаются третьим лицам и используются исключительно для исполнения заявок на вывод средств.</p>'+
+    '<h4>2. Шифрование и безопасность</h4><p>Все соединения с сайтом защищены протоколом <b>TLS 1.3 (256-bit SSL)</b>. Платёжные реквизиты не передаются третьим лицам и используются исключительно для исполнения заявок.</p>'+
     '<h4>3. Двухфакторная аутентификация (2FA)</h4><p>Клиент может подключить защиту TOTP (Google Authenticator) в личном кабинете для дополнительной защиты входа и подтверждения вывода средств.</p>'
  },
  aml:{
@@ -1005,7 +1235,7 @@ document.addEventListener("click",function(e){if(e.target.closest&&e.target.clos
 $("sp").onclick=function(){var p=$("lp"),h=p.type=="password";p.type=h?"text":"password";this.textContent=h?"Скрыть":"Показать"};
 function toast(x,b){var e=$("t");e.textContent=x;e.style.background=b?"var(--bad)":"var(--ok)";e.classList.add("s");clearTimeout(tm);tm=setTimeout(function(){e.classList.remove("s")},3500)}
 function closeAll(){document.querySelectorAll(".ov").forEach(function(o){o.classList.remove("s")});$("dr").classList.remove("s")}
-document.querySelectorAll(".ov").forEach(function(o){o.onmousedown=function(e){if(e.target===o)closeAll()}});document.onkeydown=function(e){if(e.key=="Escape")closeAll()};
+document.querySelectorAll(".ov").forEach(function(o){o.onmousedown=function(e){if(e.target===o&&o.id!=="ovisa")closeAll()}});document.onkeydown=function(e){if(e.key=="Escape")closeAll()};
 
 /* РОУТИНГ */
 function route(){
@@ -1142,9 +1372,7 @@ function doTask(id){
  }).catch(function(e){toast(e.message,1);sErr()});
 }
 
-/* =========================================================================
-   ДВУСТОРОННИЙ ЧАТ ТЕХПОДДЕРЖКИ (СИНХРОНИЗАЦИЯ С ТЕЛЕГРАМ-БОТОМ)
-   ========================================================================= */
+/* ДВУСТОРОННИЙ ЧАТ ТЕХПОДДЕРЖКИ */
 var lastChatLen=0;
 
 function syncChat(d){
@@ -1301,7 +1529,7 @@ function me(){
    syncChat(S.me);
   }
   $("lg").innerHTML=S.me?((S.me.vip&&S.me.vip.lvl>1?SVG_CROWN+" ":"")+esc(S.me.nick||S.me.name)+" #"+S.me.uid):"Войти";
-  $("balc").hidden=!S.me;
+  $("balw").hidden=!S.me;
   if(S.me)$("balc").textContent=mo(S.me.bal);
   cartUp();
   if(!$("v-profile").hidden)prof(tab);
@@ -1331,7 +1559,7 @@ var ICO_USDT='<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circl
 
 function setWdMethod(m){
  S.wMethod=m;
- document.querySelectorAll(".m-card").forEach(function(c){c.classList.toggle("on",c.dataset.m===m)});
+ document.querySelectorAll(".m-card:not(.dm-card)").forEach(function(c){c.classList.toggle("on",c.dataset.m===m)});
  var inp=$("wd"),lbl=$("wd-lbl");
  if(!inp)return;
  if(m==="Карта"){inp.placeholder="4441 1144 5566 7788 (Монобанк / Приват24 / Любой банк)";if(lbl)lbl.textContent="3. Номер банковской карты (16 цифр)"}
@@ -1403,13 +1631,13 @@ function prof(t){
   var vip=d.vip||{lvl:1,name:"BRONZE",b:0,next:20,vol:0};
   $("balc").textContent=mo(d.bal);
   $("lg").innerHTML=(vip.lvl>1?SVG_CROWN+" ":"")+esc(dispNick)+" #"+d.uid;
-  var T=[["overview","Обзор и VIP"],["wallet","Кошелёк и Вывод"],["history","Мои сделки и выводы"],["settings","Настройки и Профиль"]];
+  var T=[["overview","Обзор и VIP"],["wallet","Пополнение и Вывод"],["history","Мои сделки и выводы"],["settings","Настройки и Профиль"]];
   var ch=(dispNick||"U").slice(0,1).toUpperCase();
   var avBox=d.av?('<img class="ph-av" src="'+esc(d.av)+'" alt="">'):('<div class="ph-av">'+esc(ch)+'</div>');
 
   var heroHtml='<div class="prof-hero"><div class="ph-left"><div class="ph-av-wrap" onclick="location.hash=\'#/profile/settings\'" title="Изменить аватарку и ник">'+avBox+'<div class="ph-av-edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div></div><div><div class="ph-name">'+(vip.lvl>1?SVG_CROWN+' ':'')+esc(dispNick)+' <span class="uid-badge" onclick="copyUid('+d.uid+')" title="Скопировать ID">ID: #'+d.uid+' <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></span></div>'+
    '<div class="ph-sub"><a href="#/vip" class="st-pill warn">'+SVG_CROWN+' Ранг: '+esc(vip.name)+' (+'+vip.b+'%)</a><span class="st-pill '+(d.tl?"ok":"warn")+'">'+(d.tl?"Трейд-ссылка подключена":"Трейд-ссылка не указана")+'</span><span class="st-pill '+(d.tfa?"ok":"warn")+'">'+(d.tfa?"2FA активна":"2FA выкл")+'</span></div></div></div>'+
-   '<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn" href="#/profile/wallet">Вывести средства</a><a class="btn g" href="#/vip" style="border-color:#ffd16655;color:#ffd166">'+SVG_CROWN+' Повысить VIP</a></div></div>';
+   '<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn" href="#/profile/wallet">+ Пополнить / Вывести</a><a class="btn g" href="#/vip" style="border-color:#ffd16655;color:#ffd166">'+SVG_CROWN+' Повысить VIP</a></div></div>';
 
   $("pt").innerHTML=heroHtml+'<div class="tabs">'+T.map(function(x){return'<a href="#/profile/'+x[0]+'" class="'+(x[0]==t?"on":"")+'">'+x[1]+'</a>'}).join("")+'</div>';
 
@@ -1419,6 +1647,24 @@ function prof(t){
 
   if(t=="wallet"){
    $("pc").innerHTML='<div class="pc">'+
+    /* БЛОК ПОПОЛНЕНИЯ С КАРТОЙ VISA / MASTERCARD И CRYPTOBOT */
+    '<div class="box"><div class="box-head"><h3>Пополнение баланса</h3><span class="st-pill ok">Мгновенно · 0%</span></div>'+
+    '<p style="color:var(--mt);margin-top:0;font-size:13.5px">Пополняй счёт любой украинской картой <b>Visa / Mastercard (Монобанк, Приват24, ПУМБ)</b> или через <b>@CryptoBot</b>.'+(d.depB?'<br><b style="color:var(--ok)">Активен промо-бонус +'+d.depB+'% к сумме пополнения!</b>':'')+'</p>'+
+    '<label style="margin-top:0">1. Выбери способ пополнения</label>'+
+    '<div class="two" style="margin-bottom:12px">'+
+     '<div class="m-card dm-card '+(S.dMethod!="Crypto"?"on":"")+'" data-dm="Visa" onclick="setDepMethod(\'Visa\')"><div class="m-ico">'+ICO_CARD+'</div><b>Карта Украины</b><span>Visa / Mastercard (UAH)</span></div>'+
+     '<div class="m-card dm-card '+(S.dMethod=="Crypto"?"on":"")+'" data-dm="Crypto" onclick="setDepMethod(\'Crypto\')"><div class="m-ico">'+ICO_TG+'</div><b>CryptoBot</b><span>USDT / Telegram</span></div>'+
+    '</div>'+
+    '<label>2. Сумма пополнения в USD (минимум $2)</label>'+
+    '<input id="da" type="number" min="2" step="1" value="5" oninput="hint(this,\'dh\')">'+
+    '<div class="amt-chips"><button type="button" class="amt-chip" onclick="setDepAmt(2)">$2</button><button type="button" class="amt-chip" onclick="setDepAmt(5)">$5</button><button type="button" class="amt-chip" onclick="setDepAmt(10)">$10</button><button type="button" class="amt-chip" onclick="setDepAmt(25)">$25</button><button type="button" class="amt-chip" onclick="setDepAmt(50)">$50</button><button type="button" class="amt-chip" onclick="setDepAmt(100)">$100</button></div>'+
+    '<div class="hint" id="dh" style="color:var(--ac2);font-weight:700;margin-top:6px">Сумма в валюте: $5.00 (≈ '+Math.round(5*(R.UAH||41.5))+' ₴)</div>'+
+    '<div class="err" id="de"></div>'+
+    '<button class="btn bl" id="dep-go-btn" style="padding:13px;margin-top:6px" onclick="dep()">Перейти к оплате картой Visa / MC</button>'+
+    '<div id="dres"></div>'+
+    '</div>'+
+
+    /* БЛОК ВЫВОДА СРЕДСТВ */
     '<div class="box"><div class="box-head"><h3>Вывод средств</h3><span class="st-pill ok">Комиссия 0%</span></div>'+
     '<div style="background:var(--p2);border:1px solid var(--ln);border-radius:13px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between"><div><span style="font-size:12px;color:var(--mt)">Доступно к выводу</span><div class="big" style="font-size:28px;color:var(--ok)">'+mo(d.bal)+'</div></div><div style="text-align:right"><span style="font-size:12px;color:var(--mt)">В долларах USD</span><b style="display:block;font-size:16px">$'+(d.bal/100).toFixed(2)+'</b></div></div>'+
     (S.cfg.reqDep!==false?'<div class="note" style="margin:0 0 12px">Для вывода средств (включая бонусные) на аккаунте должно быть хотя бы одно пополнение баланса.</div>':'')+
@@ -1437,19 +1683,9 @@ function prof(t){
     '<div id="wcw" '+(d.tfa?"":"hidden")+'><label>Код двухэтапной защиты (2FA)</label><input id="wc" inputmode="numeric" maxlength="6" placeholder="6 цифр из приложения"></div>'+
     '<div class="err" id="we"></div>'+
     '<button class="btn bl" style="padding:12px;margin-top:4px" onclick="wd()">Создать заявку на выплату</button></div>'+
-
-    '<div class="box"><div class="box-head"><h3>Пополнение баланса</h3><span class="st-pill warn">Авто-зачисление</span></div>'+
-    '<p style="color:var(--mt);margin-top:0;font-size:13.5px">Пополнение работает через официальный <b>@CryptoBot</b> в Telegram (USDT). Сразу после оплаты счёта деньги автоматически начисляются на твой баланс и открывают доступ к выводу средств и покупке скинов/VIP.'+(d.depB?'<br><b style="color:var(--ok)">Активен промо-бонус +'+d.depB+'% к сумме пополнения!</b>':'')+'</p>'+
-    '<label>Сумма пополнения в USD (минимум $5)</label>'+
-    '<input id="da" type="number" min="5" step="1" value="5" oninput="hint(this,\'dh\')">'+
-    '<div class="amt-chips"><button type="button" class="amt-chip" onclick="setDepAmt(5)">$5</button><button type="button" class="amt-chip" onclick="setDepAmt(10)">$10</button><button type="button" class="amt-chip" onclick="setDepAmt(25)">$25</button><button type="button" class="amt-chip" onclick="setDepAmt(50)">$50</button><button type="button" class="amt-chip" onclick="setDepAmt(100)">$100</button></div>'+
-    '<div class="hint" id="dh" style="color:var(--ac2);font-weight:700;margin-top:6px">≈ '+fm(5)+'</div>'+
-    '<div class="err" id="de"></div>'+
-    '<button class="btn bl" style="padding:12px;margin-top:6px" onclick="dep()">Перейти к оплате в CryptoBot</button>'+
-    '<div id="dres"></div>'+
-    '<div class="note" style="margin-top:16px">Нужно пополнить с украинской карты (Моно / Приват) или купить VIP напрямую? Напиши нашему менеджеру в Telegram: <a class="lk" href="https://t.me/cs2_pay" target="_blank"><b>@cs2_pay</b></a></div>'+
-    '</div></div>';
+    '</div>';
    setWdMethod(S.wMethod||"Карта");
+   setDepMethod(S.dMethod||"Visa");
   }
   else if(t=="history"){
    var L=buildHistoryList(d);
@@ -1529,7 +1765,7 @@ function buildHistoryList(d){
   var st=opMap[o.status]||{tx:o.status,cl:"pend"};
   var isWd=o.type=="wd"||o.type=="vip";
   var title=o.type=="wd"?("Вывод средств · "+esc(o.method)):(o.method?esc(o.method):"Пополнение баланса");
-  var ico=o.method=="Карта"?ICO_CARD:o.method=="Crypto-бот"?ICO_TG:o.method=="TRC20"?ICO_USDT:(isWd?ICO_CARD:ICO_USDT);
+  var ico=o.method=="Карта"||String(o.method).includes("Visa")?ICO_CARD:o.method=="Crypto-бот"?ICO_TG:o.method=="TRC20"?ICO_USDT:(isWd?ICO_CARD:ICO_USDT);
   var msgHtml=o.msg?'<div class="adm-msg"><b>Сообщение от администратора:</b>'+esc(o.msg)+'</div>':"";
   return{
    t:o.t,
@@ -1542,12 +1778,11 @@ function buildHistoryList(d){
 
 function ok(m){sOk();toast(m);me()}function er(id,e){if($(id))$(id).textContent=e.message;sErr()}
 function wd(){api("/api/withdraw",{amount:$("wa").value,method:S.wMethod||"Карта",details:$("wd").value,code:$("wc")&&$("wc").value}).then(function(){ok("Заявка на выплату успешно создана")}).catch(function(e){er("we",e)})}
-function dep(){api("/api/deposit",{amount:$("da").value}).then(function(d){$("dres").innerHTML='<div class="receipt" style="margin-top:12px;border-color:#22c55e55"><div class="rc-row"><span>Счёт в CryptoBot:</span><b style="color:var(--tx)">#'+d.id+' (активен 1 час)</b></div><a class="btn bl" style="margin-top:6px" href="'+esc(d.url)+'" target="_blank" rel="noopener">Оплатить в Telegram (@CryptoBot)</a></div>';sOk();toast("Счёт на оплату создан");me()}).catch(function(e){er("de",e)})}
 function stl(){api("/api/settings",{tl:$("stl").value.trim()}).then(function(){ok("Трейд-ссылка сохранена")}).catch(function(e){er("tle",e)})}
 function chp(){api("/api/password",{old:$("po").value,new:$("pn").value}).then(function(){ok("Пароль изменён")}).catch(function(e){er("pe",e)})}
 function f2s(){api("/api/2fa/setup",{}).then(function(d){$("fa").innerHTML='<div class="note">1. В приложении выбери «Ввести ключ вручную» и введи:</div><div class="mono">'+esc(d.secret)+'</div><div class="note">2. Введи 6-значный код из приложения:</div><input id="fc2" inputmode="numeric" maxlength="6"><div class="err" id="fe"></div><button class="btn" style="margin-top:8px" onclick="f2(1)">Подтвердить и включить</button>'}).catch(function(e){toast(e.message,1)})}
 function f2(on){api(on?"/api/2fa/enable":"/api/2fa/disable",{code:$(on?"fc2":"dc").value,password:$("dp")&&$("dp").value}).then(function(){ok(on?"2FA включена":"2FA отключена")}).catch(function(e){er("fe",e)})}
-function out(){api("/api/logout",{}).then(function(){S.me=null;lastChatLen=0;$("lg").textContent="Войти";$("balc").hidden=true;location.hash="#/";sTap()})}
+function out(){api("/api/logout",{}).then(function(){S.me=null;lastChatLen=0;$("lg").textContent="Войти";$("balw").hidden=true;location.hash="#/";sTap()})}
 
 /* ОКНО ПОКУПКИ СКИНА */
 function buyOpen(id){
@@ -1877,7 +2112,6 @@ $("favb").onclick=function(){S.favOn=S.favOn?0:1;this.classList.toggle("on",!!S.
 function confetti(){if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;var c=document.createElement("canvas");c.style.cssText="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:99";c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);var x=c.getContext("2d"),cl=["#f2a93b","#7db4e6","#3ccf7a","#e8ebf0","#ff6b6b"],P=[];for(var i=0;i<120;i++)P.push({x:innerWidth/2,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*13-3,r:Math.random()*5+3,c:cl[i%5],a:Math.random()*6});var f=0;(function t(){x.clearRect(0,0,c.width,c.height);P.forEach(function(p){p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.a+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r,-p.r/2,p.r*2,p.r);x.restore()});if(++f<110)requestAnimationFrame(t);else c.remove()})()}
 document.addEventListener("keydown",function(e){if(e.key=="/"&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();location.hash="#/market";setTimeout(function(){$("q").focus()},60)}});
 cartUp();me();route();calcUp();renderBonuses();renderVipTab();
-/* Быстрый опрос каждые 4 секунды для мгновенного получения ответов оператора в чат */
 setInterval(function(){if(S.me)api("/api/me").then(function(d){if(d.name){bc(d.bal);checkAdminNotes(d);syncChat(d);S.me.bal=d.bal;$("balc").textContent=mo(d.bal)}}).catch(function(){})},4000);
 function home(){api("/api/market?page=1").then(function(d){$("all").textContent=d.all.toLocaleString("ru");$("showc").innerHTML=d.items.slice(0,4).map(card).join("")}).catch(function(){});api("/api/recent").then(function(d){if(!d.n)return;$("paid").textContent="Выплачено: "+fm(d.paid);$("payl").innerHTML=d.items.map(function(i){return'<div class="pi"><img src="'+esc(i.img)+'" alt=""><span>'+esc(i.n)+'</span><b>+'+fm(i.p)+'</b></div>'}).join("");$("pay").hidden=false}).catch(function(){})}home();
 function banner(c){
