@@ -614,7 +614,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
  <section id="v-profile" hidden style="padding:14px 0 50px"><div id="pt"></div><div id="pc"></div></section>
 </main>
 
-<!-- ПЛАВАЮЩИЙ ЧАТ УМНОЙ ИИ-ТЕХПОДДЕРЖКИ -->
+<!-- ПЛАВАЮЩИЙ ЧАТ ТЕХПОДДЕРЖКИ (ИИ + ЖИВОЙ ОПЕРАТОР) -->
 <button class="ai-fab" id="ai-btn" onclick="toggleAi()">
  <span class="ai-fab-ico">AI</span>
  <span>Поддержка 24/7</span>
@@ -623,12 +623,12 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
  <div class="ai-top">
   <div class="ai-top-l">
    <div class="ai-bot-av">AI</div>
-   <div><b style="display:block;font-size:13.5px">cs2pay AI-Ассистент</b><span style="font-size:11px;color:var(--ok)">Онлайн · Диагностика аккаунта</span></div>
+   <div><b style="display:block;font-size:13.5px">cs2pay Поддержка</b><span style="font-size:11px;color:var(--ok)">Онлайн · ИИ и Живой оператор</span></div>
   </div>
   <button class="x" onclick="toggleAi()">×</button>
  </div>
  <div class="ai-log" id="ai-log">
-  <div class="ai-m b">Привет! Я умный ИИ-помощник <b>cs2pay</b>. Я вижу статус твоих сделок и могу:<br>• Проверить заявку на продажу или вывод<br>• Помочь с VIP-статусом, трейд-ссылкой и 2FA<br>• Начислить стартовый бонус новичку</div>
+  <div class="ai-m b">Привет! Я умный помощник <b>cs2pay</b>. Я вижу статус твоих сделок и могу:<br>• Проверить заявку на продажу или вывод<br>• Помочь с VIP-статусом, трейд-ссылкой и 2FA<br>• Соединить с живым оператором прямо в этом чате</div>
  </div>
  <div class="ai-quick">
   <button class="ai-q" onclick="askAi('Проверь мои заявки и баланс')">Проверить мои заявки</button>
@@ -637,7 +637,7 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
   <button class="ai-q" onclick="askAi('Позови живого оператора')">Живой оператор</button>
  </div>
  <div class="ai-inp">
-  <input id="ai-in" placeholder="Напиши вопрос или номер заявки…" onkeydown="if(event.key==='Enter')sendAi()">
+  <input id="ai-in" placeholder="Напиши сообщение в поддержку…" onkeydown="if(event.key==='Enter')sendAi()">
   <button class="btn sm" onclick="sendAi()">→</button>
  </div>
 </div>
@@ -845,7 +845,7 @@ var DOCS={
   b:'<h4>1. Общие положения</h4><p>Настоящее Пользовательское соглашение регулирует отношения между платформой <b>cs2pay.fun</b> (далее — «Сервис») и пользователем сети Интернет (далее — «Клиент») по вопросам купли-продажи цифровых внутриигровых предметов Counter-Strike 2.</p>'+
     '<h4>2. Порядок проведения сделок</h4><p>2.1. Клиент самостоятельно выбирает предметы в каталоге и указывает корректную трейд-ссылку Steam.<br>2.2. Расчёт стоимости предметов производится автоматически с учётом рыночных котировок, активных промокодов и VIP-статуса аккаунта.<br>2.3. Согласно правилам безопасности Steam (Trade Protection), зачисление средств по сделкам продажи может проходить через стандартный период удержания (Hold) либо зачисляться мгновенно после подтверждения обмена администратором.</p>'+
     '<h4>3. Права и обязанности сторон</h4><p>3.1. Клиент гарантирует, что передаваемые скины получены законным путём и не имеют ограничений на обмен.<br>3.2. Запрещено использование мультиаккаунтов для злоупотребления бонусной системой, Колесом Фортуны или реферальной программой. В случае выявления нарушений Сервис вправе приостановить действие бонусного баланса.</p>'+
-    '<h4>4. Выплаты и баланс</h4><p>4.1. Вывод средств осуществляется на банковские карты (Visa/Mastercard), Telegram CryptoBot и кошельки USDT TRC-20.<br>4.2. Для защиты от автоматического фрода вывод средств (включая бонусные начисления) открывается после верификации платёжного метода минимальным депозитом либо успешной сделкой.</p>'
+    '<h4>4. Выплаты и баланс</h4><p>4.1. Вывод средств осуществляется на банковские карты (Visa/Mastercard), Telegram CryptoBot и кошельки USDT TRC-20.<br>4.2. Для защиты от автоматического фрода вывод средств и покупка предметов за бонусные начисления открываются после верификации платёжного метода минимальным депозитом либо успешной сделкой.</p>'
  },
  privacy:{
   t:"Политика конфиденциальности (Privacy Policy)",
@@ -857,7 +857,7 @@ var DOCS={
   t:"Правила выплат и политика AML / Anti-Fraud",
   b:'<h4>1. Сроки обработки выплат</h4><p>Заявки на вывод средств обрабатываются в порядке очереди от 1 до 15 минут. Для владельцев статусов <b>GOLD</b>, <b>FACEIT 10</b> и <b>ELITE VIP</b> действует приоритетный порядок выплат без очереди.</p>'+
     '<h4>2. Приобретение цифровых привилегий (VIP-Клуб)</h4><p>Услуги повышения статуса аккаунта (SILVER, GOLD, FACEIT 10, ELITE VIP) активируются мгновенно и действуют бессрочно для выбранного ID аккаунта.</p>'+
-    '<h4>3. Противодействие мошенничеству (Anti-Fraud)</h4><p>Все транзакции проходят автоматическую проверку безопасности. При возникновении вопросов Клиент может круглосуточно обратиться в встроенный ИИ-чат поддержки или к верифицированному оператору в Telegram: <b>@cs2_pay</b>.</p>'
+    '<h4>3. Противодействие мошенничеству (Anti-Fraud)</h4><p>Все транзакции проходят автоматическую проверку безопасности. При возникновении вопросов Клиент может круглосуточно обратиться в встроенный чат поддержки или к верифицированному оператору в Telegram: <b>@cs2_pay</b>.</p>'
  }
 };
 function openDoc(k){
@@ -1142,7 +1142,31 @@ function doTask(id){
  }).catch(function(e){toast(e.message,1);sErr()});
 }
 
-/* ЧАТ ИИ-ТЕХПОДДЕРЖКИ */
+/* =========================================================================
+   ДВУСТОРОННИЙ ЧАТ ТЕХПОДДЕРЖКИ (СИНХРОНИЗАЦИЯ С ТЕЛЕГРАМ-БОТОМ)
+   ========================================================================= */
+var lastChatLen=0;
+
+function syncChat(d){
+ if(!d||!d.chat)return;
+ var log=$("ai-log");if(!log)return;
+ if(d.chat.length===lastChatLen)return;
+ var lastMsg=d.chat[d.chat.length-1];
+ if(lastChatLen>0&&lastMsg&&lastMsg.from==="adm"){
+  $("ai-win").classList.add("s");
+  sOk();
+  toast("Новое сообщение от оператора поддержки");
+ }
+ lastChatLen=d.chat.length;
+ var baseGreet='<div class="ai-m b">Привет! Я умный помощник <b>cs2pay</b>. Я вижу статус твоих сделок и могу:<br>• Проверить заявку на продажу или вывод<br>• Помочь с VIP-статусом, трейд-ссылкой и 2FA<br>• Соединить с живым оператором прямо в этом чате</div>';
+ log.innerHTML=baseGreet+d.chat.map(function(m){
+  if(m.from==="u")return'<div class="ai-m u">'+esc(m.text)+'</div>';
+  if(m.from==="adm")return'<div class="ai-m b" style="border-color:var(--ac);background:#f5a62318"><b style="color:var(--ac);display:block;font-size:11px;margin-bottom:2px">Оператор поддержки:</b>'+esc(m.text)+'</div>';
+  return'<div class="ai-m b">'+m.text+'</div>';
+ }).join("");
+ log.scrollTop=log.scrollHeight;
+}
+
 function toggleAi(){
  var w=$("ai-win");
  w.classList.toggle("s");
@@ -1166,7 +1190,12 @@ function sendAi(){
  inp.value="";
  addAiMsg(q,true);
  api("/api/ai",{q:q}).then(function(d){
-  addAiMsg(d.reply,false);
+  if(d.chat){
+   lastChatLen=d.chat.length;
+   syncChat({chat:d.chat});
+  }else{
+   addAiMsg(d.reply,false);
+  }
   sPop();
   if(d.refresh)me();
  }).catch(function(e){
@@ -1269,6 +1298,7 @@ function me(){
   if(S.me){
    bc(S.me.bal);
    checkAdminNotes(S.me);
+   syncChat(S.me);
   }
   $("lg").innerHTML=S.me?((S.me.vip&&S.me.vip.lvl>1?SVG_CROWN+" ":"")+esc(S.me.nick||S.me.name)+" #"+S.me.uid):"Войти";
   $("balc").hidden=!S.me;
@@ -1368,7 +1398,7 @@ function prof(t){
   return;
  }
  api("/api/me").then(function(d){
-  S.me=d;bc(d.bal);checkAdminNotes(d);
+  S.me=d;bc(d.bal);checkAdminNotes(d);syncChat(d);
   var dispNick=d.nick||d.name.split("@")[0];
   var vip=d.vip||{lvl:1,name:"BRONZE",b:0,next:20,vol:0};
   $("balc").textContent=mo(d.bal);
@@ -1409,7 +1439,7 @@ function prof(t){
     '<button class="btn bl" style="padding:12px;margin-top:4px" onclick="wd()">Создать заявку на выплату</button></div>'+
 
     '<div class="box"><div class="box-head"><h3>Пополнение баланса</h3><span class="st-pill warn">Авто-зачисление</span></div>'+
-    '<p style="color:var(--mt);margin-top:0;font-size:13.5px">Пополнение работает через официальный <b>@CryptoBot</b> в Telegram (USDT). Сразу после оплаты счёта деньги автоматически начисляются на твой баланс и открывают доступ к выводу средств и покупке VIP.'+(d.depB?'<br><b style="color:var(--ok)">Активен промо-бонус +'+d.depB+'% к сумме пополнения!</b>':'')+'</p>'+
+    '<p style="color:var(--mt);margin-top:0;font-size:13.5px">Пополнение работает через официальный <b>@CryptoBot</b> в Telegram (USDT). Сразу после оплаты счёта деньги автоматически начисляются на твой баланс и открывают доступ к выводу средств и покупке скинов/VIP.'+(d.depB?'<br><b style="color:var(--ok)">Активен промо-бонус +'+d.depB+'% к сумме пополнения!</b>':'')+'</p>'+
     '<label>Сумма пополнения в USD (минимум $5)</label>'+
     '<input id="da" type="number" min="5" step="1" value="5" oninput="hint(this,\'dh\')">'+
     '<div class="amt-chips"><button type="button" class="amt-chip" onclick="setDepAmt(5)">$5</button><button type="button" class="amt-chip" onclick="setDepAmt(10)">$10</button><button type="button" class="amt-chip" onclick="setDepAmt(25)">$25</button><button type="button" class="amt-chip" onclick="setDepAmt(50)">$50</button><button type="button" class="amt-chip" onclick="setDepAmt(100)">$100</button></div>'+
@@ -1517,7 +1547,7 @@ function stl(){api("/api/settings",{tl:$("stl").value.trim()}).then(function(){o
 function chp(){api("/api/password",{old:$("po").value,new:$("pn").value}).then(function(){ok("Пароль изменён")}).catch(function(e){er("pe",e)})}
 function f2s(){api("/api/2fa/setup",{}).then(function(d){$("fa").innerHTML='<div class="note">1. В приложении выбери «Ввести ключ вручную» и введи:</div><div class="mono">'+esc(d.secret)+'</div><div class="note">2. Введи 6-значный код из приложения:</div><input id="fc2" inputmode="numeric" maxlength="6"><div class="err" id="fe"></div><button class="btn" style="margin-top:8px" onclick="f2(1)">Подтвердить и включить</button>'}).catch(function(e){toast(e.message,1)})}
 function f2(on){api(on?"/api/2fa/enable":"/api/2fa/disable",{code:$(on?"fc2":"dc").value,password:$("dp")&&$("dp").value}).then(function(){ok(on?"2FA включена":"2FA отключена")}).catch(function(e){er("fe",e)})}
-function out(){api("/api/logout",{}).then(function(){S.me=null;$("lg").textContent="Войти";$("balc").hidden=true;location.hash="#/";sTap()})}
+function out(){api("/api/logout",{}).then(function(){S.me=null;lastChatLen=0;$("lg").textContent="Войти";$("balc").hidden=true;location.hash="#/";sTap()})}
 
 /* ОКНО ПОКУПКИ СКИНА */
 function buyOpen(id){
@@ -1847,7 +1877,8 @@ $("favb").onclick=function(){S.favOn=S.favOn?0:1;this.classList.toggle("on",!!S.
 function confetti(){if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;var c=document.createElement("canvas");c.style.cssText="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:99";c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);var x=c.getContext("2d"),cl=["#f2a93b","#7db4e6","#3ccf7a","#e8ebf0","#ff6b6b"],P=[];for(var i=0;i<120;i++)P.push({x:innerWidth/2,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*13-3,r:Math.random()*5+3,c:cl[i%5],a:Math.random()*6});var f=0;(function t(){x.clearRect(0,0,c.width,c.height);P.forEach(function(p){p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.a+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r,-p.r/2,p.r*2,p.r);x.restore()});if(++f<110)requestAnimationFrame(t);else c.remove()})()}
 document.addEventListener("keydown",function(e){if(e.key=="/"&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();location.hash="#/market";setTimeout(function(){$("q").focus()},60)}});
 cartUp();me();route();calcUp();renderBonuses();renderVipTab();
-setInterval(function(){if(S.me)api("/api/me").then(function(d){if(d.name){bc(d.bal);checkAdminNotes(d);S.me.bal=d.bal;$("balc").textContent=mo(d.bal)}}).catch(function(){})},12000);
+/* Быстрый опрос каждые 4 секунды для мгновенного получения ответов оператора в чат */
+setInterval(function(){if(S.me)api("/api/me").then(function(d){if(d.name){bc(d.bal);checkAdminNotes(d);syncChat(d);S.me.bal=d.bal;$("balc").textContent=mo(d.bal)}}).catch(function(){})},4000);
 function home(){api("/api/market?page=1").then(function(d){$("all").textContent=d.all.toLocaleString("ru");$("showc").innerHTML=d.items.slice(0,4).map(card).join("")}).catch(function(){});api("/api/recent").then(function(d){if(!d.n)return;$("paid").textContent="Выплачено: "+fm(d.paid);$("payl").innerHTML=d.items.map(function(i){return'<div class="pi"><img src="'+esc(i.img)+'" alt=""><span>'+esc(i.n)+'</span><b>+'+fm(i.p)+'</b></div>'}).join("");$("pay").hidden=false}).catch(function(){})}home();
 function banner(c){
  var b=$("bn"),t=[];
