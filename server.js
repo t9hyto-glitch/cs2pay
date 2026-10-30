@@ -106,7 +106,7 @@ const cnt=(k)=>db.orders.filter(o=>o.status==k).length,pendP=()=>db.ops.filter(o
 function mainScr(){
  const n=cnt('new')+cnt('buy'),w=pendP().length,pCnt=Object.keys(db.promos||{}).length;
  return{
-  t:`<b>CS2PAY · ГЛАВНЫЙ ПУЛЬТ УПРАВЛЕНИЯ V3</b>\n\nЗаявок ждёт: <b>${n}</b> · Выводов ждёт: <b>${w}</b>\nЦены выкупа: <b>${adjTxt()}</b> · Продажи: <b>${buyTxt()}</b>\nОнлайн: <b>${db.cfg.minOn}–${db.cfg.maxOn}</b> (${db.cfg.hideOn?'скрыт':'виден'})\nБоты-отзывы: <b>${db.cfg.botsOn?'ВКЛ':'ВЫКЛ'}</b> · Колесо: <b>${db.cfg.wheelOn!==false?'ВКЛ':'ВЫКЛ'}</b>\nВывод без депа: <b>${db.cfg.reqDep?'ЗАПРЕЩЁН':'РАЗРЕШЁН'}</b>\nМин. вывод: <b>$${db.cfg.minWd}</b> · Ежедневка: <b>${usd(db.cfg.dailyCents)}</b>`,
+  t:`<b>CS2PAY · ГЛАВНЫЙ ПУЛЬТ УПРАВЛЕНИЯ V3</b>\n\nЗаявок ждёт: <b>${n}</b> · Выводов ждёт: <b>${w}</b>\nЦены выкупа: <b>${adjTxt()}</b> · Продажи: <b>${buyTxt()}</b>\nОнлайн: <b>${db.cfg.minOn}–${db.cfg.maxOn}</b> (${db.cfg.hideOn?'скрыт':'виден'})\nБоты-отзывы: <b>${db.cfg.botsOn?'ВКЛ':'ВЫКЛ'}</b> · Колесо: <b>${db.cfg.wheelOn!==false?'ВКЛ':'ВЫКЛ'}</b>\nВывод/покупки без депа: <b>${db.cfg.reqDep?'ЗАПРЕЩЕНЫ':'РАЗРЕШЕНЫ'}</b>\nМин. вывод: <b>$${db.cfg.minWd}</b> · Ежедневка: <b>${usd(db.cfg.dailyCents)}</b>`,
   k:kb([
    [{text:'Заявки и выводы'+(n+w?` (${n+w})`:''),callback_data:'m:pend'},{text:'Полная статистика',callback_data:'m:stats'}],
    [{text:'Пользователи ('+Object.keys(db.users).length+')',callback_data:'m:users:0'},{text:'Поиск по ID / нику',callback_data:'m:find'}],
@@ -132,9 +132,9 @@ function botsScr(m){
 
 function wcfgScr(m){
  return{
-  t:`<b>Настройки вывода и бонусов</b>${m?'\n\n'+m:''}\n\nТребовать депозит для вывода: <b>${db.cfg.reqDep?'ДА (защита от абуза бонусов)':'НЕТ (вывод открыт всем)'}</b>\nМинимальная сумма вывода: <b>$${db.cfg.minWd}</b>\nЕжедневный бонус: <b>${usd(db.cfg.dailyCents)}</b>`,
+  t:`<b>Настройки вывода и бонусов</b>${m?'\n\n'+m:''}\n\nТребовать депозит для вывода и покупок: <b>${db.cfg.reqDep?'ДА (защита от абуза бонусов)':'НЕТ (открыто всем)'}</b>\nМинимальная сумма вывода: <b>$${db.cfg.minWd}</b>\nЕжедневный бонус: <b>${usd(db.cfg.dailyCents)}</b>`,
   k:kb([
-   [{text:db.cfg.reqDep?'Разрешить вывод без депозита':'Включить защиту (вывод только с депом)',callback_data:'w:req'}],
+   [{text:db.cfg.reqDep?'Разрешить вывод/покупки без депозита':'Включить защиту (только с депом)',callback_data:'w:req'}],
    [{text:'Мин. вывод $1',callback_data:'w:min:1'},{text:'$3',callback_data:'w:min:3'},{text:'$5',callback_data:'w:min:5'},{text:'$10',callback_data:'w:min:10'},{text:'Свой $',callback_data:'w:minc'}],
    [{text:'Ежедневка $0.05',callback_data:'w:dl:5'},{text:'$0.10',callback_data:'w:dl:10'},{text:'$0.25',callback_data:'w:dl:25'},{text:'$1.00',callback_data:'w:dl:100'},{text:'Своя',callback_data:'w:dlc'}],
    BACK
@@ -177,12 +177,12 @@ function usersScr(pg){const L=Object.entries(db.users).sort((a,b)=>(b[1].created
 
 function userScr(l,m){const x=db.users[l];if(!x)return{t:'Пользователь не найден',k:kb([BACK])};
  x.name=l;const vip=getVip(x);
- const hasDep=db.ops.some(o=>o.user==l&&o.type=='dep'&&o.status=='done');
- return{t:`<b>Профиль: ${esc(x.nick||l)}</b> (${esc(l)}) · ID: <code>#${x.uid||0}</code>${x.ban?' · <b>ЗАБЛОКИРОВАН</b>':''}${m?'\n\n'+m:''}\n\nБаланс: <b>${usd(x.bal||0)}</b>\nVIP-ранг: <b>${vip.name} (+${vip.b}%)</b> · Оборот: <b>$${vip.vol}</b>\nПромо-бонус к продаже: <b>+${x.sellB||0}%</b> · к депу: <b>+${x.depB||0}%</b>\nРеальный депозит: <b>${hasDep?'Был (вывод открыт)':'Не было'}</b>\n2FA: <b>${x.totp?'Включена':'Нет'}</b>\nТрейд-ссылка: ${x.tl?'<code>'+esc(x.tl)+'</code>':'не указана'}\nЗаявок: ${db.orders.filter(o=>o.user==l).length} · Операций: ${db.ops.filter(o=>o.user==l).length}`,
+ const hasDep=db.ops.some(o=>o.user==l&&o.type=='dep'&&o.status=='done'&&o.inv);
+ return{t:`<b>Профиль: ${esc(x.nick||l)}</b> (${esc(l)}) · ID: <code>#${x.uid||0}</code>${x.ban?' · <b>ЗАБЛОКИРОВАН</b>':''}${m?'\n\n'+m:''}\n\nБаланс: <b>${usd(x.bal||0)}</b>\nVIP-ранг: <b>${vip.name} (+${vip.b}%)</b> · Оборот: <b>$${vip.vol}</b>\nПромо-бонус к продаже: <b>+${x.sellB||0}%</b> · к депу: <b>+${x.depB||0}%</b>\nРеальный депозит: <b>${hasDep?'Был (вывод и покупки открыты)':'Не было'}</b>\n2FA: <b>${x.totp?'Включена':'Нет'}</b>\nТрейд-ссылка: ${x.tl?'<code>'+esc(x.tl)+'</code>':'не указана'}\nЗаявок: ${db.orders.filter(o=>o.user==l).length} · Операций: ${db.ops.filter(o=>o.user==l).length}`,
  k:kb([
-  [{text:'Изменить баланс ($)',callback_data:'ab:'+l},{text:'Написать сообщение юзеру',callback_data:'umsg:'+l}],
+  [{text:'Изменить баланс ($)',callback_data:'ab:'+l},{text:'Написать в чат поддержки',callback_data:'umsg:'+l}],
   [{text:'Дать % бонус юзеру',callback_data:'ub:'+l},{text:'Выдать VIP-оборот ($)',callback_data:'uvip:'+l}],
-  [{text:'Разрешить вывод без депа',callback_data:'ufd:'+l},{text:'Сбросить таймер Колеса',callback_data:'uwhl:'+l}],
+  [{text:'Разрешить вывод/покупки без депа',callback_data:'ufd:'+l},{text:'Сбросить таймер Колеса',callback_data:'uwhl:'+l}],
   [{text:x.ban?'Разблокировать':'Заблокировать',callback_data:'ban:'+l},...(x.totp?[{text:'Сбросить 2FA',callback_data:'u2fa:'+l}]:[])],
   [{text:'← К списку пользователей',callback_data:'m:users:0'}],
   BACK
@@ -219,8 +219,8 @@ function applyOrderAction(o,st,msg){
  else if(prev=='new'&&st=='credited'&&u)u.bal=(u.bal||0)+Math.round(o.price*100);
  else if(prev=='buy'&&st=='refunded'&&u)u.bal=(u.bal||0)+Math.round(o.price*100);
  if(u&&msg){
-  u.notes=u.notes||[];
-  u.notes.push({id:Date.now(),text:`По заявке #${o.id} (${o.skin}): ${msg}`,t:Date.now()});
+  u.chat=u.chat||[];
+  u.chat.push({id:Date.now(),from:'adm',text:`По заявке #${o.id} (${o.skin}): ${msg}`,t:Date.now()});
  }
  save();
 }
@@ -235,8 +235,8 @@ function applyOpAction(q,st,msg){
   u.bal=(u.bal||0)+q.cents;
  }
  if(u&&msg){
-  u.notes=u.notes||[];
-  u.notes.push({id:Date.now(),text:`По выплате #${q.id}: ${msg}`,t:Date.now()});
+  u.chat=u.chat||[];
+  u.chat.push({id:Date.now(),from:'adm',text:`По выплате #${q.id}: ${msg}`,t:Date.now()});
  }
  save();
 }
@@ -262,18 +262,23 @@ async function onInput(chat,w,t){
   const o=db.orders.find(x=>x.id==w.id);
   if(!o)return show(chat,0,mainScr());
   applyOrderAction(o,w.st,t);
-  return screen(chat,0,`Статус заявки #${o.id} обновлён и сообщение отправлено клиенту:\n\n${fmtO(o)}`,kbO(o));
+  return screen(chat,0,`Статус заявки #${o.id} обновлён и сообщение отправлено в чат клиента:\n\n${fmtO(o)}`,kbO(o));
  }
  if(w.k=='op_msg'){
   const q=db.ops.find(x=>x.id==w.id);
   if(!q)return show(chat,0,mainScr());
   applyOpAction(q,w.st,t);
-  return screen(chat,0,`Статус операции #${q.id} обновлён и сообщение отправлено клиенту:\n\n${fmtP(q)}`,kbP(q));
+  return screen(chat,0,`Статус операции #${q.id} обновлён и сообщение отправлено в чат клиента:\n\n${fmtP(q)}`,kbP(q));
  }
  if(w.k=='umsg'){
   const u=db.users[w.l];
-  if(u){u.notes=u.notes||[];u.notes.push({id:Date.now(),text:t,t:Date.now()});save()}
-  return show(chat,0,userScr(w.l,'Сообщение отправлено пользователю на сайт'));
+  if(u){
+   u.chat=u.chat||[];
+   u.chat.push({id:Date.now(),from:'adm',text:t,t:Date.now()});
+   u.liveSupport=true;
+   save();
+  }
+  return show(chat,0,userScr(w.l,'Ответ отправлен клиенту прямо в чат техподдержки на сайте'));
  }
  if(w.k=='masspush'){
   let c=0;
@@ -384,12 +389,12 @@ async function onUpdate(u){const m=u.message,c=u.callback_query;
  }
  else if(k=='pd'){delete db.promos[p[1]];save();await show(chat,mid,promosScr('Удалён '+p[1]))}
  else if(k=='u')await show(chat,mid,userScr(p[1]));
- else if(k=='umsg'){wait[chat]={k:'umsg',l:p[1]};await screen(chat,mid,'Напиши сообщение для пользователя <b>'+esc(p[1])+'</b> (оно всплывёт у него на экране сайта):',CANCEL)}
+ else if(k=='umsg'){wait[chat]={k:'umsg',l:p[1]};await screen(chat,mid,'Напиши ответ для <b>'+esc(p[1])+'</b> (он прилетит ему прямо в окно чата техподдержки на сайте):',CANCEL)}
  else if(k=='uvip'){wait[chat]={k:'uvip',l:p[1]};await screen(chat,mid,'Отправь сумму оборота в $ для <b>'+esc(p[1])+'</b> (например: <code>500</code> для ELITE VIP +5%):',CANCEL)}
  else if(k=='uwhl'){const x=db.users[p[1]];if(x){x.wheelAt=0;save()}await show(chat,mid,userScr(p[1],'Таймер Колеса Фортуны сброшен'))}
  else if(k=='ban'){const x=db.users[p[1]];if(x){x.ban=!x.ban;save()}await show(chat,mid,userScr(p[1]))}
  else if(k=='u2fa'){const x=db.users[p[1]];if(x){delete x.totp;save()}await show(chat,mid,userScr(p[1],'2FA сброшена'))}
- else if(k=='ufd'){const l=p[1];db.ops.push({id:db.ops.length+1,user:l,type:'dep',cents:0,method:'Доступ к выводу (admin)',inv:'admin_unlock',status:'done',t:Date.now()});save();await show(chat,mid,userScr(l,'Вывод без депа открыт для этого юзера'))}
+ else if(k=='ufd'){const l=p[1];db.ops.push({id:db.ops.length+1,user:l,type:'dep',cents:0,method:'Доступ к выводу и покупкам (admin)',inv:'admin_unlock',status:'done',t:Date.now()});save();await show(chat,mid,userScr(l,'Вывод и покупка скинов без депа открыты для этого юзера'))}
  else if(k=='ub'){wait[chat]={k:'ub',l:p[1]};await screen(chat,mid,'Отправь процент бонуса для '+p[1]+' (например <code>15</code>):',CANCEL)}
  else if(k=='ab')await show(chat,mid,balScr(p[1]));
  else if(k=='az'){if(db.users[p[1]]){db.users[p[1]].bal=0;save()}await show(chat,mid,balScr(p[1]))}
@@ -442,33 +447,46 @@ let rates={USD:1,UAH:41.5,EUR:.86,PLN:3.65,GBP:.75,KZT:520,RUB:80},ratesAt=0;
 async function loadRates(){try{const j=await fetch('https://open.er-api.com/v6/latest/USD').then(r=>r.json());if(j.rates){for(const k in rates)if(j.rates[k]>0)rates[k]=j.rates[k];ratesAt=Date.now()}}catch(e){console.log('rates:',e.message)}}
 
 /* =========================================================================
-   БЕЗОПАСНОЕ ЯДРО ИИ-ТЕХПОДДЕРЖКИ (SANDBOXED AI SUPPORT ENGINE)
+   ДВУСТОРОННИЙ ЧАТ ТЕХПОДДЕРЖКИ (ИИ + ЖИВОЙ АДМИН В TELEGRAM)
    ========================================================================= */
 async function handleAiSupport(n,q){
  const txt=String(q||'').trim();
  const low=txt.toLowerCase();
  if(!n){
-  return{reply:'Чтобы я проверил твои сделки, баланс или начислил бонус, сначала <b>войди в аккаунт</b> (кнопка «Войти» в правом верхнем углу). После входа напиши мне снова!'};
+  return{reply:'Чтобы я проверил твои сделки, баланс или соединил с оператором, сначала <b>войди в аккаунт</b> (кнопка «Войти» в правом верхнем углу).'};
  }
  const u=db.users[n];u.name=n;
+ u.chat=u.chat||[];
+ u.chat.push({id:Date.now(),from:'u',text:txt,t:Date.now()});
+
+ const pushReply=(rep,extra={})=>{
+  u.chat.push({id:Date.now()+1,from:'b',text:rep,t:Date.now()});
+  if(u.chat.length>50)u.chat=u.chat.slice(-50);
+  save();
+  return{reply:rep,chat:u.chat,...extra};
+ };
+
  const vip=getVip(u);
  const myOrds=db.orders.filter(o=>o.user==n);
  const myOps=db.ops.filter(o=>o.user==n);
 
- /* 1. Вызов живого оператора -> мгновенный тикет админу в Telegram */
- if(/оператор|админ|человек|менеджер|помощь|позови|связь/.test(low)){
-  note(`<b>🤖 Запрос из ИИ-Чата поддержки</b>\nОт: <b>${esc(u.nick||n)}</b> (${esc(n)} · ID #${u.uid})\nБаланс: <b>${usd(u.bal||0)}</b>\nТекст: <i>${esc(txt)}</i>`,kb([[{text:'Ответить клиенту на сайт',callback_data:'umsg:'+n}],uBtn(n)]));
-  return{reply:`Я передал твой запрос живому администратору (твой ID <b>#${u.uid}</b>). Ответ всплывёт прямо у тебя на экране сайта! Также можешь написать напрямую в наш Telegram: <a class="lk" href="https://t.me/cs2_pay" target="_blank"><b>@cs2_pay</b></a>.`};
+ /* 1. Если юзер уже в режиме диалога с оператором или зовет оператора -> шлем тебе в ТГ */
+ if(u.liveSupport||/оператор|админ|человек|менеджер|помощь|позови|связь/.test(low)){
+  u.liveSupport=true;
+  note(`<b>Сообщение в техподдержку на сайте</b>\nОт: <b>${esc(u.nick||n)}</b> (${esc(n)} · ID #${u.uid})\nБаланс: <b>${usd(u.bal||0)}</b>\n\nТекст: <i>${esc(txt)}</i>`,kb([[{text:'Ответить в чат на сайте',callback_data:'umsg:'+n}],uBtn(n)]));
+  const msg=/оператор|админ|человек|менеджер|позови/.test(low)
+   ?`Оператор подключен к твоему диалогу (ID <b>#${u.uid}</b>). Опиши свой вопрос — ответ администратора придет прямо в это окно чата!`
+   :`Сообщение отправлено оператору. Ответ появится прямо здесь в чате.`;
+  return pushReply(msg);
  }
 
- /* 2. Отмена собственной новой (непринятой) заявки по просьбе юзера */
+ /* 2. Отмена собственной новой (непринятой) заявки */
  if(/отмен|удал/.test(low)){
   const newOrd=myOrds.find(o=>o.status=='new');
   if(newOrd){
    newOrd.status='rejected';
-   newOrd.msg='Отменено по запросу клиента в чате ИИ-поддержки';
-   save();
-   return{reply:`Готово! Я безопасно отменил твою заявку <b>#${newOrd.id}</b> (${esc(newOrd.skin)}).`,refresh:true};
+   newOrd.msg='Отменено по запросу клиента в чате поддержки';
+   return pushReply(`Готово! Я отменил твою заявку <b>#${newOrd.id}</b> (${esc(newOrd.skin)}).`,{refresh:true});
   }
  }
 
@@ -476,51 +494,52 @@ async function handleAiSupport(n,q){
  if(/заявк|ордер|вывод|выплат|где|статус|баланс|провер/.test(low)){
   const pendO=myOrds.filter(o=>o.status=='new'||o.status=='accepted'||o.status=='buy');
   const pendW=myOps.filter(o=>o.type=='wd'&&o.status=='pending');
-  let rep=`<b>Диагностика аккаунта #${u.uid} (${esc(u.nick||n)}):</b><br>• Баланс: <b>${usd(u.bal||0)}</b> (VIP: ${vip.name} +${vip.b}%)<br>• Трейд-ссылка: ${u.tl?'✅ Подключена':'❌ Не указана в настройках'}<br>`;
+  let rep=`<b>Диагностика аккаунта #${u.uid} (${esc(u.nick||n)}):</b><br>• Баланс: <b>${usd(u.bal||0)}</b> (VIP: ${vip.name} +${vip.b}%)<br>• Трейд-ссылка: ${u.tl?'Подключена':'Не указана в настройках'}<br>`;
   if(pendO.length){
    const last=pendO[pendO.length-1];
-   rep+=`• Активная сделка: <b>#${last.id} ${esc(last.skin)}</b> — статус: <b>${OS[last.status]||last.status}</b>${last.msg?' (Комментарий: '+esc(last.msg)+')':''}.<br>`;
+   rep+=`• Активная сделка: <b>#${last.id} ${esc(last.skin)}</b> — статус: <b>${OS[last.status]||last.status}</b>${last.msg?' ('+esc(last.msg)+')':''}.<br>`;
   }else{
    rep+=`• Активных заявок на скины сейчас нет.<br>`;
   }
   if(pendW.length){
    const lw=pendW[pendW.length-1];
-   rep+=`• Заявка на вывод <b>#${lw.id} (${usd(lw.cents)} на ${esc(lw.method)})</b> находится в обработке. Обычно выплаты приходят за 2–15 минут.`;
+   rep+=`• Заявка на вывод <b>#${lw.id} (${usd(lw.cents)} на ${esc(lw.method)})</b> в обработке (обычно 2–15 минут).`;
   }
-  return{reply:rep};
+  return pushReply(rep);
  }
 
- /* 4. Выдача приветственного ИИ-бонуса (строго 1 раз на аккаунт — защита от абуза) */
+ /* 4. Выдача приветственного ИИ-бонуса (% к продаже) */
  if(/бонус|промо|халяв|подарок|дай/.test(low)){
   u.tasks=u.tasks||{};
   if(!u.tasks.ai_gift){
    u.tasks.ai_gift=1;
    u.sellB=Math.max(u.sellB||0,5);
-   save();
-   return{reply:`Я активировал для твоего аккаунта персональный ИИ-бонус: <b>+5% к следующей продаже скинов</b>! А ещё ты можешь крутить бесплатное <b>Колесо Фортуны</b> и забирать ежедневку во вкладке «Бонусы и Колесо».`,refresh:true};
+   return pushReply(`Я активировал для твоего аккаунта персональный бонус: <b>+5% к следующей продаже скинов</b>! А ещё ты можешь крутить бесплатное <b>Колесо Фортуны</b> раз в сутки.`,{refresh:true});
   }
-  return{reply:`Персональный бонус от меня (+5% к продаже) ты уже получал! Загляни во вкладку <b>«Бонусы и Колесо»</b> — там доступно бесплатное Колесо Фортуны и свежие промокоды из нашего канала <a class="lk" href="https://t.me/SellSkin_cs2" target="_blank">@SellSkin_cs2</a>.`};
+  return pushReply(`Персональный бонус от меня (+5% к продаже) ты уже получал. Загляни во вкладку <b>«Колесо Фортуны»</b> и в наш канал <a class="lk" href="https://t.me/SellSkin_cs2" target="_blank">@SellSkin_cs2</a> за свежими промокодами!`);
  }
 
  /* 5. Сроки и условия вывода */
  if(/карт|моно|приват|крипт|usdt|срок|скольк|минимал/.test(low)){
-  return{reply:`Выплаты на <b>Карту (Моно / Приват / любой банк)</b>, <b>CryptoBot</b> и <b>USDT TRC-20</b> обрабатываются от 1 до 15 минут. Комиссия сайта — <b>0%</b>, минимальная сумма вывода — <b>$${db.cfg.minWd||5}</b>.`};
+  return pushReply(`Выплаты на <b>Карту (Моно / Приват / любой банк)</b>, <b>CryptoBot</b> и <b>USDT TRC-20</b> обрабатываются от 1 до 15 минут. Комиссия — <b>0%</b>, минимальная сумма вывода — <b>$${db.cfg.minWd||5}</b>.`);
  }
 
- /* 6. Если подключен внешний ключ GEMINI_API_KEY, отвечаем через LLM с безопасным системным промптом */
+ /* 6. Любое другое нестандартное сообщение тоже пересылаем админу в ТГ, чтобы ты ничего не пропустил */
+ note(`<b>Вопрос в чате на сайте</b>\nОт: <b>${esc(u.nick||n)}</b> (${esc(n)} · ID #${u.uid})\nТекст: <i>${esc(txt)}</i>`,kb([[{text:'Ответить в чат на сайте',callback_data:'umsg:'+n}],uBtn(n)]));
+
  if(AI_KEY&&AI_KEY.startsWith('AIza')){
   try{
-   const sys=`Ты — вежливый ИИ-саппорт сайта скупки скинов CS2 cs2pay.fun. Игрок: ${u.nick||n} (ID #${u.uid}), баланс $${((u.bal||0)/100).toFixed(2)}, VIP: ${vip.name}, ордеров: ${myOrds.length}. Отвечай кратко (2-3 предложения), по-русски. Ты не можешь начислять деньги просто так. Если проблема сложная — советуй нажать кнопку "Живой оператор" или написать в ТГ @cs2_pay.`;
+   const sys=`Ты — вежливый ИИ-саппорт сайта скупки скинов CS2 cs2pay.fun. Игрок: ${u.nick||n} (ID #${u.uid}), баланс $${((u.bal||0)/100).toFixed(2)}, VIP: ${vip.name}. Отвечай кратко (2-3 предложения), по-русски.`;
    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${AI_KEY}`,{
     method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({contents:[{parts:[{text:sys+"\nВопрос клиента: "+txt}]}]})
    }).then(x=>x.json());
    const ans=r?.candidates?.[0]?.content?.parts?.[0]?.text;
-   if(ans)return{reply:esc(ans)};
+   if(ans)return pushReply(esc(ans));
   }catch(e){}
  }
 
- return{reply:`Я проверил твой профиль <b>#${u.uid}</b> (баланс <b>${usd(u.bal||0)}</b>, активных заявок: <b>${myOrds.filter(o=>o.status=='new'||o.status=='accepted').length}</b>). Уточни, что именно подсказать? Можешь нажать кнопку <b>«Проверить мои заявки»</b> или <b>«Живой оператор»</b> ниже, и я сразу соединю тебя с администратором!`};
+ return pushReply(`Я проверил твой профиль <b>#${u.uid}</b> и передал вопрос оператору — администратор уже видит твоё сообщение и ответит прямо в этот чат!`);
 }
 
 /* http */
@@ -553,6 +572,7 @@ const pub=n=>{
   dailyAt:u.dailyAt||0,
   wheelAt:u.wheelAt||0,
   notes,
+  chat:(u.chat||[]).slice(-40),
   orders:db.orders.filter(o=>o.user==n).map(({id,skin,img,price,status,hold,t,kind,msg})=>({id,skin,img,price,status,hold,t,kind,msg:msg||''})),
   ops:db.ops.filter(o=>o.user==n)
  }
@@ -584,7 +604,7 @@ http.createServer(async(req,res)=>{try{
    const inviter=Object.values(db.users).find(u=>u.uid===refUid);
    if(inviter){inviter.refs=(inviter.refs||0)+1;inviter.refEarn=(inviter.refEarn||0)+10;inviter.bal=(inviter.bal||0)+10;startBal=10}
   }
-  db.users[l]={uid:db.nextUid,nick:l.split('@')[0],av:'',s,h:hash(pw,s),bal:startBal,created:Date.now(),tasks:{}};save();return start(req,res,l)}
+  db.users[l]={uid:db.nextUid,nick:l.split('@')[0],av:'',s,h:hash(pw,s),bal:startBal,created:Date.now(),tasks:{},chat:[]};save();return start(req,res,l)}
  if(p=='/api/login'){const b=await body(req),l=String(b.login||'').trim().toLowerCase(),x=db.users[l];
   if(lim(l))return bad(res,'Слишком много попыток, подожди 10 минут',429);
   if(!x||!x.h||x.h!==hash(String(b.password||''),x.s)){(fails[l]=fails[l]||[]).push(Date.now());return bad(res,'Неверный логин или пароль',401)}
@@ -593,7 +613,7 @@ http.createServer(async(req,res)=>{try{
   return start(req,res,l)}
  if(p=='/api/google'){const b=await body(req);const j=await fetch('https://oauth2.googleapis.com/tokeninfo?id_token='+encodeURIComponent(b.credential||'')).then(r=>r.json());
   if(!GID||j.aud!==GID||!j.email)return bad(res,'Google-вход не прошёл',401);const l=j.email.toLowerCase();
-  if(!db.users[l]){db.nextUid=(db.nextUid||10001)+1;db.users[l]={uid:db.nextUid,nick:j.given_name||l.split('@')[0],av:j.picture||'',google:true,bal:0,created:Date.now(),tasks:{}};save()}return start(req,res,l)}
+  if(!db.users[l]){db.nextUid=(db.nextUid||10001)+1;db.users[l]={uid:db.nextUid,nick:j.given_name||l.split('@')[0],av:j.picture||'',google:true,bal:0,created:Date.now(),tasks:{},chat:[]};save()}return start(req,res,l)}
  if(p=='/api/logout'){const sid=(/sid=(\w+)/.exec(req.headers.cookie||'')||[])[1];if(sid){delete db.sess[sid];save()}return send(res,200,{},{'Set-Cookie':'sid=; Max-Age=0; Path=/'})}
  const n=me(req);
  if(p=='/api/ai'){const b=await body(req);const out=await handleAiSupport(n,b.q);return send(res,200,out)}
@@ -616,6 +636,23 @@ http.createServer(async(req,res)=>{try{
    x.av=av;
   }
   save();return send(res,200,{ok:true,nick:x.nick,av:x.av})
+ }
+ /* ПОКУПКА VIP-ПРИВИЛЕГИИ (ТОЛЬКО С ДЕПОЗИТОМ ПРИ ВКЛЮЧЕННОЙ ЗАЩИТЕ) */
+ if(p=='/api/vip/buy'){
+  const prices={2:{c:199,v:20,n:'SILVER',b:1},3:{c:499,v:75,n:'GOLD',b:2},4:{c:999,v:200,n:'FACEIT 10',b:3.5},5:{c:1999,v:500,n:'ELITE VIP',b:5}};
+  const t=prices[+b.lvl];
+  if(!t)return bad(res,'Неверный уровень VIP');
+  if((x.bal||0)<t.c)return bad(res,'Недостаточно средств на балансе: нужно '+usd(t.c));
+  if(db.cfg.reqDep!==false){
+   const hasRealDep=db.ops.some(o=>o.user==n&&o.type=='dep'&&o.status=='done'&&o.inv);
+   if(!hasRealDep)return bad(res,'Покупка VIP за бонусные средства доступна только после пополнения баланса');
+  }
+  x.bal-=t.c;
+  x.vol=Math.max(x.vol||0,t.v);
+  db.ops.push({id:db.ops.length+1,user:n,type:'vip',cents:t.c,method:'Покупка '+t.n,status:'done',t:Date.now()});
+  save();
+  note(`<b>Куплен VIP-статус</b>\nСтатус: <b>${t.n} (+${t.b}%)</b>\nКлиент: ${esc(x.nick||n)} (#${x.uid||0})`);
+  return send(res,200,{ok:true,name:t.n,b:t.b})
  }
  if(p=='/api/wheel'){
   if(db.cfg.wheelOn===false)return bad(res,'Колесо Фортуны временно отключено');
@@ -672,7 +709,8 @@ http.createServer(async(req,res)=>{try{
   const tid=String(b.id||'');
   if(tid=='daily'){
    if(Date.now()-(x.dailyAt||0)<864e5)return bad(res,'Ежедневный бонус уже получен, приходи завтра');
-   const dc=db.cfg.dailyCents||5;
+   x.name=n;const vipM=getVip(x).lvl||1;
+   const dc=(db.cfg.dailyCents||5)*vipM;
    x.dailyAt=Date.now();x.bal=(x.bal||0)+dc;
    db.ops.push({id:db.ops.length+1,user:n,type:'bonus',cents:dc,method:'Ежедневный бонус',status:'done',t:Date.now()});
    save();return send(res,200,{ok:true,cents:dc})
@@ -709,9 +747,22 @@ http.createServer(async(req,res)=>{try{
   x.tl=b.tl;x.name=n;const vipB=getVip(x).b||0;const mult=1+((x.sellB||0)+vipB)/100;x.sellB=0;
   for(const s of ss){const finalP=+(pr(s)*mult).toFixed(2);const o={id:db.orders.length+1,user:n,skin:s.id,img:s.img,price:finalP,tl:b.tl,status:'new',t:Date.now()};db.orders.push(o);note(fmtO(o),kbO(o),o.img)}
   save();return send(res,200,{ok:true,n:ss.length})}
- if(p=='/api/buy'){const s=skins.find(k=>k.id==b.id);if(!s)return bad(res,'Скин не найден, обнови страницу');if(!TL.test(b.tl||''))return bad(res,'Укажи верную трейд-ссылку Steam');
-  const c=Math.round(bp(s)*100);if((x.bal||0)<c)return bad(res,'Не хватает баланса: нужно '+usd(c));
-  x.bal-=c;x.tl=b.tl;const o={id:db.orders.length+1,user:n,skin:s.id,img:s.img,price:c/100,tl:b.tl,status:'buy',kind:'buy',t:Date.now()};db.orders.push(o);save();note(fmtO(o),kbO(o),o.img);return send(res,200,{ok:true})}
+ /* ПОКУПКА СКИНА НА МАРКЕТЕ (ТОЛЬКО С ДЕПОЗИТОМ ПРИ ВКЛЮЧЕННОЙ ЗАЩИТЕ) */
+ if(p=='/api/buy'){
+  const s=skins.find(k=>k.id==b.id);
+  if(!s)return bad(res,'Скин не найден, обнови страницу');
+  if(!TL.test(b.tl||''))return bad(res,'Укажи верную трейд-ссылку Steam');
+  const c=Math.round(bp(s)*100);
+  if((x.bal||0)<c)return bad(res,'Не хватает баланса: нужно '+usd(c));
+  if(db.cfg.reqDep!==false){
+   const hasRealDep=db.ops.some(o=>o.user==n&&o.type=='dep'&&o.status=='done'&&o.inv);
+   if(!hasRealDep)return bad(res,'Покупка скинов за бонусный баланс доступна только после первого пополнения счёта');
+  }
+  x.bal-=c;x.tl=b.tl;
+  const o={id:db.orders.length+1,user:n,skin:s.id,img:s.img,price:c/100,tl:b.tl,status:'buy',kind:'buy',t:Date.now()};
+  db.orders.push(o);save();note(fmtO(o),kbO(o),o.img);
+  return send(res,200,{ok:true})
+ }
  if(p=='/api/deposit'){if(!CP)return bad(res,'Пополнение через Crypto-бот пока не подключено');const baseC=Math.round((+b.amount||0)*100);if(baseC<500||baseC>1e6)return bad(res,'Сумма от $5 до $10000');
   const mult=1+(x.depB||0)/100;const finalC=Math.round(baseC*mult);x.depB=0;
   const r=await cp('createInvoice',{asset:'USDT',amount:(baseC/100).toFixed(2),description:'Пополнение баланса cs2pay',expires_in:3600}).catch(()=>({}));
