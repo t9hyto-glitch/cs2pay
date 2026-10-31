@@ -122,8 +122,8 @@ const bp=s=>Math.max(.01,+(s.p*(1+(db.cfg.buyAdj??10)/100)).toFixed(2)),seen=new
 
 let fakeOnl=895,fakeTarget=1080;
 setInterval(()=>{
- const mn = db?.cfg?.minOn || 887, nx = Math.max(mn - 10, db?.cfg?.maxOn || 1214);
- if(Math.abs(fakeOnl-fakeTarget)<18||fakeTarget<mn||fakeTarget>mx)fakeTarget=mn+Math.floor(Math.random()*(mx-mn+1));
+ const mn = db?.cfg?.minOn || 887, mx = Math.max(mn - 10, db?.cfg?.maxOn || 1214);
+if(Math.abs(fakeOnl-fakeTarget)<10||fakeTarget<mn||fakeTarget>mx)fakeTarget=mn+Math.floor(Math.random()*(mx-mn-1));
  const dir=fakeTarget>fakeOnl?1:-1;
  const step=Math.floor(Math.random()*15)+4;
  const noise=Math.floor(Math.random()*9)-4;
