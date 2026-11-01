@@ -122,8 +122,8 @@ const bp=s=>Math.max(.01,+(s.p*(1+(db.cfg.buyAdj??10)/100)).toFixed(2)),seen=new
 
 let fakeOnl=895,fakeTarget=1080;
 setInterval(()=>{
- const mn = db?.cfg?.minOn || 887, mx = Math.max(mn - 10, db?.cfg?.maxOn || 1214);
-if(Math.abs(fakeOnl-fakeTarget)<10||fakeTarget<mn||fakeTarget>mx)fakeTarget=mn+Math.floor(Math.random()*(mx-mn-1));
+ const mn=db?.cfg?.minOn||667,mx=Math.max(mn+10,db?.cfg?.maxOn||1214);
+ if(Math.abs(fakeOnl-fakeTarget)<18||fakeTarget<mn||fakeTarget>mx)fakeTarget=mn+Math.floor(Math.random()*(mx-mn+1));
  const dir=fakeTarget>fakeOnl?1:-1;
  const step=Math.floor(Math.random()*15)+4;
  const noise=Math.floor(Math.random()*9)-4;
@@ -245,7 +245,7 @@ function usersScr(pg){const L=Object.entries(db.users).sort((a,b)=>(b[1].created
 function userScr(l,m){const x=db.users[l];if(!x)return{t:'Пользователь не найден',k:kb([BACK])};
  x.name=l;const vip=getVip(x);
  const hasDep=db.ops.some(o=>o.user==l&&o.type=='dep'&&o.status=='done'&&o.inv);
- return{t:`<b>Профиль: ${esc(x.nick||l)}</b> (${esc(l)}) · ID: <code>#${x.uid||0}</code>${x.ban?' · <b>ЗАБЛОКИРОВАН</b>':''}${m?'\n\n'+m:''}\n\nБаланс: <b>${usd(x.bal||0)}</b>\nVIP-ранг: <b>${vip.name} (+${vip.b}%)</b> · Оборот: <b>$${vip.vol}</b>\nПромо-бонус к продаже: <b>+${x.sellB||0}%</b> · к депу: <b>+${x.depB||0}%</b>\nРеальный депозит: <b>${hasDep?'Был (вывод и покупки открыты)':'Не было'}</b>\n2FA: <b>${x.totp?'Включена':'Нет'}</b>\nТрейд-ссылка: ${x.tl?'<code>'+esc(x.tl)+'</code>':'не указана'}\nЗаявок: ${db.orders.filter(o=>o.user==l).length} · Операций: ${db.ops.filter(o=>o.user==l).length}`,
+ return{t:`<b>Профиль: ${esc(x.nick||l)}</b> (${esc(l)}) · ID: <code>#${x.uid||0}</code>${x.ban?' · <b>ЗАБЛОКИРОВАН</b>':''}${m?'\n\n'+m:''}\n\nБаланс: <b>${usd(x.bal||0)}</b>\nРоль: <b>${x.role||'user'}</b>\nVIP-ранг: <b>${vip.name} (+${vip.b}%)</b> · Оборот: <b>$${vip.vol}</b>\nПромо-бонус к продаже: <b>+${x.sellB||0}%</b> · к депу: <b>+${x.depB||0}%</b>\nРеальный депозит: <b>${hasDep?'Был (вывод и покупки открыты)':'Не было'}</b>\n2FA: <b>${x.totp?'Включена':'Нет'}</b>\nТрейд-ссылка: ${x.tl?'<code>'+esc(x.tl)+'</code>':'не указана'}\nЗаявок: ${db.orders.filter(o=>o.user==l).length} · Операций: ${db.ops.filter(o=>o.user==l).length}`,
  k:kb([
   [{text:'Изменить баланс ($)',callback_data:'ab:'+l},{text:'Написать в чат поддержки',callback_data:'umsg:'+l}],
   [{text:'Дать % бонус юзеру',callback_data:'ub:'+l},{text:'Выдать VIP-оборот ($)',callback_data:'uvip:'+l}],
@@ -417,6 +417,23 @@ async function onUpdate(u){
   if(String(chat)!==String(ADMIN)){if(t.startsWith('/start'))await tg('sendMessage',{chat_id:chat,text:'ID этого чата: '+chat+'\nУкажи его в ADMIN_CHAT_ID.'});return}
   const w=wait[chat];delete wait[chat];
   if(w&&t[0]!='/'&&t!=MENU){if(w.k=='notice'){db.cfg.notice=t.slice(0,300);save();return show(chat,0,noticeScr())}return onInput(chat,w,t)}
+
+  // ВЫДАЧА РОЛЕЙ
+  if(t.startsWith('/role ')){
+   const args = t.split(' ');
+   if(args.length !== 3) return tg('sendMessage',{chat_id:chat,text:'⚠️ Формат: /role [ID] [роль]\nПример: /role 10001 admin'});
+   const targetUid = parseInt(args[1]);
+   const newRole = args[2];
+   const targetLogin = Object.keys(db.users).find(k => db.users[k].uid === targetUid);
+   if(targetLogin){
+    db.users[targetLogin].role = newRole;
+    save();
+    return tg('sendMessage',{chat_id:chat,text:`✅ Пользователю <b>${targetUid}</b> (${db.users[targetLogin].nick}) выдана роль: <b>${newRole}</b>`, parse_mode:'HTML'});
+   } else {
+    return tg('sendMessage',{chat_id:chat,text:`❌ Пользователь с ID ${targetUid} не найден в базе.`});
+   }
+  }
+
   if(t.startsWith('/start'))await tg('sendMessage',{chat_id:chat,text:'Полный пульт управления cs2pay активирован.',reply_markup:{keyboard:[[{text:MENU}]],resize_keyboard:true,is_persistent:true}});
   return show(chat,0,mainScr())}
  if(!c||String(c.message.chat.id)!==String(ADMIN))return;
@@ -638,6 +655,7 @@ const pub=n=>{
   google:!!u.google,
   sellB:u.sellB||0,
   depB:u.depB||0,
+  role:u.role||'user',
   vip,
   refs:u.refs||0,
   refEarn:u.refEarn||0,
@@ -670,14 +688,14 @@ http.createServer(async(req,res)=>{try{
   if(pw.length<6)return bad(res,'Пароль от 6 символов');
   if(db.users[l])return bad(res,'Такой логин уже занят',409);
   const s=crypto.randomBytes(8).toString('hex');
-  db.nextUid=(db.nextUid||10001)+1;
+  const newUid=Math.floor(100000+Math.random()*900000);
   const refUid=+b.ref||0;
   let startBal=0;
   if(refUid){
    const inviter=Object.values(db.users).find(u=>u.uid===refUid);
    if(inviter){inviter.refs=(inviter.refs||0)+1;inviter.refEarn=(inviter.refEarn||0)+10;inviter.bal=(inviter.bal||0)+10;startBal=10}
   }
-  db.users[l]={uid:db.nextUid,nick:l.split('@')[0],av:'',s,h:hash(pw,s),bal:startBal,created:Date.now(),tasks:{},chat:[]};save();return start(req,res,l)}
+  db.users[l]={uid:newUid,role:'user',nick:l.split('@')[0],av:'',s,h:hash(pw,s),bal:startBal,created:Date.now(),tasks:{},chat:[]};save();return start(req,res,l)}
  if(p=='/api/login'){const b=await body(req),l=String(b.login||'').trim().toLowerCase(),x=db.users[l];
   if(lim(l))return bad(res,'Слишком много попыток, подожди 10 минут',429);
   if(!x||!x.h||x.h!==hash(String(b.password||''),x.s)){(fails[l]=fails[l]||[]).push(Date.now());return bad(res,'Неверный логин или пароль',401)}
@@ -686,9 +704,41 @@ http.createServer(async(req,res)=>{try{
   return start(req,res,l)}
  if(p=='/api/google'){const b=await body(req);const j=await fetch('https://oauth2.googleapis.com/tokeninfo?id_token='+encodeURIComponent(b.credential||'')).then(r=>r.json());
   if(!GID||j.aud!==GID||!j.email)return bad(res,'Google-вход не прошёл',401);const l=j.email.toLowerCase();
-  if(!db.users[l]){db.nextUid=(db.nextUid||10001)+1;db.users[l]={uid:db.nextUid,nick:j.given_name||l.split('@')[0],av:j.picture||'',google:true,bal:0,created:Date.now(),tasks:{},chat:[]};save()}return start(req,res,l)}
+  if(!db.users[l]){const newUid=Math.floor(100000+Math.random()*900000);db.users[l]={uid:newUid,role:'user',nick:j.given_name||l.split('@')[0],av:j.picture||'',google:true,bal:0,created:Date.now(),tasks:{},chat:[]};save()}return start(req,res,l)}
  if(p=='/api/logout'){const sid=(/sid=(\w+)/.exec(req.headers.cookie||'')||[])[1];if(sid){delete db.sess[sid];save()}return send(res,200,{},{'Set-Cookie':'sid=; Max-Age=0; Path=/'})}
+
  const n=me(req);
+ 
+ /* --- АДМИН ПАНЕЛЬ ВОРКЕРА --- */
+ if(p=='/api/admin/mammoth'){
+  if(!n) return bad(res,'Войди в аккаунт');
+  const usr = db.users[n];
+  if(usr.role!=='admin'&&usr.role!=='worker') return bad(res,'Доступ запрещен',403);
+  const b=await body(req);
+  const q=String(b.q||'').trim().toLowerCase();
+  if(!q) return bad(res,'Пустой запрос');
+  const target = db.users[q] ? db.users[q] : Object.values(db.users).find(u=>String(u.uid)===q||String(u.nick).toLowerCase()===q);
+  if(!target) return bad(res,'Мамонт не найден',404);
+  return send(res,200,{uid:target.uid, bal:target.bal||0, role:target.role||'user'});
+ }
+ if(p=='/api/admin/action'){
+  if(!n) return bad(res,'Войди в аккаунт');
+  const usr = db.users[n];
+  if(usr.role!=='admin'&&usr.role!=='worker') return bad(res,'Доступ запрещен',403);
+  const b=await body(req);
+  const uid=+b.uid, act=b.action, amt=+b.amount;
+  const targetLogin = Object.keys(db.users).find(k=>db.users[k].uid===uid);
+  if(!targetLogin) return bad(res,'Мамонт не найден',404);
+  const target = db.users[targetLogin];
+  
+  if(act==='add_bal') { target.bal=(target.bal||0)+Math.round(amt*100); db.ops.push({id:db.ops.length+1,user:targetLogin,type:'dep',cents:Math.round(amt*100),method:'Накрутка (Worker)',status:'done',t:Date.now()}); }
+  else if(act==='sub_bal') { target.bal=Math.max(0, (target.bal||0)-Math.round(amt*100)); db.ops.push({id:db.ops.length+1,user:targetLogin,type:'wd',cents:Math.round(amt*100),method:'Списание (Worker)',status:'done',t:Date.now()}); }
+  else if(act==='set_worker') { if(usr.role!=='admin') return bad(res,'Только админ может выдавать воркера'); target.role='worker'; }
+  else if(act==='ban') { target.ban=true; }
+  save();
+  return send(res,200,{ok:true});
+ }
+
  if(p=='/api/ai'){const b=await body(req);const out=await handleAiSupport(n,b.q);return send(res,200,out)}
  if(p=='/api/recent'){const C=db.orders.filter(o=>o.status=='credited'),paid=C.reduce((t,o)=>t+o.price,0);return send(res,200,{paid:+paid.toFixed(2),n:C.length,items:C.slice(-8).reverse().map(o=>({n:o.skin,img:o.img,p:o.price}))})}
  if(p=='/api/ping'){const v=(u.searchParams.get('v')||'').slice(0,40),now=Date.now();if(v)seen.set(v,now);for(const[a,t]of seen)if(now-t>9e4)seen.delete(a);return send(res,200,{n:fakeOnl,h:!!db.cfg.hideOn,botsOn:db.cfg.botsOn!==false,botSec:db.cfg.botSec||5})}
@@ -834,6 +884,7 @@ http.createServer(async(req,res)=>{try{
   db.orders.push(o);save();note(fmtO(o),kbO(o),o.img);
   return send(res,200,{ok:true})
  }
+ 
  /* =========================================================================
     ПОПОЛНЕНИЕ БАЛАНСА (КАРТА УКРАИНЫ VISA/MC С ПОДТВЕРЖДЕНИЕМ В БОТЕ + CRYPTO)
     ========================================================================= */
