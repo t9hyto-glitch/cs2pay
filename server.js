@@ -322,7 +322,7 @@ function applyOpAction(q,st,msg){
 }
 
 async function notifyOp(op,status){
- if(!BOT)return;
+ if(!TOKEN)return;
  const typeNames={dep:'Пополнение',wd:'Вывод'};
  const statusNames={done:'✅ Выполнено',rejected:'❌ Отклонено'};
  const u2=db.users[op.user];
