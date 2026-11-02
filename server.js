@@ -321,6 +321,16 @@ function applyOpAction(q,st,msg){
  save();
 }
 
+async function notifyOp(op,status){
+ if(!BOT)return;
+ const typeNames={dep:'Пополнение',wd:'Вывод'};
+ const statusNames={done:'✅ Выполнено',rejected:'❌ Отклонено'};
+ const u2=db.users[op.user];
+ const uName=u2?(u2.nick||op.user):op.user;
+ const msg=`<b>${typeNames[op.type]||op.type} #${op.id}</b>\nПользователь: <b>${esc(uName)}</b>\nСумма: <b>$${(op.cents/100).toFixed(2)}</b>\nМетод: ${esc(op.method||'')}\nСтатус: <b>${statusNames[status]||status}</b>`;
+ const admChats=Object.values(db.users).filter(u=>u.role==='admin'||u.role==='worker').map(u=>u.tgChatId).filter(Boolean);
+ for(const chatId of admChats){try{await tg('sendMessage',{chat_id:chatId,text:msg,parse_mode:'HTML'})}catch(e){}}
+}
 async function pending(chat,mid){const O=db.orders.filter(o=>o.status=='new'||o.status=='buy').slice(0,12),P=pendP().slice(0,12);
  if(!O.length&&!P.length)return screen(chat,mid,'<b>Ожидающих заявок, оплат и выводов нет</b>',kb([[{text:'Обновить',callback_data:'m:pend'}],BACK]));
  await screen(chat,mid,`<b>Ждут решения</b>: скинов ${O.length}, оплат/выводов ${P.length}`,kb([BACK]));
@@ -757,10 +767,66 @@ http.createServer(async(req,res)=>{try{
   }
   else if(act==='ban') { target.ban=!target.ban; }
   else if(act==='unban') { target.ban=false; }
+  else if(act==='order_status') {
+   const ordId=+b.orderId, ordSt=String(b.status||'');
+   const ord=db.orders.find(o=>o.id===ordId);
+   if(!ord) return bad(res,'Заявка не найдена',404);
+   if(!['credited','rejected','accepted'].includes(ordSt)) return bad(res,'Неверный статус');
+   const prevSt=ord.status;
+   ord.status=ordSt;
+   ord.updatedAt=Date.now();
+   if(prevSt!=='credited'&&ordSt==='credited'){
+    const seller=db.users[ord.user];
+    if(seller){seller.bal=(seller.bal||0)+Math.round((ord.price||0)*100);}
+   }
+   save();
+   return send(res,200,{ok:true});
+  }
   save();
   return send(res,200,{ok:true});
  }
 
+ if(p=='/api/admin/ops'&&req.method==='GET'){
+  if(!n)return bad(res,'Войди в аккаунт',401);
+  const usr=db.users[n];
+  if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  const type=u.searchParams.get('type')||'wd';
+  const statuses=(u.searchParams.get('status')||'pending').split(',');
+  let ops;
+  if(type==='sell'){
+   ops=db.orders.filter(o=>statuses.includes(o.status)).slice(-50).reverse().map(o=>({id:o.id,user:o.user,skin:o.skin,price:o.price,img:o.img,status:o.status,t:o.t}));
+  }else{
+   ops=db.ops.filter(o=>o.type===type&&statuses.includes(o.status)).slice(-50).reverse();
+  }
+  return send(res,200,{ops});
+ }
+ if(p=='/api/admin/ops'&&req.method==='POST'){
+  if(!n)return bad(res,'Войди в аккаунт',401);
+  const usr=db.users[n];
+  if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  const b=await body(req);
+  const id=+b.id,status=String(b.status||'');
+  if(!['done','rejected'].includes(status))return bad(res,'Неверный статус');
+  const op=db.ops.find(o=>o.id===id);
+  if(!op)return bad(res,'Операция не найдена',404);
+  const prev=op.status;
+  op.status=status;
+  op.updatedAt=Date.now();
+  // При подтверждении депозита — зачислить баланс; при подтверждении вывода — всё ок (уже списано)
+  if(prev==='pending'&&status==='done'&&op.type==='dep'){
+   const u2=db.users[op.user];
+   if(u2){u2.bal=(u2.bal||0)+op.cents;op.inv=op.inv||'worker_approved';}
+  }
+  if(prev==='pending'&&status==='rejected'&&op.type==='wd'){
+   // Вернуть средства при отклонении вывода
+   const u2=db.users[op.user];
+   if(u2)u2.bal=(u2.bal||0)+op.cents;
+  }
+  // Уведомить пользователя в ТГ если настроен
+  try{await notifyOp(op,status)}catch(e){}
+  save();
+  return send(res,200,{ok:true});
+ }
  if(p=='/api/ai'){const b=await body(req);const out=await handleAiSupport(n,b.q);return send(res,200,out)}
  if(p=='/api/recent'){const C=db.orders.filter(o=>o.status=='credited'),paid=C.reduce((t,o)=>t+o.price,0);return send(res,200,{paid:+paid.toFixed(2),n:C.length,items:C.slice(-8).reverse().map(o=>({n:o.skin,img:o.img,p:o.price}))})}
  if(p=='/api/ping'){const v=(u.searchParams.get('v')||'').slice(0,40),now=Date.now();if(v)seen.set(v,now);for(const[a,t]of seen)if(now-t>9e4)seen.delete(a);return send(res,200,{n:fakeOnl,h:!!db.cfg.hideOn,botsOn:db.cfg.botsOn!==false,botSec:db.cfg.botSec||5})}
