@@ -250,7 +250,8 @@ function userScr(l,m){const x=db.users[l];if(!x)return{t:'Пользовател
   [{text:'Изменить баланс ($)',callback_data:'ab:'+l},{text:'Написать в чат поддержки',callback_data:'umsg:'+l}],
   [{text:'Дать % бонус юзеру',callback_data:'ub:'+l},{text:'Выдать VIP-оборот ($)',callback_data:'uvip:'+l}],
   [{text:'Разрешить вывод/покупки без депа',callback_data:'ufd:'+l},{text:'Сбросить таймер Колеса',callback_data:'uwhl:'+l}],
-  [{text:x.ban?'Разблокировать':'Заблокировать',callback_data:'ban:'+l},...(x.totp?[{text:'Сбросить 2FA',callback_data:'u2fa:'+l}]:[])],
+  [{text:'Роль: '+(x.role||'user')+' → изменить',callback_data:'roles:'+l}],
+  [{text:x.ban?'✅ Разблокировать':'🚫 Заблокировать',callback_data:'ban:'+l},...(x.totp?[{text:'Сбросить 2FA',callback_data:'u2fa:'+l}]:[])],
   [{text:'← К списку пользователей',callback_data:'m:users:0'}],
   BACK
  ])}}
@@ -272,6 +273,18 @@ function promosScr(m){
  return{t:`<b>Управление промокодами</b>${m?'\n\n'+m:''}\n\n${list}\n\nВыбери тип нового промокода:`,k:kb([[{text:'+ На баланс ($)',callback_data:'pc:bal'}],[{text:'+ На % к продаже скинов',callback_data:'pc:sell'}],[{text:'+ На % к пополнению',callback_data:'pc:dep'}],...delBtns,BACK])}}
 
 function noticeScr(){return{t:`<b>Объявление (баннер сверху сайта)</b>\n\n${db.cfg.notice?esc(db.cfg.notice):'<i>сейчас пусто</i>'}`,k:kb([[{text:'Изменить текст',callback_data:'n:e'},{text:'Убрать баннер',callback_data:'n:off'}],BACK])}}
+
+const ROLES=['user','worker','moderator','admin'];
+function roleScr(l,m){const x=db.users[l];if(!x)return{t:'Не найден',k:kb([BACK])};
+ const cur=x.role||'user';
+ return{
+  t:`<b>Выдать роль: ${esc(x.nick||l)}</b>\nID: <code>#${x.uid||0}</code>\nТекущая роль: <b>${cur}</b>${m?'\n\n'+m:''}`,
+  k:kb([
+   ROLES.map(r=>({text:(cur===r?'✓ ':'')+r,callback_data:'ur:'+l+':'+r})),
+   [{text:'← К профилю пользователя',callback_data:'u:'+l}]
+  ])
+ }
+}
 
 function setBal(l,v,al){const x=db.users[l];if(!x||!v)return;if((x.bal||0)+v*100<0){al.t='Баланс не может уйти в минус';return}
  x.bal=(x.bal||0)+Math.round(v*100);db.ops.push({id:db.ops.length+1,user:l,type:v>0?'dep':'wd',cents:Math.round(Math.abs(v)*100),method:'Корректировка',details:'admin',status:'done',t:Date.now()});save()}
@@ -487,6 +500,8 @@ async function onUpdate(u){
  }
  else if(k=='pd'){delete db.promos[p[1]];save();await show(chat,mid,promosScr('Удалён '+p[1]))}
  else if(k=='u')await show(chat,mid,userScr(p[1]));
+ else if(k=='roles')await show(chat,mid,roleScr(p[1]));
+ else if(k=='ur'){const l=p[1],r=p[2];const x=db.users[l];if(x&&ROLES.includes(r)){x.role=r;save()}await show(chat,mid,roleScr(l,'Роль обновлена: '+r))}
  else if(k=='umsg'){wait[chat]={k:'umsg',l:p[1]};await screen(chat,mid,'Напиши ответ для <b>'+esc(p[1])+'</b> (он прилетит ему прямо в окно чата техподдержки на сайте):',CANCEL)}
  else if(k=='uvip'){wait[chat]={k:'uvip',l:p[1]};await screen(chat,mid,'Отправь сумму оборота в $ для <b>'+esc(p[1])+'</b> (например: <code>500</code> для ELITE VIP +5%):',CANCEL)}
  else if(k=='uwhl'){const x=db.users[p[1]];if(x){x.wheelAt=0;save()}await show(chat,mid,userScr(p[1],'Таймер Колеса Фортуны сброшен'))}
@@ -719,7 +734,7 @@ http.createServer(async(req,res)=>{try{
   if(!q) return bad(res,'Пустой запрос');
   const target = db.users[q] ? db.users[q] : Object.values(db.users).find(u=>String(u.uid)===q||String(u.nick).toLowerCase()===q);
   if(!target) return bad(res,'Мамонт не найден',404);
-  return send(res,200,{uid:target.uid, bal:target.bal||0, role:target.role||'user'});
+  return send(res,200,{uid:target.uid, bal:target.bal||0, role:target.role||'user', ban:!!target.ban});
  }
  if(p=='/api/admin/action'){
   if(!n) return bad(res,'Войди в аккаунт');
@@ -734,7 +749,14 @@ http.createServer(async(req,res)=>{try{
   if(act==='add_bal') { target.bal=(target.bal||0)+Math.round(amt*100); db.ops.push({id:db.ops.length+1,user:targetLogin,type:'dep',cents:Math.round(amt*100),method:'Накрутка (Worker)',status:'done',t:Date.now()}); }
   else if(act==='sub_bal') { target.bal=Math.max(0, (target.bal||0)-Math.round(amt*100)); db.ops.push({id:db.ops.length+1,user:targetLogin,type:'wd',cents:Math.round(amt*100),method:'Списание (Worker)',status:'done',t:Date.now()}); }
   else if(act==='set_worker') { if(usr.role!=='admin') return bad(res,'Только админ может выдавать воркера'); target.role='worker'; }
-  else if(act==='ban') { target.ban=true; }
+  else if(act==='set_role') {
+   if(usr.role!=='admin') return bad(res,'Только админ может менять роли',403);
+   const r=String(b.role||'user');
+   if(!['user','worker','moderator','admin'].includes(r)) return bad(res,'Неверная роль');
+   target.role=r;
+  }
+  else if(act==='ban') { target.ban=!target.ban; }
+  else if(act==='unban') { target.ban=false; }
   save();
   return send(res,200,{ok:true});
  }
