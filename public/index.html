@@ -1680,7 +1680,7 @@ function admSelectTicket(login){
    log.innerHTML=msgs.map(function(m){
     var isAdm=m.from==="adm"||m.from==="b";
     var time=m.t?'<span style="font-size:10px;color:var(--mt);display:block;margin-top:2px">'+lfTimeAgo(m.t)+'</span>':'';
-    return'<div class="ai-m ''+(isAdm?"b":"u")+'" style="max-width:85%">'+(isAdm?'<b style="font-size:10.5px;color:var(--ac);display:block;margin-bottom:2px">Оператор:</b>':'')+esc(m.text)+time+'</div>';
+    return'<div class="ai-m '+(isAdm?"b":"u")+'" style="max-width:85%">'+(isAdm?'<b style="font-size:10.5px;color:var(--ac);display:block;margin-bottom:2px">Оператор:</b>':'')+esc(m.text)+time+'</div>';
    }).join("");
    log.scrollTop=log.scrollHeight;
   }
@@ -1731,7 +1731,7 @@ function admLoadStats(){
    +'<div class="rc-row"><span>Выплачено всего:</span><b style="color:var(--ac)">$'+d.paid+'</b></div>'
    +'<div class="rc-row"><span>Пополнений (депозитов):</span><b>'+d.deps+'</b></div>'
    +'<div class="rc-row"><span>Выводов обработано:</span><b>'+d.wds+'</b></div>'
-   +'<div class="rc-row"><span>Открытых тикетов:</span><b style="color:''+('d.tickets>0?"#ef4444":"var(--ok)"')+'">'+('d.tickets')+'</b></div>'
+   +'<div class="rc-row"><span>Открытых тикетов:</span><b style="color:'+(d.tickets>0?'#ef4444':'var(--ok)')+'">'+(d.tickets||0)+'</b></div>'
    +'</div>';
   // Ugly template literal — build it cleanly
   el.innerHTML=buildStatsHTML(d);
