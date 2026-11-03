@@ -1421,8 +1421,12 @@ function calcUp(){var v=+(($("ca")&&$("ca").value)||0),m=+(($("cm")&&$("cm").val
 if($("ca"))$("ca").oninput=calcUp;if($("cm"))$("cm").onchange=calcUp;
 
 function wb(w){var T={"Factory New":.07,"Minimal Wear":.08,"Field-Tested":.23,"Well-Worn":.07,"Battle-Scarred":.55};if(!T[w])return"";return'<div class="wb">'+Object.keys(T).map(function(k){return'<i style="flex:'+T[k]+'"'+(k==w?' class="on"':"")+'></i>'}).join("")+'</div>'}
-function api(u,b){return api0(u,b).catch(function(e){if(!e.d)e.message="Нет связи с сервером. Открывай сайт по адресу на Render, а не как файл";throw e})}
-function api0(u,b){return fetch(u,b!==undefined?{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}:{}).then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok){var e=new Error(j.error||"Ошибка");e.d=j;throw e}return j})})}
+function api(u,b,method){return api0(u,b,method).catch(function(e){if(!e.d)e.message="Нет связи с сервером. Открывай сайт по адресу на Render, а не как файл";throw e})}
+function api0(u,b,method){
+ var isGet=(method&&method.toUpperCase()==='GET')||(!method&&b===undefined)||(!method&&b===null&&arguments.length<2);
+ var opts=isGet?{}:{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b!=null?b:{})};
+ return fetch(u,opts).then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok){var e=new Error(j.error||"Ошибка");e.d=j;throw e}return j})});
+}
 
 /* =========================================================================
    БЫСТРОЕ ПОПОЛНЕНИЕ (+) И СТРАНИЦА ОПЛАТЫ КАРТОЙ VISA / MASTERCARD
@@ -1806,7 +1810,7 @@ function admLoadTickets(){
  var list=$("sup-ticket-list");
  if(!list)return;
  list.innerHTML='<div style="color:var(--mt);font-size:12px;padding:10px">Загрузка…</div>';
- api("/api/support/tickets",null,"GET").then(function(d){
+ api("/api/support/tickets").then(function(d){
   _supTickets=d.tickets||[];
   renderTicketList();
   var unread=_supTickets.filter(function(t){return t.unread}).length;
@@ -1906,7 +1910,7 @@ function admLoadStats(){
  var el=$("adm-stats-grid")||$("adm-stats-body");
  if(!el)return;
  el.innerHTML='<div style="color:var(--mt);font-size:12px">Загрузка…</div>';
- api("/api/admin/stats",null,"GET").then(function(d){
+ api("/api/admin/stats").then(function(d){
   el.innerHTML=buildStatsHTML(d);
   var nu=$("adm-new-users");
   if(nu&&d.newUsers){
