@@ -36,13 +36,17 @@ async function tgLoadDb(){
 }
 
 let tgSyncTimer=null;
-async function tgSaveDbNow(){
+let _lastTgBackup=0;
+async function tgSaveDbNow(force){
  if(!(TOKEN&&ADMIN))return;
+ const now=Date.now();
+ // Бэкап не чаще раза в 10 минут, если не форс
+ if(!force&&now-_lastTgBackup<10*60*1000)return;
+ _lastTgBackup=now;
  try{
   const f=new FormData();
   f.append('chat_id',String(ADMIN));
   f.append('disable_notification','true');
-  f.append('caption','☁️ Авто-сохранение базы (не удаляй и не открепляй — по этому файлу восстанавливаются все аккаунты при перезапуске Render)');
   f.append('document',new Blob([JSON.stringify(db)],{type:'application/json'}),'cs2pay-db.json');
   const r=await fetch(`https://api.telegram.org/bot${TOKEN}/sendDocument`,{method:'POST',body:f}).then(x=>x.json());
   if(r.ok&&r.result&&r.result.message_id){
@@ -80,8 +84,7 @@ function save(){
    if(pool)await pool.query("insert into kv(k,v) values('db',$1) on conflict(k) do update set v=$1",[JSON.stringify(db)]);
    else{
     fs.writeFileSync('data.json',JSON.stringify(db));
-    clearTimeout(tgSyncTimer);
-    tgSyncTimer=setTimeout(tgSaveDbNow,4000);
+    // Бэкап в TG не чаще раза в 10 минут — вызывается через интервал ниже
    }
   }catch(e){console.log('save fail',e.message)}
  },200);
@@ -1146,6 +1149,8 @@ dbInit().then(()=>{
  load();setInterval(load,18e5);
  loadRates();setInterval(loadRates,36e5);
  settle();
+ // Бэкап базы в TG раз в 10 минут — без спама после каждого save()
+ setInterval(()=>tgSaveDbNow(true),10*60*1000);
 }).catch(e=>{console.log('DB ERROR',e.message);process.exit(1)});
 
 const flushNow=async()=>{
