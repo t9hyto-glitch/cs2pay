@@ -1646,10 +1646,10 @@ function renderTicketList(){
   var unreadDot=t.unread?'<span style="width:7px;height:7px;border-radius:50%;background:#ef4444;flex-shrink:0;display:inline-block"></span>':'';
   var statusColor=t.status==="closed"?"#22c55e":t.status==="in_progress"?"#f59e0b":"#ef4444";
   var isActive=_supCur===t.login;
-  return'<div class="sup-ticket-row''+(isActive?' active':'')+'" onclick="admSelectTicket(\'"+t.login+"\')" style="padding:10px 12px;border-bottom:1px solid var(--ln);cursor:pointer;background:''+(isActive?"var(--p2)":"transparent")+';transition:background .15s">'
+  return'<div class="sup-ticket-row'+(isActive?' active':'')+'" onclick="admSelectTicket(\'"+t.login+"\')" style="padding:10px 12px;border-bottom:1px solid var(--ln);cursor:pointer;background:'+(isActive?"var(--p2)":"transparent")+';transition:background .15s">'
    +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">'+unreadDot
    +'<b style="font-size:12.5px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(t.nick||t.login)+'</b>'
-   +'<span style="font-size:10px;color:'+statusColor+';font-weight:700">''+(t.status==="closed"?"✓ закрыт":t.status==="in_progress"?"в работе":"открыт")+'</span>'
+   +'<span style="font-size:10px;color:'+statusColor+';font-weight:700">'+(t.status==="closed"?"✓ закрыт":t.status==="in_progress"?"в работе":"открыт")+'</span>'
    +'</div>'
    +'<div style="font-size:11px;color:var(--mt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+preview+'</div>'
    +'</div>';
