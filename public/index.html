@@ -803,6 +803,7 @@ textarea:focus{outline:none;border-color:var(--ac)}
    <button class="wp-nav-btn" data-tab="ops" onclick="admShowTab('ops')">Заявки</button>
    <button class="wp-nav-btn" data-tab="stats" onclick="admShowTab('stats')">Статистика</button>
    <button class="wp-nav-btn" data-tab="cfg" onclick="admShowTab('cfg')">Настройки</button>
+   <button class="wp-nav-btn" data-tab="ann" onclick="admShowTab('ann')">Объявления</button>
   </div>
 
   <!-- TAB: SEARCH -->
@@ -871,7 +872,37 @@ textarea:focus{outline:none;border-color:var(--ac)}
      </div>
     </div>
 
-    <div class="wp-actions">
+    <!-- Теги -->
+    <div class="wp-card" style="margin:12px 0 0;padding:14px">
+     <div class="wp-card-title" style="margin-bottom:10px">Теги аккаунта</div>
+     <div id="adm-m-tags" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;min-height:20px"></div>
+     <div style="display:flex;gap:8px">
+      <select id="adm-tag-sel" style="flex:1">
+       <option value="">— без тега —</option>
+       <option value="Владелец">Владелец</option>
+       <option value="Ютубер">Ютубер</option>
+       <option value="Стример">Стример</option>
+       <option value="Партнёр">Партнёр</option>
+       <option value="Верифицирован">Верифицирован</option>
+       <option value="Топ-продавец">Топ-продавец</option>
+       <option value="Модератор">Модератор</option>
+       <option value="Воркер">Воркер</option>
+       <option value="VIP">VIP</option>
+      </select>
+      <button class="wp-btn accent" onclick="admAction('set_tag')">Выдать</button>
+      <button class="wp-btn danger" onclick="admAction('remove_tag')" style="padding:8px 10px">×</button>
+     </div>
+    </div>
+    <!-- Кастомный ID -->
+    <div class="wp-card" style="margin:12px 0 0;padding:14px">
+     <div class="wp-card-title" style="margin-bottom:10px">Кастомный ID</div>
+     <div style="display:flex;gap:8px">
+      <input id="adm-custom-id" placeholder="Например: 12345 или cs2pay_owner" style="flex:1;font-family:monospace">
+      <button class="wp-btn accent" onclick="admAction('set_custom_id')">Сохранить</button>
+     </div>
+     <div style="font-size:11px;color:var(--mt);margin-top:6px">Уникальный ID отображается в профиле вместо автоматического</div>
+    </div>
+    <div class="wp-actions" style="margin-top:12px">
      <button class="wp-btn danger" onclick="admAction('ban')">Заблокировать</button>
      <button class="wp-btn success" onclick="admAction('unban')">Разблокировать</button>
      <button class="wp-btn" onclick="admAction('ufd')" style="border-color:#a78bfa44;color:#a78bfa">Разблок. вывод</button>
@@ -977,6 +1008,44 @@ textarea:focus{outline:none;border-color:var(--ac)}
      <button class="op-btn-ok" onclick="saveCfg('promo','cfg-promo-code')">Добавить</button>
     </div>
     <div class="err" id="cfg-err" style="margin-top:10px"></div>
+   </div>
+  </div>
+
+  <!-- TAB: ОБЪЯВЛЕНИЯ -->
+  <div id="adm-tab-ann" class="adm-tab-body" hidden>
+   <div class="pc">
+    <div class="wp-card">
+     <div class="wp-card-title" style="margin-bottom:16px">Создать объявление</div>
+     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <div><label>Заголовок</label><input id="ann-title" placeholder="Важное обновление!"></div>
+      <div><label>Тип</label>
+       <select id="ann-type">
+        <option value="info">Инфо</option>
+        <option value="success">Успех</option>
+        <option value="warn">Предупреждение</option>
+        <option value="danger">Важно</option>
+       </select>
+      </div>
+     </div>
+     <label>Текст объявления</label>
+     <textarea id="ann-text" rows="3" placeholder="Текст объявления…" style="width:100%;resize:vertical;background:var(--inp);color:var(--tx);border:1px solid var(--ln);border-radius:10px;padding:10px;font-size:13px;font-family:inherit;margin-top:4px;margin-bottom:10px"></textarea>
+     <div style="display:grid;grid-template-columns:1fr 1fr 80px;gap:10px;margin-bottom:10px">
+      <div><label>Иконка (эмодзи)</label><input id="ann-icon" placeholder="🔥" style="font-size:18px"></div>
+      <div><label>Ссылка (необязательно)</label><input id="ann-link" placeholder="https://…"></div>
+      <div><label>Текст ссылки</label><input id="ann-link-text" placeholder="Подробнее"></div>
+     </div>
+     <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;margin-bottom:14px">
+      <input type="checkbox" id="ann-pinned"> Закрепить объявление вверху
+     </label>
+     <button class="wp-btn accent" style="width:100%;padding:12px;font-size:14px" onclick="admCreateAnn()">Опубликовать объявление</button>
+    </div>
+    <div class="wp-card">
+     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div class="wp-card-title" style="margin:0">Активные объявления</div>
+      <button class="wp-btn" style="padding:5px 12px;font-size:12px" onclick="admLoadAnnouncements()">↻ Обновить</button>
+     </div>
+     <div id="adm-ann-list"><div style="color:var(--mt);font-size:13px">Загрузка…</div></div>
+    </div>
    </div>
   </div>
 
@@ -1715,6 +1784,8 @@ function admShowTab(tab){
  if(t)t.hidden=false;
  if(tab==="stats")admLoadStats();
  if(tab==="support")admLoadTickets();
+ if(tab==="ops"){admTab('wd');}
+ if(tab==="ann")admLoadAnnouncements();
 }
 function admSendMsg(){
  var msg=$("adm-chat-msg").value.trim();
@@ -1876,33 +1947,159 @@ function saveCfg(key,inputId){
   sOk();toast("Сохранено ✓");
  }).catch(function(e){toast(e.message,1);if($("cfg-err"))$("cfg-err").textContent=e.message});
 }
+/* ===== ВОРКЕР-ПАНЕЛЬ: ЗАЯВКИ ===== */
+var _opsStatus='pending', _opsType='wd';
+function admTab(type){
+ _opsType=type;
+ document.querySelectorAll('.adm-op-tab').forEach(function(b){
+  b.classList.toggle('on',b.dataset.op===type);
+  b.classList.toggle('bl',b.dataset.op===type);
+ });
+ admLoadOps();
+}
+function admLoadOps(){
+ var list=$('adm-ops-list');if(!list)return;
+ list.innerHTML='<div style="color:var(--mt);font-size:12px;padding:12px">Загрузка…</div>';
+ api('/api/admin/ops?type='+_opsType+'&status='+_opsStatus).then(function(d){
+  var ops=d.ops||[];
+  if(!ops.length){list.innerHTML='<div style="color:var(--mt);font-size:13px;padding:12px">Нет заявок</div>';return;}
+  list.innerHTML=ops.map(function(op){
+   var typeLabel={dep:'Депозит',wd:'Вывод',sell:'Продажа'}[op.type]||op.type;
+   var stCls={pending:'warn',done:'ok',rejected:'bad'}[op.status]||'';
+   var stLabel={pending:'Ожидает',done:'Выполнено',rejected:'Отклонено'}[op.status]||op.status;
+   var amt=op.cents?'$'+(op.cents/100).toFixed(2):(op.price?'$'+op.price:'—');
+   return '<div style="background:var(--p2);border:1px solid var(--ln);border-radius:12px;padding:14px;margin-bottom:10px">'
+    +'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px">'
+    +'<div><b style="font-size:13.5px">'+typeLabel+' #'+(op.id||'—')+'</b>'
+    +'<div style="font-size:11px;color:var(--mt);margin-top:2px">'+(op.t?new Date(op.t).toLocaleString('ru-RU'):'—')+'</div></div>'
+    +'<span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid;color:'+({pending:'#f59e0b',done:'#22c55e',rejected:'#ef4444'}[op.status]||'var(--mt)')+';border-color:'+({pending:'#f59e0b44',done:'#22c55e44',rejected:'#ef444444'}[op.status]||'var(--ln)')+';background:'+({pending:'#f59e0b11',done:'#22c55e11',rejected:'#ef444411'}[op.status]||'transparent')+'">'+stLabel+'</span>'
+    +'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:12.5px;margin-bottom:10px">'
+    +'<div style="color:var(--mt)">Пользователь:</div><div><b>#'+(op.user||op.uid||'—')+'</b></div>'
+    +'<div style="color:var(--mt)">Сумма:</div><div><b style="color:var(--ok)">'+amt+'</b></div>'
+    +(op.to||op.card?'<div style="color:var(--mt)">Реквизит:</div><div style="word-break:break-all"><b>'+(op.to||op.card)+'</b></div>':'')
+    +(op.skin?'<div style="color:var(--mt)">Скин:</div><div><b>'+esc(op.skin)+'</b></div>':'')
+    +'</div>'
+    +(op.status==='pending'?'<div style="display:flex;gap:8px">'
+     +'<button class="op-btn-ok" onclick="admOpAction('+op.id+',\'done\')">Подтвердить</button>'
+     +'<button class="op-btn-no" onclick="admOpAction('+op.id+',\'rejected\')">Отклонить</button>'
+     +'</div>':'')
+    +'</div>';
+  }).join('');
+ }).catch(function(e){list.innerHTML='<div class="err">'+esc(e.message)+'</div>';});
+}
+function admOpAction(id,status){
+ if(!confirm(status==='done'?'Подтвердить заявку #'+id+'?':'Отклонить заявку #'+id+'?'))return;
+ api('/api/admin/ops',{id:id,status:status}).then(function(){
+  sOk();toast(status==='done'?'Заявка подтверждена':'Заявка отклонена');
+  admLoadOps();
+ }).catch(function(e){toast(e.message,1);sErr();});
+}
+
+/* ===== ПОИСК ПОЛЬЗОВАТЕЛЯ ===== */
 function admSearch(){
- var q=$("adm-uid").value.trim();
- if(!q)return;
- api("/api/admin/mammoth",{q:q}).then(function(d){
-  S.admCur=d.uid;
-  $("adm-m-uid").textContent="#"+d.uid;
-  $("adm-m-bal").textContent="$"+(d.bal/100).toFixed(2);
-  $("adm-m-role").textContent=d.role||"user";
-  var sel=$("adm-role-sel");
-  if(sel)sel.value=d.role||"user";
-  $("adm-panel-res").hidden=false;
-  $("adm-err").textContent="";
+ var q=($('adm-uid')||{}).value||'';q=q.trim();if(!q)return;
+ api('/api/admin/mammoth',{q:q}).then(function(d){
+  S.admCur=d.uid;window._admLogin=d.login||q;
+  var uid=$('adm-m-uid');if(uid)uid.textContent=d.uid;
+  var bal=$('adm-m-bal');if(bal)bal.textContent='$'+(d.bal/100).toFixed(2);
+  var role=$('adm-m-role');if(role)role.textContent=d.role||'user';
+  var roleSub=$('adm-m-role-sub');if(roleSub)roleSub.textContent=(d.nick||d.login||'')+(d.customId?' · ID: '+d.customId:'');
+  var roleAv=$('adm-m-av');if(roleAv)roleAv.textContent=(d.nick||d.login||'?')[0].toUpperCase();
+  var vip=$('adm-m-vip');if(vip)vip.textContent=(d.vip&&d.vip.name)||'—';
+  var orders=$('adm-m-orders');if(orders)orders.textContent=d.orders||'0';
+  var wds=$('adm-m-wds');if(wds)wds.textContent=d.wds||'0';
+  var ban=$('adm-m-ban');if(ban){ban.textContent=d.banned?'Заблокирован':'Активен';ban.style.color=d.banned?'#ef4444':'var(--ok)';}
+  var banBadge=$('adm-m-ban-badge');if(banBadge)banBadge.style.display=d.banned?'':'none';
+  var sel=$('adm-role-sel');if(sel)sel.value=d.role||'user';
+  // Теги
+  var tagsEl=$('adm-m-tags');
+  if(tagsEl)tagsEl.innerHTML=(d.tags||[]).map(function(t){return'<span style="padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;background:'+tagColor(t)+'22;color:'+tagColor(t)+';border:1px solid '+tagColor(t)+'44">'+esc(t)+'</span>';}).join(' ');
+  var tagSel=$('adm-tag-sel');if(tagSel&&d.tags&&d.tags.length)tagSel.value=d.tags[0]||'';
+  var cidInp=$('adm-custom-id');if(cidInp)cidInp.value=d.customId||'';
+  var res=$('adm-panel-res');if(res)res.hidden=false;
+  var err=$('adm-err');if(err)err.textContent='';
  }).catch(function(e){
-  $("adm-err").textContent=e.message;
-  $("adm-panel-res").hidden=true;
+  var err=$('adm-err');if(err)err.textContent=e.message;
+  var res=$('adm-panel-res');if(res)res.hidden=true;
  });
 }
+function tagColor(t){
+ var map={'Владелец':'#f59e0b','Ютубер':'#ef4444','Партнёр':'#8b5cf6','Стример':'#ec4899','VIP':'#f5a623','Модератор':'#22c55e','Воркер':'#3b82f6','Верифицирован':'#06b6d4','Топ-продавец':'#10b981'};
+ return map[t]||'#94a3b8';
+}
 function admAction(act){
- var amt=0;
- if(act==='add_bal')amt=+$("adm-add-bal").value;
- if(act==='sub_bal')amt=+$("adm-sub-bal").value;
- var payload={uid:S.admCur,action:act,amount:amt};
- if(act==='set_role'&&$("adm-role-sel"))payload.role=$("adm-role-sel").value;
- api("/api/admin/action",payload).then(function(){
-  sOk();toast("Успешно выполнено!");
-  admSearch();
- }).catch(function(e){toast(e.message,1);sErr()});
+ var payload={uid:S.admCur,action:act};
+ if(act==='add_bal'||act==='sub_bal'){
+  var v=+($('adm-add-bal')||{}).value||+($('adm-sub-bal')||{}).value;
+  payload.amount=v;
+ }
+ if(act==='set_role'&&$('adm-role-sel'))payload.role=$('adm-role-sel').value;
+ if(act==='set_vip'&&$('adm-vip-sel'))payload.vip=+$('adm-vip-sel').value;
+ if(act==='set_tag'){
+  var tagSel=$('adm-tag-sel');
+  payload.tag=tagSel?tagSel.value:'';
+ }
+ if(act==='set_custom_id'){
+  var cidInp=$('adm-custom-id');
+  payload.customId=(cidInp?cidInp.value:'').trim();
+ }
+ api('/api/admin/action',payload).then(function(){
+  sOk();toast('Выполнено!');admSearch();
+ }).catch(function(e){toast(e.message,1);sErr();});
+}
+function admSendMsg(){
+ var msg=($('adm-chat-msg')||{}).value||'';
+ if(!msg.trim())return;
+ api('/api/admin/action',{uid:S.admCur,action:'send_msg',text:msg}).then(function(){
+  sOk();toast('Сообщение отправлено');$('adm-chat-msg').value='';
+ }).catch(function(e){toast(e.message,1);});
+}
+
+/* ===== ОБЪЯВЛЕНИЯ ===== */
+function admLoadAnnouncements(){
+ var el=$('adm-ann-list');if(!el)return;
+ el.innerHTML='<div style="color:var(--mt);font-size:12px">Загрузка…</div>';
+ api('/api/admin/announcements').then(function(d){
+  if(!d.list||!d.list.length){el.innerHTML='<div style="color:var(--mt);font-size:13px">Объявлений нет</div>';return;}
+  el.innerHTML=d.list.map(function(a){
+   var typeStyle={info:'color:#3b82f6;background:#3b82f611;border-color:#3b82f633',warn:'color:#f59e0b;background:#f59e0b11;border-color:#f59e0b33',success:'color:#22c55e;background:#22c55e11;border-color:#22c55e33',danger:'color:#ef4444;background:#ef444411;border-color:#ef444433'}[a.type]||'';
+   return '<div style="background:var(--p2);border:1px solid var(--ln);border-radius:12px;padding:16px;margin-bottom:10px">'
+    +'<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px">'
+    +'<div style="display:flex;align-items:center;gap:8px">'
+    +(a.icon?'<span style="font-size:18px">'+a.icon+'</span>':'')
+    +'<b style="font-size:14px">'+esc(a.title)+'</b>'
+    +'<span style="padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid;'+typeStyle+'">'+(a.type||'info')+'</span>'
+    +'</div>'
+    +'<button onclick="admDeleteAnn(\''+a.id+'\')" style="background:none;border:none;color:var(--mt);cursor:pointer;font-size:16px;padding:0;line-height:1">×</button>'
+    +'</div>'
+    +'<div style="font-size:13px;color:var(--tx);margin-bottom:6px">'+esc(a.text)+'</div>'
+    +(a.link?'<a href="'+esc(a.link)+'" style="font-size:12px;color:var(--ac)">'+(a.linkText||a.link)+'</a>':'')
+    +'<div style="font-size:11px;color:var(--mt);margin-top:8px">'+new Date(a.t).toLocaleString('ru-RU')+(a.pinned?' · 📌 Закреплено':'')+'</div>'
+    +'</div>';
+  }).join('');
+ }).catch(function(e){el.innerHTML='<div class="err">'+esc(e.message)+'</div>';});
+}
+function admCreateAnn(){
+ var title=($('ann-title')||{}).value||'';
+ var text=($('ann-text')||{}).value||'';
+ var type=($('ann-type')||{}).value||'info';
+ var icon=($('ann-icon')||{}).value||'';
+ var link=($('ann-link')||{}).value||'';
+ var linkText=($('ann-link-text')||{}).value||'';
+ var pinned=($('ann-pinned')||{}).checked||false;
+ if(!title.trim()||!text.trim()){toast('Заполни заголовок и текст',1);return;}
+ api('/api/admin/announcement/create',{title,text,type,icon,link,linkText,pinned}).then(function(){
+  sOk();toast('Объявление опубликовано!');
+  $('ann-title').value='';$('ann-text').value='';$('ann-link').value='';$('ann-icon').value='';
+  admLoadAnnouncements();
+ }).catch(function(e){toast(e.message,1);});
+}
+function admDeleteAnn(id){
+ if(!confirm('Удалить объявление?'))return;
+ api('/api/admin/announcement/delete',{id:id}).then(function(){
+  sOk();admLoadAnnouncements();
+ }).catch(function(e){toast(e.message,1);});
 }
 
 /* VIP-КЛУБ */
