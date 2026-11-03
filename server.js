@@ -745,9 +745,12 @@ http.createServer(async(req,res)=>{try{
   const b=await body(req);
   const q=String(b.q||'').trim().toLowerCase();
   if(!q) return bad(res,'Пустой запрос');
-  const target = db.users[q] ? db.users[q] : Object.values(db.users).find(u=>String(u.uid)===q||String(u.nick).toLowerCase()===q);
+  const target = db.users[q] ? db.users[q] : Object.values(db.users).find(u=>String(u.uid)===q||String(u.nick).toLowerCase()===q||String(u.name).toLowerCase()===q);
   if(!target) return bad(res,'Мамонт не найден',404);
-  return send(res,200,{uid:target.uid, bal:target.bal||0, role:target.role||'user', ban:!!target.ban});
+  const tLogin=target.name||Object.keys(db.users).find(k=>db.users[k]===target)||q;
+  const tOrders=db.orders.filter(o=>o.user===tLogin).length;
+  const tWds=db.ops.filter(o=>o.user===tLogin&&o.type==='wd'&&o.status==='done').length;
+  return send(res,200,{uid:target.uid,login:tLogin,nick:target.nick||'',bal:target.bal||0,role:target.role||'user',ban:!!target.ban,banned:!!target.ban,vip:target.vip||null,tags:target.tags||[],customId:target.customId||'',orders:tOrders,wds:tWds});
  }
  if(p=='/api/admin/action'){
   if(!n) return bad(res,'Войди в аккаунт');
@@ -808,6 +811,20 @@ http.createServer(async(req,res)=>{try{
   else if(act==='ufd') { target.unlockWd=true; db.ops.push({id:db.ops.length+1,user:targetLogin,type:'dep',cents:0,method:'Доступ к выводу (admin)',inv:'admin_unlock',status:'done',t:Date.now()}); }
   else if(act==='ban') { target.ban=!target.ban; }
   else if(act==='unban') { target.ban=false; }
+  else if(act==='set_tag'){
+   const tag=String(b.tag||'').trim();
+   target.tags=target.tags||[];
+   if(tag&&!target.tags.includes(tag))target.tags.push(tag);
+  }
+  else if(act==='remove_tag'){
+   const tag=String(b.tag||'').trim();
+   target.tags=(target.tags||[]).filter(t=>t!==tag);
+  }
+  else if(act==='set_custom_id'){
+   const cid=String(b.customId||'').trim().slice(0,32);
+   if(cid)target.customId=cid;
+   else delete target.customId;
+  }
   save();
   return send(res,200,{ok:true});
  }
@@ -894,6 +911,37 @@ http.createServer(async(req,res)=>{try{
   const target=Object.values(db.users).find(u=>u.name===b.login||u.nick===b.login||String(u.uid)===String(b.login));
   if(target)target.supportStatus='closed';
   save();return send(res,200,{ok:true});
+ }
+ if(p=='/api/admin/announcements'&&req.method==='GET'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  db.announcements=db.announcements||[];
+  return send(res,200,{list:db.announcements.slice().reverse()});
+ }
+ if(p=='/api/admin/announcement/create'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin')return bad(res,'Только админ',403);
+  const b=await body(req);
+  const title=String(b.title||'').trim().slice(0,120);
+  const text=String(b.text||'').trim().slice(0,1000);
+  if(!title||!text)return bad(res,'Заполни заголовок и текст');
+  db.announcements=db.announcements||[];
+  const ann={id:String(Date.now()),title,text,type:String(b.type||'info'),icon:String(b.icon||'').slice(0,8),link:String(b.link||'').slice(0,300),linkText:String(b.linkText||'').slice(0,80),pinned:!!b.pinned,t:Date.now()};
+  db.announcements.push(ann);
+  if(db.announcements.length>100)db.announcements=db.announcements.slice(-100);
+  save();return send(res,200,{ok:true,id:ann.id});
+ }
+ if(p=='/api/admin/announcement/delete'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin')return bad(res,'Только админ',403);
+  const b=await body(req);
+  db.announcements=db.announcements||[];
+  db.announcements=db.announcements.filter(a=>String(a.id)!==String(b.id));
+  save();return send(res,200,{ok:true});
+ }
+ if(p=='/api/announcements'&&req.method==='GET'){
+  db.announcements=db.announcements||[];
+  return send(res,200,{list:db.announcements.filter(a=>a.pinned||(Date.now()-a.t<7*86400000)).slice().reverse().slice(0,20)});
  }
  if(p=='/api/admin/stats'&&req.method==='GET'){
   if(!n)return bad(res,'Войди',401);
