@@ -341,6 +341,14 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
 .lf-list::-webkit-scrollbar{display:none}
 .lf-item{background:var(--p);border:1px solid #202733;border-radius:9px;padding:6px 7px;animation:dealIn .36s var(--ease);flex-shrink:0;transition:border-color .2s}
 .lf-item:hover{border-color:#344156}
+.lf-time{font-size:9.5px;color:#5a6478;margin-top:3px;display:block}
+/* Admin panel nice tabs */
+#adm-tabs{background:var(--p2);border:1px solid var(--ln);border-radius:14px;padding:6px;gap:4px}
+.adm-tab{background:transparent!important;border:none!important;color:var(--mt)!important;border-radius:10px!important;padding:8px 14px!important;font-size:13px!important;font-weight:600!important;transition:all .18s!important;white-space:nowrap}
+.adm-tab:hover{background:var(--p)!important;color:var(--tx)!important}
+.adm-tab.bl{background:var(--ac)!important;color:#0d1117!important;box-shadow:0 3px 12px -2px #f5a62366!important}
+.adm-tab-body{animation:fadeIn .2s var(--ease)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 @keyframes dealIn{0%{opacity:0;transform:translateY(-10px) scale(.97)}100%{opacity:1;transform:none}}
 .lf-top{display:flex;align-items:center;gap:6px}
 .lf-av{width:23px;height:23px;border-radius:50%;object-fit:cover;background:var(--p2);flex-shrink:0;display:grid;place-items:center;font-weight:800;font-size:10px;color:#fff}
@@ -1586,6 +1594,176 @@ function route(){
 addEventListener("hashchange",route);
 
 /* АДМИН ПАНЕЛЬ ЛОГИКА */
+function admShowTab(tab){
+ document.querySelectorAll(".adm-tab").forEach(function(b){
+  b.classList.toggle("bl", b.dataset.tab===tab);
+ });
+ document.querySelectorAll(".adm-tab-body").forEach(function(d){d.hidden=true});
+ var t=$("adm-tab-"+tab);
+ if(t)t.hidden=false;
+ if(tab==="stats")admLoadStats();
+ if(tab==="support")admLoadTickets();
+}
+function admSendMsg(){
+ var msg=$("adm-chat-msg").value.trim();
+ if(!msg||!S.admCur){return}
+ api("/api/admin/action",{uid:S.admCur,action:"send_msg",text:msg}).then(function(){
+  toast("Сообщение отправлено!");
+  $("adm-chat-msg").value="";
+  sOk();
+ }).catch(function(e){toast(e.message,1)});
+}
+function admOpenChat(login){
+ if(!login)return;
+ admShowTab("support");
+ setTimeout(function(){admSelectTicket(login)},300);
+}
+var _supFilter="open",_supCur=null;
+function admLoadTickets(){
+ var list=$("sup-ticket-list");
+ if(!list)return;
+ list.innerHTML='<div style="color:var(--mt);font-size:12px;padding:10px">Загрузка…</div>';
+ api("/api/support/tickets",null,"GET").then(function(d){
+  _supTickets=d.tickets||[];
+  renderTicketList();
+  var unread=_supTickets.filter(function(t){return t.unread}).length;
+  var badge=$("sup-badge");
+  if(badge){badge.style.display=unread?"inline":"none";badge.textContent=unread}
+ }).catch(function(e){if(list)list.innerHTML='<div class="err">'+esc(e.message)+'</div>'});
+}
+var _supTickets=[];
+function renderTicketList(){
+ var list=$("sup-ticket-list");if(!list)return;
+ var filt=_supTickets.filter(function(t){
+  if(_supFilter==="open")return t.status!=="closed";
+  if(_supFilter==="closed")return t.status==="closed";
+  return true;
+ });
+ if(!filt.length){list.innerHTML='<div style="color:var(--mt);font-size:12px;padding:10px">Нет диалогов</div>';return}
+ list.innerHTML=filt.map(function(t){
+  var last=t.msgs&&t.msgs.length?t.msgs[t.msgs.length-1]:null;
+  var preview=last?esc(last.text.slice(0,38))+(last.text.length>38?"…":""):"—";
+  var unreadDot=t.unread?'<span style="width:7px;height:7px;border-radius:50%;background:#ef4444;flex-shrink:0;display:inline-block"></span>':'';
+  var statusColor=t.status==="closed"?"#22c55e":t.status==="in_progress"?"#f59e0b":"#ef4444";
+  var isActive=_supCur===t.login;
+  return'<div class="sup-ticket-row''+(isActive?' active':'')+'" onclick="admSelectTicket(\'"+t.login+"\')" style="padding:10px 12px;border-bottom:1px solid var(--ln);cursor:pointer;background:''+(isActive?"var(--p2)":"transparent")+';transition:background .15s">'
+   +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">'+unreadDot
+   +'<b style="font-size:12.5px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(t.nick||t.login)+'</b>'
+   +'<span style="font-size:10px;color:'+statusColor+';font-weight:700">''+(t.status==="closed"?"✓ закрыт":t.status==="in_progress"?"в работе":"открыт")+'</span>'
+   +'</div>'
+   +'<div style="font-size:11px;color:var(--mt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+preview+'</div>'
+   +'</div>';
+ }).join("");
+}
+function admTicketFilter(f){
+ _supFilter=f;
+ document.querySelectorAll(".adm-tf").forEach(function(b){b.classList.toggle("bl",b.dataset.f===f)});
+ renderTicketList();
+}
+function admSelectTicket(login){
+ _supCur=login;
+ renderTicketList();
+ var t=_supTickets.find(function(x){return x.login===login});
+ var hdr=$("sup-chat-header");
+ var log=$("sup-chat-log");
+ var inp=$("sup-reply-inp");
+ var sendBtn=$("sup-send-btn");
+ var closeBtn=$("sup-close-btn");
+ if(!t){if(hdr)hdr.innerHTML='<span style="color:var(--mt)">Диалог не найден</span>';return}
+ if(hdr)hdr.innerHTML='<div style="width:32px;height:32px;border-radius:50%;background:var(--ac);display:grid;place-items:center;font-weight:800;font-size:13px;color:#0d1117;flex-shrink:0">'+esc((t.nick||t.login)[0].toUpperCase())+'</div>'
+  +'<div><b style="font-size:13.5px">'+esc(t.nick||t.login)+'</b><span style="display:block;font-size:11px;color:var(--mt)">#'+esc(t.uid||t.login)+' · '+esc(t.login)+'</span></div>'
+  +'<button class="btn sm" style="margin-left:auto;font-size:11px" onclick="admLoadTickets()">↻</button>';
+ if(log){
+  var msgs=t.msgs||[];
+  if(!msgs.length){log.innerHTML='<div style="margin:auto;color:var(--mt);font-size:13px">Сообщений нет</div>';
+  }else{
+   log.innerHTML=msgs.map(function(m){
+    var isAdm=m.from==="adm"||m.from==="b";
+    var time=m.t?'<span style="font-size:10px;color:var(--mt);display:block;margin-top:2px">'+lfTimeAgo(m.t)+'</span>':'';
+    return'<div class="ai-m ''+(isAdm?"b":"u")+'" style="max-width:85%">'+(isAdm?'<b style="font-size:10.5px;color:var(--ac);display:block;margin-bottom:2px">Оператор:</b>':'')+esc(m.text)+time+'</div>';
+   }).join("");
+   log.scrollTop=log.scrollHeight;
+  }
+ }
+ if(inp){inp.disabled=t.status==="closed";inp.placeholder=t.status==="closed"?"Тикет закрыт":"Ответ оператора…"}
+ if(sendBtn)sendBtn.disabled=t.status==="closed";
+ // Mark read
+ if(t.unread){
+  api("/api/support/read",{login:login}).catch(function(){});
+  t.unread=false;
+  var badge=$("sup-badge");
+  var unread=_supTickets.filter(function(x){return x.unread}).length;
+  if(badge){badge.style.display=unread?"inline":"none";badge.textContent=unread}
+ }
+}
+function supSend(){
+ var inp=$("sup-reply-inp");
+ var msg=(inp&&inp.value||"").trim();
+ if(!msg||!_supCur)return;
+ inp.value="";
+ api("/api/support/reply",{login:_supCur,text:msg}).then(function(){
+  // push msg locally
+  var t=_supTickets.find(function(x){return x.login===_supCur});
+  if(t){t.msgs=t.msgs||[];t.msgs.push({from:"adm",text:msg,t:Date.now()})}
+  admSelectTicket(_supCur);
+  sOk();
+ }).catch(function(e){toast(e.message,1)});
+}
+function supClose(){
+ if(!_supCur)return;
+ api("/api/support/close",{login:_supCur}).then(function(){
+  var t=_supTickets.find(function(x){return x.login===_supCur});
+  if(t)t.status="closed";
+  admSelectTicket(_supCur);
+  renderTicketList();
+  toast("Тикет закрыт ✓");
+ }).catch(function(e){toast(e.message,1)});
+}
+function admLoadStats(){
+ var el=$("adm-stats-body");
+ if(!el)return;
+ el.innerHTML='<div style="color:var(--mt);font-size:12px">Загрузка…</div>';
+ api("/api/admin/stats",null,"GET").then(function(d){
+  el.innerHTML='<div class="receipt" style="margin-top:0">'
+   +'<div class="rc-row"><span>Всего пользователей:</span><b>'+d.users+'</b></div>'
+   +'<div class="rc-row"><span>Активных сегодня:</span><b style="color:var(--ok)">'+d.active+'</b></div>'
+   +'<div class="rc-row"><span>Заявок на продажу:</span><b>'+d.orders+'</b></div>'
+   +'<div class="rc-row"><span>Выплачено всего:</span><b style="color:var(--ac)">$'+d.paid+'</b></div>'
+   +'<div class="rc-row"><span>Пополнений (депозитов):</span><b>'+d.deps+'</b></div>'
+   +'<div class="rc-row"><span>Выводов обработано:</span><b>'+d.wds+'</b></div>'
+   +'<div class="rc-row"><span>Открытых тикетов:</span><b style="color:''+('d.tickets>0?"#ef4444":"var(--ok)"')+'">'+('d.tickets')+'</b></div>'
+   +'</div>';
+  // Ugly template literal — build it cleanly
+  el.innerHTML=buildStatsHTML(d);
+  // new users list
+  var nu=$("adm-new-users");
+  if(nu&&d.newUsers){
+   nu.innerHTML=d.newUsers.map(function(u){
+    return'<div class="row" style="padding:6px 0;border-bottom:1px solid var(--ln)">'
+     +'<div><b style="font-size:13px">'+esc(u.nick||u.login)+'</b><span style="font-size:11px;color:var(--mt);margin-left:6px">#'+u.uid+'</span></div>'
+     +'<div style="font-size:12px;color:var(--mt)">'+lfTimeAgo(u.reg)+'</div></div>';
+   }).join("");
+  }
+ }).catch(function(e){el.innerHTML='<div class="err">'+esc(e.message)+'</div>'});
+}
+function buildStatsHTML(d){
+ return'<div class="receipt" style="margin-top:0">'
+  +'<div class="rc-row"><span>Всего пользователей:</span><b>'+d.users+'</b></div>'
+  +'<div class="rc-row"><span>Активных за 24ч:</span><b style="color:var(--ok)">'+d.active+'</b></div>'
+  +'<div class="rc-row"><span>Заявок на продажу:</span><b>'+d.orders+'</b></div>'
+  +'<div class="rc-row"><span>Выплачено всего:</span><b style="color:var(--ac)">$'+d.paid+'</b></div>'
+  +'<div class="rc-row"><span>Депозитов обработано:</span><b>'+d.deps+'</b></div>'
+  +'<div class="rc-row"><span>Выводов обработано:</span><b>'+d.wds+'</b></div>'
+  +'<div class="rc-row"><span>Открытых тикетов:</span><b style="color:'+(d.tickets>0?"#ef4444":"var(--ok)")+'">'+d.tickets+'</b></div>'
+  +'</div>';
+}
+function saveCfg(key,inputId){
+ var val=$(inputId)&&$(inputId).value;
+ if(!val&&val!=="0"){toast("Введи значение",1);return}
+ api("/api/admin/action",{action:"set_cfg",key:key,val:val}).then(function(){
+  sOk();toast("Сохранено ✓");
+ }).catch(function(e){toast(e.message,1);if($("cfg-err"))$("cfg-err").textContent=e.message});
+}
 function admSearch(){
  var q=$("adm-uid").value.trim();
  if(!q)return;
@@ -2303,20 +2481,23 @@ var ULTRA_SHORT=[
  "прийшло","все чітко","+реп","дякую","норм","імба","бабки на карті","вивели швидко","спс","все гуд","топ","+rep","рекомендую","не скам","все чесно","гроші прийшли",
  "пиздато","хуй знає як так швидко","заєбісь","найкраще","не проїбали","чотко","рілі топ","без єбалова","усе путьом","реально швидко","без дурні","всьо збс",
  "ёбаный быстро","нихуя себе скорость","мега чётко","без базаров","пушка сервис","збс короче","оч понравилось","по красоте","жиза","кайф",
- "все без обману","не кинули","чесні хлопці","дякую братан","красавчики","норм пацани","реп в плюс","дали добре","від душі","збс"
+ "все без обману","не кинули","чесні хлопці","дякую братан","красавчики","норм пацани","реп в плюс","дали добре","від душі","збс",
+ "усьо норм","топчік","красаві","спасиб","чоткі пацани","огонь","всьо ок","збс нема слів","крут","пушка"
 ];
 var CMB_A=[
  "все прийшло","гроші на карті","вивели за пару хвилин","бабки на месте","трейд приняли сразу","выплата прилетела моментально",
  "все чітко","все гуд","скин забрали быстро","оплата на месте","гроші капнули","виплатили без затримок","прийшло все до копійки",
  "деньги уже на балансе карты","обмен прилетел за секунду","вывели за 3 минуты","швидко вивели","все чесно","прайс реально норм",
- "лучший курс выкупа","не кинули, все четко","перевірив на дешевому скіні, платять","выручили когда срочно нужны были бабки",
- "слил ненужный дроп","продал скин который валялся в инвентаре","злив ширп, копійка на карті","вже втретє тут продаю",
+ "лучший курс выкупа","не кинули все четко","перевірив на дешевому скіні платять","выручили когда срочно нужны были бабки",
+ "слил ненужный дроп","продал скин который валялся в инвентаре","злив ширп копійка на карті","вже втретє тут продаю",
  "быстро и без лишних вопросов","работают ровно","сервіс топ","найкраща скупка","все супер","бабки пришли быстрее чем я закрыл стим",
  "нихуя себе как быстро вывели","хуй знає як вони так швидко","відвал башки який швидкий вивід","вообще без єбалова",
- "слив дроп который пылился — деньги сразу","пиздато платять","без лайна і без затримок","збс реально збс",
- "отписал в саппорт — ответили за минуту","сапорт топовий","менеджер пояснив за 30 сек всё","поддержка не сливается",
- "четко сработали пацаны","красавчики не развели","продал уже раз 5 — ни разу не кинули","постоянный клиент теперь",
- "вывел на крипту за 5 минут это вообще космос","usdt прилетел мгновенно","крипта пришла раньше чем я ожидал"
+ "слив дроп который пылился деньги сразу","пиздато платять","без лайна і без затримок","збс реально збс",
+ "отписал в саппорт ответили за минуту","сапорт топовий","менеджер пояснив за 30 сек всё","поддержка не сливается",
+ "четко сработали пацаны","красавчики не развели","продал уже раз 5 ни разу не кинули","постоянный клиент теперь",
+ "вывел на крипту за 5 минут это вообще космос","usdt прилетел мгновенно","крипта пришла раньше чем я ожидал",
+ "все прийшло норм","гроші є","збс пацани","топ скуп","реально норм",
+ "всё чіткою","прийшло усьо","бабки є на моно","пришло все ок","зачіт"
 ];
 var CMB_B=[
  "на моно","на приват24","на монобанк","на карту","на пумб","на кріптобота","на usdt","на крипту","в тг боті","без комісії",
@@ -2326,12 +2507,15 @@ var CMB_B=[
  "хуй знає як вони встигають так швидко","пиздатий сервіс чесно","без єбалова і лажі","збс короче без слів",
  "це не скам перевірив особисто","не проїбали ані копійки","реально кращий курс ніж у конкурентів","жиза платять норм",
  "поставив 5 зірок без вагань","не шкодую що скинув сюди","друзям порадив вже","кент здивувався що так швидко",
- "минути 3 і гроші вже тут","швидше ніж очікував","без затримок і пояснень"
+ "минути 3 і гроші вже тут","швидше ніж очікував","без затримок і пояснень",
+ "на моно прийшло","на карту відразу","без геморою","на усдт","на крипт бота"
 ];
 var CMB_C=[
  "дякую","спс","+реп","+rep","топ","імба","раджу","рекомендую","красавцы","гуд","четко","супер","от души","работаем дальше","все ок","норм",
- "пиздато","збс","заєбісь","нормік","від душі братан","без лайна","реп в плюс","жиза","кайф","вогонь","огонь","масть","чотко","путьом"
+ "пиздато","збс","заєбісь","нормік","від душі братан","без лайна","реп в плюс","жиза","кайф","вогонь","огонь","масть","чотко","путьом",
+ "збс нема слів","топ реально","класно","зачіт","ок","гуд","спс брат","дяк","👍","🔥","норм норм","ок ок","збс збс"
 ];
+
 
 var BY_GUN={
  "AK-47":["продал калаш, выплата прилетела быстро","злив свій калаш, гроші вже на моно","калаш забрали по норм прайсу, дякую","продав ак-47, вивели за пару хв","слил калаш, бабки на карте"],
@@ -2471,6 +2655,23 @@ function getRev(stars,skinName,priceUsd){
 var STAR_ON='<svg width="10" height="10" viewBox="0 0 24 24" fill="#f5a623"><polygon points="12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3 12 2"/></svg>';
 var STAR_OFF='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="2"><polygon points="12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3 12 2"/></svg>';
 
+var _lfTimes=[];
+function lfTimeAgo(ms){
+ var s=Math.floor((Date.now()-(ms||Date.now()))/1000);
+ if(s<10)return"только что";
+ if(s<60)return s+" сек назад";
+ var m=Math.floor(s/60);
+ if(m<60)return m+" мин назад";
+ var h=Math.floor(m/60);
+ if(h<24)return h+" ч назад";
+ return Math.floor(h/24)+" дн назад";
+}
+function updateLfTimes(){
+ document.querySelectorAll(".lf-ts").forEach(function(el){
+  var t=+el.dataset.t;if(t)el.textContent=lfTimeAgo(t);
+ });
+}
+setInterval(updateLfTimes,30000);
 function renderDealItem(nick,stars,skinName,skinImg,priceUsd,revText,customAv){
  var box=$("lf-list");if(!box)return;
  var st=Math.max(1,Math.min(5,stars|0)),starStr="";
@@ -2478,9 +2679,13 @@ function renderDealItem(nick,stars,skinName,skinImg,priceUsd,revText,customAv){
  var avHtml=getAvatarHtml(nick,customAv);
  var el=document.createElement("div");
  el.className="lf-item";
+ // scatter fake timestamp: 10s–35min ago
+ var fakeOffset=Math.floor(Math.random()*35*60+10)*1000;
+ var ts=Date.now()-fakeOffset;
  el.innerHTML='<div class="lf-top">'+avHtml+'<div class="lf-u"><div class="lf-name">'+esc(nick)+'</div><div class="lf-stars">'+starStr+'</div></div></div>'+
   '<div class="lf-deal"><img src="'+esc(skinImg||FALLBACK_SVG)+'" alt="" onerror="this.src=FALLBACK_SVG"><div class="lf-skin">'+esc(skinName)+'</div><div class="lf-pr">+'+fm(priceUsd)+'</div></div>'+
-  '<div class="lf-rev">'+esc(revText)+'</div>';
+  '<div class="lf-rev">'+esc(revText)+'</div>'+
+  '<span class="lf-time lf-ts" data-t="'+ts+'">'+lfTimeAgo(ts)+'</span>';
  box.insertBefore(el,box.firstChild);
  while(box.children.length>16)box.removeChild(box.lastChild);
 }
