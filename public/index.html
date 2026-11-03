@@ -1903,22 +1903,11 @@ function supClose(){
  }).catch(function(e){toast(e.message,1)});
 }
 function admLoadStats(){
- var el=$("adm-stats-body");
+ var el=$("adm-stats-grid")||$("adm-stats-body");
  if(!el)return;
  el.innerHTML='<div style="color:var(--mt);font-size:12px">Загрузка…</div>';
  api("/api/admin/stats",null,"GET").then(function(d){
-  el.innerHTML='<div class="receipt" style="margin-top:0">'
-   +'<div class="rc-row"><span>Всего пользователей:</span><b>'+d.users+'</b></div>'
-   +'<div class="rc-row"><span>Активных сегодня:</span><b style="color:var(--ok)">'+d.active+'</b></div>'
-   +'<div class="rc-row"><span>Заявок на продажу:</span><b>'+d.orders+'</b></div>'
-   +'<div class="rc-row"><span>Выплачено всего:</span><b style="color:var(--ac)">$'+d.paid+'</b></div>'
-   +'<div class="rc-row"><span>Пополнений (депозитов):</span><b>'+d.deps+'</b></div>'
-   +'<div class="rc-row"><span>Выводов обработано:</span><b>'+d.wds+'</b></div>'
-   +'<div class="rc-row"><span>Открытых тикетов:</span><b style="color:'+(d.tickets>0?'#ef4444':'var(--ok)')+'">'+(d.tickets||0)+'</b></div>'
-   +'</div>';
-  // Ugly template literal — build it cleanly
-  buildStatsHTML(d);
-  // new users list
+  el.innerHTML=buildStatsHTML(d);
   var nu=$("adm-new-users");
   if(nu&&d.newUsers){
    nu.innerHTML=d.newUsers.map(function(u){
