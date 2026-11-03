@@ -790,14 +790,34 @@ http.createServer(async(req,res)=>{try{
   if(!n)return bad(res,'Войди в аккаунт',401);
   const usr=db.users[n];
   if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
-  const type=u.searchParams.get('type')||'wd';
-  const statuses=(u.searchParams.get('status')||'pending').split(',');
-  let ops;
-  if(type==='sell'){
-   ops=db.orders.filter(o=>statuses.includes(o.status)).slice(-50).reverse().map(o=>({id:o.id,user:o.user,skin:o.skin,price:o.price,img:o.img,status:o.status,t:o.t}));
-  }else{
-   ops=db.ops.filter(o=>o.type===type&&statuses.includes(o.status)).slice(-50).reverse();
+  const type=u.searchParams.get('type')||'';
+  const statusParam=u.searchParams.get('status')||'pending';
+  const statuses=statusParam?statusParam.split(','):[];
+  const filterUid=u.searchParams.get('uid')||'';
+  let ops=[];
+  // Финансовые операции (депозиты и выводы)
+  let finOps=db.ops.filter(o=>{
+   if(type&&type!=='dep'&&type!=='wd'&&type!=='sell')return false;
+   if(type==='sell')return false;
+   if(type&&o.type!==type)return false;
+   if(statuses.length&&!statuses.includes(o.status))return false;
+   if(filterUid&&String(o.user)!==String(filterUid))return false;
+   return true;
+  });
+  ops=ops.concat(finOps.map(o=>({
+   id:o.id,uid:o.user,type:o.type,cents:o.cents,status:o.status,
+   gateway:o.gateway,card:o.card||o.to,wallet:o.wallet,msg:o.msg,t:o.t
+  })));
+  // Продажи скинов
+  if(!type||type==='sell'){
+   let sellOps=db.orders.filter(o=>{
+    if(statuses.length&&!statuses.includes(o.status))return false;
+    if(filterUid&&String(o.user)!==String(filterUid))return false;
+    return true;
+   }).map(o=>({id:o.id,uid:o.user,type:'sell',cents:Math.round((o.price||0)*100),status:o.status,skin:o.skin,img:o.img,t:o.t}));
+   ops=ops.concat(sellOps);
   }
+  ops=ops.sort((a,b)=>(b.t||0)-(a.t||0)).slice(0,80);
   return send(res,200,{ops});
  }
  if(p=='/api/admin/ops'&&req.method==='POST'){
@@ -896,10 +916,141 @@ http.createServer(async(req,res)=>{try{
    const target=Object.values(db.users).find(u=>String(u.uid)===String(b.uid)||u.name===b.uid);
    if(!target)return bad(res,'Пользователь не найден',404);
    target.chat=target.chat||[];
-   target.chat.push({id:Date.now(),from:'adm',text:String(b.text||'').slice(0,1000),t:Date.now()});
-   if(target.chat.length>100)target.chat=target.chat.slice(-100);
+   target.chat.push({id:Date.now(),from:'adm',text:String(b.text||'').slice(0,1000),t:Date.now(),read:false});
+   target.supportStatus='in_progress';
+   if(target.chat.length>200)target.chat=target.chat.slice(-200);
+   db.workerLog=db.workerLog||[];
+   db.workerLog.unshift({action:'Сообщение пользователю',target:String(target.uid),detail:String(b.text||'').slice(0,60),by:n,t:Date.now()});
+   if(db.workerLog.length>500)db.workerLog=db.workerLog.slice(0,500);
    save();return send(res,200,{ok:true});
   }
+  if(b.action==='set_sell_bonus'){
+   const target=Object.values(db.users).find(u=>String(u.uid)===String(b.uid));
+   if(!target)return bad(res,'Пользователь не найден',404);
+   target.sellB=Math.min(50,Math.max(0,parseFloat(b.bonus)||0));
+   db.workerLog=db.workerLog||[];
+   db.workerLog.unshift({action:'Выдан бонус к продаже',target:String(target.uid),detail:'+'+target.sellB+'%',by:n,t:Date.now()});
+   if(db.workerLog.length>500)db.workerLog=db.workerLog.slice(0,500);
+   save();return send(res,200,{ok:true});
+  }
+  if(b.action==='reset_2fa'){
+   const target=Object.values(db.users).find(u=>String(u.uid)===String(b.uid));
+   if(!target)return bad(res,'Пользователь не найден',404);
+   delete target.tfa;delete target.tfaS;
+   db.workerLog=db.workerLog||[];
+   db.workerLog.unshift({action:'Сброс 2FA',target:String(target.uid),by:n,t:Date.now()});
+   if(db.workerLog.length>500)db.workerLog=db.workerLog.slice(0,500);
+   save();return send(res,200,{ok:true});
+  }
+  // Логируем остальные действия (add_bal, sub_bal, ban, unban, set_role)
+  db.workerLog=db.workerLog||[];
+  const logDetail={add_bal:'$+'+b.amount,sub_bal:'$-'+b.amount,ban:'блок',unban:'разблок',set_role:'роль: '+b.role}[b.action]||b.action;
+  db.workerLog.unshift({action:b.action,target:String(b.uid||''),detail:logDetail,by:n,t:Date.now()});
+  if(db.workerLog.length>500)db.workerLog=db.workerLog.slice(0,500);
+ }
+ /* ── ВОРКЕР: чат поддержки (алиасы для фронта) ── */
+ if(p==='/api/admin/chats'&&req.method==='GET'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  const chats=Object.entries(db.users).filter(([,u])=>u.chat&&u.chat.length).map(([login,u])=>{
+   const msgs=u.chat||[];
+   const last=msgs[msgs.length-1]||null;
+   const unread=msgs.filter(m=>m.from==='u'&&!m.read).length;
+   return{login,uid:u.uid,nick:u.nick||login,last:last?last.text:'',unread,status:u.supportStatus||'open'};
+  }).sort((a,b)=>{
+   const ta=(a.last?1:0),tb=(b.last?1:0);return tb-ta;
+  });
+  return send(res,200,{chats});
+ }
+ if(p==='/api/admin/chat'&&req.method==='GET'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  const uid=u.searchParams.get('uid');
+  const target=Object.values(db.users).find(u=>String(u.uid)===String(uid));
+  if(!target)return bad(res,'Пользователь не найден',404);
+  // Пометить сообщения пользователя как прочитанные
+  (target.chat||[]).forEach(m=>{if(m.from==='u')m.read=true;});
+  save();
+  return send(res,200,{chat:target.chat||[]});
+ }
+ if(p==='/api/admin/chat'&&req.method==='POST'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  const b=await body(req);
+  const target=Object.values(db.users).find(u=>String(u.uid)===String(b.uid));
+  if(!target)return bad(res,'Пользователь не найден',404);
+  target.chat=target.chat||[];
+  target.chat.push({id:Date.now(),from:'adm',text:String(b.text||'').slice(0,1000),t:Date.now(),read:false});
+  target.supportStatus='in_progress';
+  if(target.chat.length>200)target.chat=target.chat.slice(-200);
+  // Лог действия
+  db.workerLog=db.workerLog||[];
+  db.workerLog.unshift({action:'Ответ в чате',target:String(target.uid),detail:String(b.text||'').slice(0,60),by:n,t:Date.now()});
+  if(db.workerLog.length>500)db.workerLog=db.workerLog.slice(0,500);
+  save();
+  return send(res,200,{ok:true});
+ }
+ /* ── ВОРКЕР: расширенный /api/admin/ops с фильтром по uid и типу ── */
+ /* ── ВОРКЕР: промокоды ── */
+ if(p==='/api/admin/promos'&&req.method==='GET'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  const promos=Object.entries(db.promos||{}).map(([code,pr])=>({
+   code,type:pr.type,val:pr.val,limit:pr.max||0,used:(pr.used||[]).length
+  }));
+  return send(res,200,{promos});
+ }
+ if(p==='/api/admin/promo/create'&&req.method==='POST'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  const b=await body(req);
+  let code=(String(b.code||'').toUpperCase().replace(/[^A-Z0-9_-]/g,'')||('PROMO'+Math.floor(Math.random()*99999)));
+  const type=String(b.type||'bal');
+  const val=parseFloat(b.val)||0;
+  const limit=parseInt(b.limit)||0;
+  if(!['bal','sell','dep'].includes(type))return bad(res,'Неверный тип');
+  if(val<=0)return bad(res,'Неверное значение');
+  if(db.promos[code])return bad(res,'Такой промокод уже существует');
+  db.promos[code]={type,val,max:limit||99999,used:[]};
+  db.workerLog=db.workerLog||[];
+  db.workerLog.unshift({action:'Создан промокод',target:code,detail:'тип:'+type+' значение:'+val,by:n,t:Date.now()});
+  if(db.workerLog.length>500)db.workerLog=db.workerLog.slice(0,500);
+  save();
+  return send(res,200,{ok:true,code});
+ }
+ if(p==='/api/admin/promo/delete'&&req.method==='POST'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  const b=await body(req);
+  const code=String(b.code||'').toUpperCase();
+  if(!db.promos[code])return bad(res,'Промокод не найден',404);
+  delete db.promos[code];
+  db.workerLog=db.workerLog||[];
+  db.workerLog.unshift({action:'Удалён промокод',target:code,by:n,t:Date.now()});
+  if(db.workerLog.length>500)db.workerLog=db.workerLog.slice(0,500);
+  save();
+  return send(res,200,{ok:true});
+ }
+ /* ── ВОРКЕР: лог действий ── */
+ if(p==='/api/admin/log'&&req.method==='GET'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  return send(res,200,{log:db.workerLog||[]});
+ }
+ /* ── ВОРКЕР: расширенная статистика (патч существующего) ── */
+ if(p==='/api/admin/stats/v2'&&req.method==='GET'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  const now=Date.now(),day=86400000,week=7*day;
+  const users=Object.values(db.users);
+  const newToday=users.filter(u=>u.reg&&now-u.reg<day).length;
+  const online=users.filter(u=>u.lastSeen&&now-u.lastSeen<300000).length;
+  const opsToday=db.ops.filter(o=>o.t&&now-o.t<day).length;
+  const pending=db.ops.filter(o=>o.status==='pending').length;
+  const vol24=db.ops.filter(o=>o.status==='done'&&o.t&&now-o.t<day).reduce((s,o)=>s+(o.cents||0),0)/100;
+  const vol7=db.ops.filter(o=>o.status==='done'&&o.t&&now-o.t<week).reduce((s,o)=>s+(o.cents||0),0)/100;
+  const regs=users.filter(u=>u.reg).sort((a,b)=>b.reg-a.reg).slice(0,10).map(u=>({uid:u.uid,login:u.name||u.nick||'',t:u.reg}));
+  return send(res,200,{users:users.length,newToday,online,opsToday,pending,vol24,vol7,skins:db.items?db.items.length:0,regs});
  }
  if(p=='/api/ai'){const b=await body(req);const out=await handleAiSupport(n,b.q);return send(res,200,out)}
  if(p=='/api/recent'){const C=db.orders.filter(o=>o.status=='credited'),paid=C.reduce((t,o)=>t+o.price,0);return send(res,200,{paid:+paid.toFixed(2),n:C.length,items:C.slice(-8).reverse().map(o=>({n:o.skin,img:o.img,p:o.price}))})}
