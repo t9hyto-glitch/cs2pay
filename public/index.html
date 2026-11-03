@@ -703,168 +703,283 @@ textarea:focus{outline:none;border-color:var(--ac)}
  <section id="v-profile" hidden style="padding:14px 0 50px"><div id="pt"></div><div id="pc"></div></section>
 
  <!-- АДМИН-ПАНЕЛЬ ВОРКЕРА -->
- <section id="v-admin" hidden style="padding:14px 0 60px">
+ <section id="v-admin" hidden style="padding:18px 0 70px">
 
-  <!-- ШАПКА ПАНЕЛИ -->
-  <div class="row" style="margin-bottom:16px;flex-wrap:wrap;gap:10px">
-   <div><h2 style="margin:0">Воркер-панель <span class="gr">cs2pay</span></h2><span style="font-size:12px;color:var(--mt)">Управление · Поддержка · Аналитика</span></div>
-   <span class="st-pill ok" style="margin-left:auto">Доступ разрешён</span>
+  <style>
+   /* ===== WORKER PANEL ===== */
+   .wp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--ln)}
+   .wp-title{font-size:22px;font-weight:800;letter-spacing:-.4px}
+   .wp-title span{color:var(--ac)}
+   .wp-badge{font-size:11px;font-weight:700;color:#22c55e;background:#22c55e14;border:1px solid #22c55e33;padding:4px 12px;border-radius:99px}
+   /* Nav tabs */
+   .wp-nav{display:flex;gap:2px;background:var(--p2);border:1px solid var(--ln);border-radius:12px;padding:4px;margin-bottom:20px;overflow-x:auto}
+   .wp-nav-btn{flex-shrink:0;padding:8px 18px;border-radius:9px;border:none;background:transparent;color:var(--mt);font:600 13px var(--font);cursor:pointer;transition:all .18s;white-space:nowrap}
+   .wp-nav-btn:hover{color:var(--tx);background:var(--p)}
+   .wp-nav-btn.on{background:var(--ac);color:#0d1117;box-shadow:0 2px 10px #f5a62340}
+   .wp-nav-btn .cnt{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;background:#ef4444;color:#fff;border-radius:99px;font-size:10px;font-weight:800;padding:0 5px;margin-left:6px;vertical-align:middle}
+   /* Cards */
+   .wp-card{background:var(--p2);border:1px solid var(--ln);border-radius:14px;padding:20px;margin-bottom:14px}
+   .wp-card-title{font-size:13px;font-weight:700;color:var(--mt);text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px}
+   /* User info grid */
+   .wp-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+   .wp-info-cell{background:var(--p);border:1px solid var(--ln);border-radius:10px;padding:10px 12px}
+   .wp-info-cell small{display:block;font-size:10.5px;color:var(--mt);margin-bottom:3px;font-weight:600}
+   .wp-info-cell b{font-size:14px;font-weight:800}
+   /* Action buttons */
+   .wp-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+   .wp-btn{padding:11px 14px;border-radius:10px;border:1.5px solid var(--ln);background:var(--p);color:var(--tx);font:600 13px var(--font);cursor:pointer;transition:all .18s;text-align:center}
+   .wp-btn:hover{border-color:var(--ac);color:var(--ac)}
+   .wp-btn.danger{border-color:#ef444433;color:#ef4444}
+   .wp-btn.danger:hover{background:#ef444414}
+   .wp-btn.success{border-color:#22c55e33;color:#22c55e}
+   .wp-btn.success:hover{background:#22c55e14}
+   .wp-btn.accent{border-color:var(--ac);background:var(--ac);color:#0d1117}
+   .wp-btn.accent:hover{filter:brightness(1.07)}
+   /* Ops table */
+   .ops-tabs{display:flex;gap:6px;margin-bottom:14px}
+   .ops-tab{padding:7px 16px;border-radius:8px;border:1.5px solid var(--ln);background:transparent;color:var(--mt);font:600 12.5px var(--font);cursor:pointer;transition:all .18s}
+   .ops-tab.on{border-color:var(--ac);background:var(--ac);color:#0d1117}
+   .op-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--ln)}
+   .op-row:last-child{border-bottom:none}
+   .op-row-info{flex:1;min-width:0}
+   .op-row-info b{display:block;font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+   .op-row-info span{font-size:11.5px;color:var(--mt)}
+   .op-row-amt{font-size:15px;font-weight:800;color:var(--ac);white-space:nowrap}
+   .op-row-btns{display:flex;gap:6px;flex-shrink:0}
+   .op-btn-ok{padding:6px 12px;border-radius:8px;border:1.5px solid #22c55e44;background:transparent;color:#22c55e;font:700 12px var(--font);cursor:pointer;transition:all .18s}
+   .op-btn-ok:hover{background:#22c55e18}
+   .op-btn-no{padding:6px 12px;border-radius:8px;border:1.5px solid #ef444433;background:transparent;color:#ef4444;font:700 12px var(--font);cursor:pointer;transition:all .18s}
+   .op-btn-no:hover{background:#ef444414}
+   /* Support layout */
+   .sup-layout{display:grid;grid-template-columns:260px 1fr;gap:12px;height:560px}
+   .sup-sidebar{background:var(--p2);border:1px solid var(--ln);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+   .sup-sidebar-head{padding:14px 16px;border-bottom:1px solid var(--ln);display:flex;align-items:center;justify-content:space-between}
+   .sup-filter{display:flex;gap:4px;padding:8px 10px;border-bottom:1px solid var(--ln)}
+   .sup-filter-btn{flex:1;padding:5px 0;border-radius:7px;border:none;background:transparent;color:var(--mt);font:600 11px var(--font);cursor:pointer;transition:all .15s;text-align:center}
+   .sup-filter-btn.on{background:var(--ac);color:#0d1117}
+   .sup-list{flex:1;overflow-y:auto}
+   .sup-row{padding:12px 14px;border-bottom:1px solid var(--ln);cursor:pointer;transition:background .15s}
+   .sup-row:hover{background:var(--p)}
+   .sup-row.on{background:var(--p)}
+   .sup-row-top{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+   .sup-dot{width:7px;height:7px;border-radius:50%;background:#ef4444;flex-shrink:0}
+   .sup-row-name{font-size:13px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+   .sup-status{font-size:10px;font-weight:700}
+   .sup-preview{font-size:11.5px;color:var(--mt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+   .sup-chat-area{background:var(--p2);border:1px solid var(--ln);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+   .sup-chat-hdr{padding:14px 18px;border-bottom:1px solid var(--ln);display:flex;align-items:center;gap:10px;min-height:56px}
+   .sup-chat-log{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+   .sup-chat-inp{padding:10px 12px;border-top:1px solid var(--ln);display:flex;gap:8px}
+   .sup-chat-inp input{flex:1}
+   .sup-send{padding:9px 16px;border-radius:9px;border:none;background:var(--ac);color:#0d1117;font:700 13px var(--font);cursor:pointer;transition:filter .18s}
+   .sup-send:hover{filter:brightness(1.08)}
+   .sup-send:disabled{opacity:.4;cursor:default}
+   .sup-close{padding:9px 12px;border-radius:9px;border:1.5px solid #22c55e33;background:transparent;color:#22c55e;font:700 13px var(--font);cursor:pointer;transition:all .18s}
+   .sup-close:hover{background:#22c55e14}
+   /* Stats grid */
+   .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+   .stat-cell{background:var(--p);border:1px solid var(--ln);border-radius:12px;padding:16px}
+   .stat-cell small{display:block;font-size:11px;color:var(--mt);margin-bottom:6px;font-weight:600}
+   .stat-cell b{font-size:22px;font-weight:800}
+   /* Cfg rows */
+   .cfg-row{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--ln)}
+   .cfg-row:last-child{border-bottom:none}
+   .cfg-row label{flex:1;margin:0;font-size:13.5px;font-weight:600;color:var(--tx)}
+   .cfg-row small{display:block;font-size:11px;color:var(--mt);font-weight:400;margin-top:2px}
+   .cfg-row input,.cfg-row select{width:140px;min-width:0}
+   @media(max-width:700px){.wp-info-grid{grid-template-columns:repeat(2,1fr)}.wp-actions{grid-template-columns:1fr}.sup-layout{grid-template-columns:1fr;height:auto}.stats-grid{grid-template-columns:repeat(2,1fr)}.cfg-row{flex-wrap:wrap}.cfg-row input,.cfg-row select{width:100%}}
+  </style>
+
+  <!-- Header -->
+  <div class="wp-header">
+   <div>
+    <div class="wp-title">Панель <span>cs2pay</span></div>
+    <div style="font-size:12px;color:var(--mt);margin-top:2px">Управление · Поддержка · Аналитика</div>
+   </div>
+   <span class="wp-badge">Доступ разрешён</span>
   </div>
 
-  <!-- ТАБЫ ПАНЕЛИ -->
-  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px" id="adm-tabs">
-   <button class="btn sm adm-tab bl" data-tab="search" onclick="admShowTab('search')">🔍 Поиск</button>
-   <button class="btn sm adm-tab" data-tab="support" onclick="admShowTab('support')">💬 Тех поддержка <span id="sup-badge" style="display:none;background:#ef4444;color:#fff;border-radius:99px;padding:1px 7px;font-size:11px;font-weight:700;margin-left:4px">0</span></button>
-   <button class="btn sm adm-tab" data-tab="ops" onclick="admShowTab('ops')">📋 Заявки</button>
-   <button class="btn sm adm-tab" data-tab="stats" onclick="admShowTab('stats')">📊 Статистика</button>
-   <button class="btn sm adm-tab" data-tab="cfg" onclick="admShowTab('cfg')">⚙️ Настройки</button>
+  <!-- Nav -->
+  <div class="wp-nav" id="adm-tabs">
+   <button class="wp-nav-btn on adm-tab" data-tab="search" onclick="admShowTab('search')">Поиск</button>
+   <button class="wp-nav-btn adm-tab" data-tab="support" onclick="admShowTab('support')">Поддержка<span class="cnt" id="sup-badge" style="display:none">0</span></button>
+   <button class="wp-nav-btn adm-tab" data-tab="ops" onclick="admShowTab('ops')">Заявки</button>
+   <button class="wp-nav-btn adm-tab" data-tab="stats" onclick="admShowTab('stats')">Статистика</button>
+   <button class="wp-nav-btn adm-tab" data-tab="cfg" onclick="admShowTab('cfg')">Настройки</button>
   </div>
 
-  <!-- ТАБ: ПОИСК ЮЗЕРА -->
+  <!-- TAB: SEARCH -->
   <div id="adm-tab-search" class="adm-tab-body">
-   <div class="pc">
-    <div class="box">
-     <div class="box-head"><h3>Поиск пользователя</h3></div>
-     <label>ID, Логин или никнейм</label>
-     <div style="display:flex;gap:8px"><input id="adm-uid" placeholder="Например: 12345 или login"><button class="btn" onclick="admSearch()">Найти</button></div>
-     <div class="err" id="adm-err"></div>
+   <div class="wp-card">
+    <div class="wp-card-title">Поиск пользователя</div>
+    <div style="display:flex;gap:8px">
+     <input id="adm-uid" placeholder="ID, логин или никнейм" style="flex:1">
+     <button class="wp-btn accent" style="white-space:nowrap" onclick="admSearch()">Найти</button>
     </div>
-    <div class="box" id="adm-panel-res" hidden>
-     <div class="box-head"><h3>Аккаунт <span id="adm-m-uid" style="color:var(--ac)"></span></h3></div>
-     <div class="receipt" style="margin-top:0">
-      <div class="rc-row"><span>Баланс:</span><b id="adm-m-bal" style="color:var(--ok)">0.00 USD</b></div>
-      <div class="rc-row"><span>Роль:</span><b id="adm-m-role">user</b></div>
-      <div class="rc-row"><span>VIP:</span><b id="adm-m-vip">—</b></div>
-      <div class="rc-row"><span>Сделок:</span><b id="adm-m-orders">0</b></div>
-      <div class="rc-row"><span>Выводов:</span><b id="adm-m-wds">0</b></div>
-      <div class="rc-row"><span>Заблокирован:</span><b id="adm-m-ban" style="color:var(--bad)">Нет</b></div>
+    <div class="err" id="adm-err" style="margin-top:8px"></div>
+   </div>
+
+   <div class="wp-card" id="adm-panel-res" hidden>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+     <div style="width:42px;height:42px;border-radius:50%;background:var(--ac);display:grid;place-items:center;font-size:18px;font-weight:800;color:#0d1117;flex-shrink:0" id="adm-m-av">?</div>
+     <div>
+      <b id="adm-m-uid" style="font-size:17px;color:var(--ac)"></b>
+      <div style="font-size:12px;color:var(--mt)" id="adm-m-role-sub"></div>
      </div>
-     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
-      <div><label>Добавить баланс ($)</label><input id="adm-add-bal" type="number" placeholder="Сумма"><button class="btn bl" style="margin-top:6px;width:100%" onclick="admAction('add_bal')">Пополнить</button></div>
-      <div><label>Списать баланс ($)</label><input id="adm-sub-bal" type="number" placeholder="Сумма"><button class="btn g bl" style="margin-top:6px;width:100%" onclick="admAction('sub_bal')">Списать</button></div>
-     </div>
-     <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--ln)">
-      <label style="margin-top:0">Роль аккаунта</label>
-      <div style="display:flex;gap:8px">
-       <select id="adm-role-sel" style="flex:1">
-        <option value="user">user — обычный</option>
-        <option value="moderator">moderator</option>
-        <option value="worker">worker — воркер</option>
-        <option value="admin">admin — полный доступ</option>
-       </select>
-       <button class="btn" onclick="admAction('set_role')">Выдать</button>
+     <span id="adm-m-ban-badge" style="margin-left:auto;display:none;font-size:11px;font-weight:700;color:#ef4444;background:#ef444414;border:1px solid #ef444433;padding:3px 10px;border-radius:99px">Заблокирован</span>
+    </div>
+
+    <div class="wp-info-grid">
+     <div class="wp-info-cell"><small>Баланс</small><b id="adm-m-bal" style="color:var(--ok)">$0</b></div>
+     <div class="wp-info-cell"><small>Роль</small><b id="adm-m-role">user</b></div>
+     <div class="wp-info-cell"><small>VIP</small><b id="adm-m-vip">—</b></div>
+     <div class="wp-info-cell"><small>Сделок</small><b id="adm-m-orders">0</b></div>
+     <div class="wp-info-cell"><small>Выводов</small><b id="adm-m-wds">0</b></div>
+     <div class="wp-info-cell"><small>Статус</small><b id="adm-m-ban" style="color:var(--ok)">Активен</b></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+     <div class="wp-card" style="margin:0;padding:14px">
+      <div class="wp-card-title" style="margin-bottom:10px">Баланс</div>
+      <input id="adm-add-bal" type="number" placeholder="Сумма ($)" style="margin-bottom:8px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+       <button class="op-btn-ok" onclick="admAction('add_bal')">+ Пополнить</button>
+       <button class="op-btn-no" onclick="admAction('sub_bal')" onclick="admAction('sub_bal')">− Списать</button>
       </div>
      </div>
-     <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--ln)">
-      <label style="margin-top:0">Дать VIP</label>
-      <div style="display:flex;gap:8px">
-       <select id="adm-vip-sel" style="flex:1">
-        <option value="0">Без VIP</option>
-        <option value="1">VIP Bronze (30 дней)</option>
-        <option value="2">VIP Silver (30 дней)</option>
-        <option value="3">VIP Gold (30 дней)</option>
-       </select>
-       <button class="btn" onclick="admAction('set_vip')">Выдать</button>
-      </div>
+     <div class="wp-card" style="margin:0;padding:14px">
+      <div class="wp-card-title" style="margin-bottom:10px">Роль и VIP</div>
+      <select id="adm-role-sel" style="margin-bottom:8px">
+       <option value="user">user</option>
+       <option value="moderator">moderator</option>
+       <option value="worker">worker</option>
+       <option value="admin">admin</option>
+      </select>
+      <button class="wp-btn accent" style="width:100%;margin-bottom:8px" onclick="admAction('set_role')">Выдать роль</button>
+      <select id="adm-vip-sel" style="margin-bottom:8px">
+       <option value="0">Без VIP</option>
+       <option value="1">VIP Bronze 30д</option>
+       <option value="2">VIP Silver 30д</option>
+       <option value="3">VIP Gold 30д</option>
+      </select>
+      <button class="wp-btn" style="width:100%" onclick="admAction('set_vip')">Выдать VIP</button>
      </div>
-     <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--ln)">
-      <label style="margin-top:0">Написать в чат пользователю</label>
-      <div style="display:flex;gap:8px">
-       <input id="adm-chat-msg" placeholder="Текст сообщения...">
-       <button class="btn bl" onclick="admSendMsg()">Отправить</button>
-      </div>
+    </div>
+
+    <div class="wp-card" style="margin:0 0 12px;padding:14px">
+     <div class="wp-card-title" style="margin-bottom:10px">Сообщение пользователю</div>
+     <div style="display:flex;gap:8px">
+      <input id="adm-chat-msg" placeholder="Текст сообщения…" style="flex:1">
+      <button class="wp-btn accent" onclick="admSendMsg()">Отправить</button>
      </div>
-     <div style="display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--ln);flex-wrap:wrap">
-      <button class="btn g bl" id="adm-ban-btn" onclick="admAction('ban')">Заблокировать</button>
-      <button class="btn g bl" onclick="admAction('unban')" style="color:var(--ok);border-color:#22c55e44">Разблокировать</button>
-      <button class="btn g bl" onclick="admAction('ufd')" style="color:#a78bfa;border-color:#a78bfa44">Разблок. вывод</button>
-      <button class="btn g bl" onclick="admOpenChat(window._admLogin)" style="color:var(--ac);border-color:var(--ac)44">Открыть чат</button>
-     </div>
+    </div>
+
+    <div class="wp-actions">
+     <button class="wp-btn danger" onclick="admAction('ban')">Заблокировать</button>
+     <button class="wp-btn success" onclick="admAction('unban')">Разблокировать</button>
+     <button class="wp-btn" onclick="admAction('ufd')" style="border-color:#a78bfa44;color:#a78bfa">Разблок. вывод</button>
+     <button class="wp-btn" onclick="admOpenChat(window._admLogin)" style="border-color:var(--ac)44;color:var(--ac)">Открыть чат</button>
     </div>
    </div>
   </div>
 
-  <!-- ТАБ: ТЕХ ПОДДЕРЖКА -->
+  <!-- TAB: SUPPORT -->
   <div id="adm-tab-support" class="adm-tab-body" hidden>
-   <div style="display:grid;grid-template-columns:280px 1fr;gap:12px;min-height:500px" id="sup-layout">
-
-    <!-- Список тикетов -->
-    <div class="box" style="padding:0;overflow:hidden;display:flex;flex-direction:column">
-     <div style="padding:12px 14px;border-bottom:1px solid var(--ln);display:flex;align-items:center;gap:8px">
-      <b style="font-size:13.5px">Диалоги</b>
-      <button class="btn sm" style="margin-left:auto;font-size:11px;padding:3px 8px" onclick="admLoadTickets()">↻</button>
+   <div class="sup-layout" id="sup-layout">
+    <div class="sup-sidebar">
+     <div class="sup-sidebar-head">
+      <b style="font-size:14px">Диалоги</b>
+      <button class="wp-btn" style="padding:4px 10px;font-size:11px" onclick="admLoadTickets()">Обновить</button>
      </div>
-     <div style="padding:8px;border-bottom:1px solid var(--ln);display:flex;gap:5px;flex-wrap:wrap">
-      <button class="btn sm adm-tf" data-f="open" onclick="admTicketFilter('open')" style="font-size:11px;padding:3px 8px">Открытые</button>
-      <button class="btn sm adm-tf" data-f="all" onclick="admTicketFilter('all')" style="font-size:11px;padding:3px 8px">Все</button>
-      <button class="btn sm adm-tf" data-f="closed" onclick="admTicketFilter('closed')" style="font-size:11px;padding:3px 8px">Закрытые</button>
+     <div class="sup-filter">
+      <button class="sup-filter-btn on adm-tf" data-f="open" onclick="admTicketFilter('open')">Открытые</button>
+      <button class="sup-filter-btn adm-tf" data-f="all" onclick="admTicketFilter('all')">Все</button>
+      <button class="sup-filter-btn adm-tf" data-f="closed" onclick="admTicketFilter('closed')">Закрытые</button>
      </div>
-     <div id="sup-ticket-list" style="flex:1;overflow-y:auto;padding:6px"></div>
+     <div class="sup-list" id="sup-ticket-list"></div>
     </div>
-
-    <!-- Окно чата -->
-    <div class="box" style="padding:0;overflow:hidden;display:flex;flex-direction:column">
-     <div id="sup-chat-header" style="padding:12px 16px;border-bottom:1px solid var(--ln);display:flex;align-items:center;gap:10px;min-height:54px">
-      <span style="color:var(--mt);font-size:13px">Выбери диалог слева</span>
+    <div class="sup-chat-area">
+     <div class="sup-chat-hdr" id="sup-chat-header">
+      <span style="color:var(--mt);font-size:13px">Выбери диалог</span>
      </div>
-     <div id="sup-chat-log" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px">
-      <div style="margin:auto;color:var(--mt);font-size:13px;text-align:center">Выбери диалог для просмотра переписки</div>
+     <div class="sup-chat-log" id="sup-chat-log">
+      <div style="margin:auto;text-align:center;color:var(--mt);font-size:13px">Выбери диалог для просмотра</div>
      </div>
-     <div id="sup-chat-inp" style="padding:10px 12px;border-top:1px solid var(--ln);display:flex;gap:8px">
+     <div class="sup-chat-inp">
       <input id="sup-reply-inp" placeholder="Ответ оператора…" onkeydown="if(event.key==='Enter')supSend()" disabled>
-      <button class="btn bl sm" onclick="supSend()" id="sup-send-btn" disabled>→</button>
-      <button class="btn sm" onclick="supClose()" id="sup-close-btn" title="Закрыть тикет" style="color:var(--ok)">✓</button>
+      <button class="sup-send" id="sup-send-btn" onclick="supSend()" disabled>Отправить</button>
+      <button class="sup-close" id="sup-close-btn" onclick="supClose()">Закрыть</button>
      </div>
     </div>
-
    </div>
-   <!-- мобильный режим — тикеты в колонку -->
-   <style>@media(max-width:640px){#sup-layout{grid-template-columns:1fr;grid-template-rows:auto 1fr}#sup-chat-log{min-height:300px}}</style>
   </div>
 
-  <!-- ТАБ: ЗАЯВКИ -->
+  <!-- TAB: OPS -->
   <div id="adm-tab-ops" class="adm-tab-body" hidden>
-   <div class="box">
-    <div class="box-head" style="align-items:center;gap:0">
-     <h3 style="margin:0">Заявки</h3>
-     <div style="display:flex;gap:6px;margin-left:auto;flex-wrap:wrap">
-      <button class="btn sm adm-op-tab" data-op="wd" onclick="admTab('wd')">Вывод</button>
-      <button class="btn sm adm-op-tab" data-op="dep" onclick="admTab('dep')">Пополнения</button>
-      <button class="btn sm adm-op-tab" data-op="sell" onclick="admTab('sell')">Продажи</button>
-     </div>
+   <div class="wp-card">
+    <div class="ops-tabs">
+     <button class="ops-tab adm-op-tab" data-op="wd" onclick="admTab('wd')">Вывод</button>
+     <button class="ops-tab adm-op-tab" data-op="dep" onclick="admTab('dep')">Пополнения</button>
+     <button class="ops-tab adm-op-tab" data-op="sell" onclick="admTab('sell')">Продажи</button>
     </div>
-    <div id="adm-ops-list" style="margin-top:10px"><div style="color:var(--mt);font-size:13px;padding:12px 0">Выбери тип заявок выше</div></div>
+    <div id="adm-ops-list"><div style="color:var(--mt);font-size:13px;padding:10px 0">Выбери тип заявок</div></div>
    </div>
   </div>
 
-  <!-- ТАБ: СТАТИСТИКА -->
+  <!-- TAB: STATS -->
   <div id="adm-tab-stats" class="adm-tab-body" hidden>
-   <div class="pc">
-    <div class="box">
-     <div class="box-head"><h3>Общая статистика</h3><button class="btn sm" onclick="admLoadStats()">↻ Обновить</button></div>
-     <div id="adm-stats-body" style="color:var(--mt);font-size:13px;padding:8px 0">Загрузка…</div>
-    </div>
-    <div class="box">
-     <div class="box-head"><h3>Последние регистрации</h3></div>
-     <div id="adm-new-users" style="color:var(--mt);font-size:13px;padding:8px 0">Загрузка…</div>
-    </div>
+   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+    <b style="font-size:16px">Статистика платформы</b>
+    <button class="wp-btn" style="padding:6px 14px" onclick="admLoadStats()">Обновить</button>
+   </div>
+   <div class="stats-grid" id="adm-stats-grid">
+    <div class="stat-cell"><small>Пользователей</small><b id="st-users">—</b></div>
+    <div class="stat-cell"><small>Активных 24ч</small><b id="st-active" style="color:var(--ok)">—</b></div>
+    <div class="stat-cell"><small>Выплачено</small><b id="st-paid" style="color:var(--ac)">—</b></div>
+    <div class="stat-cell"><small>Заявок</small><b id="st-orders">—</b></div>
+    <div class="stat-cell"><small>Депозитов</small><b id="st-deps">—</b></div>
+    <div class="stat-cell"><small>Выводов</small><b id="st-wds">—</b></div>
+    <div class="stat-cell"><small>Открытых тикетов</small><b id="st-tickets">—</b></div>
+   </div>
+   <div class="wp-card" style="margin-top:14px">
+    <div class="wp-card-title">Последние регистрации</div>
+    <div id="adm-new-users" style="color:var(--mt);font-size:13px">Загрузка…</div>
    </div>
   </div>
 
-  <!-- ТАБ: НАСТРОЙКИ -->
+  <!-- TAB: CFG -->
   <div id="adm-tab-cfg" class="adm-tab-body" hidden>
-   <div class="pc">
-    <div class="box">
-     <div class="box-head"><h3>Настройки платформы</h3></div>
-     <div style="display:grid;gap:12px">
-      <div><label>Мин. сумма вывода ($)</label><div style="display:flex;gap:8px"><input id="cfg-min-wd" type="number" placeholder="5"><button class="btn" onclick="saveCfg('minWd','cfg-min-wd')">Сохранить</button></div></div>
-      <div><label>Курс UAH (за $1)</label><div style="display:flex;gap:8px"><input id="cfg-uah" type="number" placeholder="41.5"><button class="btn" onclick="saveCfg('uah','cfg-uah')">Сохранить</button></div></div>
-      <div><label>Скрыть онлайн-счётчик</label><div style="display:flex;gap:8px"><select id="cfg-hide-on"><option value="0">Показывать</option><option value="1">Скрывать</option></select><button class="btn" onclick="saveCfg('hideOn','cfg-hide-on')">Сохранить</button></div></div>
-      <div><label>Приветствие на главной</label><input id="cfg-hero-sub" placeholder="Выбери скины, укажи трейд-ссылку…"><button class="btn" style="margin-top:6px" onclick="saveCfg('heroSub','cfg-hero-sub')">Сохранить</button></div>
-      <div><label>Промокод (скидка %)</label><div style="display:flex;gap:8px"><input id="cfg-promo-code" placeholder="Промокод"><input id="cfg-promo-pct" type="number" placeholder="%" style="width:80px"><button class="btn" onclick="saveCfg('promo','cfg-promo-code')">Добавить</button></div></div>
-     </div>
-     <div class="err" id="cfg-err" style="margin-top:8px"></div>
+   <div class="wp-card">
+    <div class="wp-card-title">Настройки платформы</div>
+    <div class="cfg-row">
+     <div><label>Мин. вывод ($)</label></div>
+     <input id="cfg-min-wd" type="number" placeholder="5">
+     <button class="op-btn-ok" onclick="saveCfg('minWd','cfg-min-wd')">Сохранить</button>
     </div>
+    <div class="cfg-row">
+     <div><label>Курс UAH / $1</label></div>
+     <input id="cfg-uah" type="number" placeholder="41.5">
+     <button class="op-btn-ok" onclick="saveCfg('uah','cfg-uah')">Сохранить</button>
+    </div>
+    <div class="cfg-row">
+     <div><label>Онлайн-счётчик</label></div>
+     <select id="cfg-hide-on"><option value="0">Показывать</option><option value="1">Скрывать</option></select>
+     <button class="op-btn-ok" onclick="saveCfg('hideOn','cfg-hide-on')">Сохранить</button>
+    </div>
+    <div class="cfg-row" style="border-bottom:1px solid var(--ln);padding-bottom:12px">
+     <div style="flex:1"><label>Приветствие</label></div>
+    </div>
+    <div style="padding-top:10px">
+     <input id="cfg-hero-sub" placeholder="Текст под заголовком на главной…" style="margin-bottom:8px">
+     <button class="op-btn-ok" onclick="saveCfg('heroSub','cfg-hero-sub')">Сохранить</button>
+    </div>
+    <div class="cfg-row" style="margin-top:10px">
+     <div><label>Промокод</label></div>
+     <input id="cfg-promo-code" placeholder="Код" style="width:100px">
+     <input id="cfg-promo-pct" type="number" placeholder="%" style="width:60px">
+     <button class="op-btn-ok" onclick="saveCfg('promo','cfg-promo-code')">Добавить</button>
+    </div>
+    <div class="err" id="cfg-err" style="margin-top:10px"></div>
    </div>
   </div>
 
@@ -1596,7 +1711,11 @@ addEventListener("hashchange",route);
 /* АДМИН ПАНЕЛЬ ЛОГИКА */
 function admShowTab(tab){
  document.querySelectorAll(".adm-tab").forEach(function(b){
-  b.classList.toggle("bl", b.dataset.tab===tab);
+  b.classList.toggle("on", b.dataset.tab===tab);
+  b.classList.toggle("bl", b.dataset.tab===tab); // compat
+ });
+ document.querySelectorAll(".wp-nav-btn").forEach(function(b){
+  b.classList.toggle("on", b.dataset.tab===tab);
  });
  document.querySelectorAll(".adm-tab-body").forEach(function(d){d.hidden=true});
  var t=$("adm-tab-"+tab);
@@ -1657,7 +1776,7 @@ function renderTicketList(){
 }
 function admTicketFilter(f){
  _supFilter=f;
- document.querySelectorAll(".adm-tf").forEach(function(b){b.classList.toggle("bl",b.dataset.f===f)});
+ document.querySelectorAll(".adm-tf").forEach(function(b){b.classList.toggle("on",b.dataset.f===f);b.classList.toggle("bl",b.dataset.f===f)});
  renderTicketList();
 }
 function admSelectTicket(login){
@@ -1734,7 +1853,7 @@ function admLoadStats(){
    +'<div class="rc-row"><span>Открытых тикетов:</span><b style="color:'+(d.tickets>0?'#ef4444':'var(--ok)')+'">'+(d.tickets||0)+'</b></div>'
    +'</div>';
   // Ugly template literal — build it cleanly
-  el.innerHTML=buildStatsHTML(d);
+  buildStatsHTML(d);
   // new users list
   var nu=$("adm-new-users");
   if(nu&&d.newUsers){
