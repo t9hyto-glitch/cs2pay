@@ -827,6 +827,80 @@ http.createServer(async(req,res)=>{try{
   save();
   return send(res,200,{ok:true});
  }
+ if(p=='/api/support/tickets'&&req.method==='GET'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  const tickets=Object.entries(db.users).filter(([,u])=>u.chat&&u.chat.length).map(([login,u])=>{
+   const msgs=u.chat||[];
+   const hasUnread=msgs.some(m=>m.from==='u'&&!m.read);
+   return{login,uid:u.uid,nick:u.nick||login,status:u.supportStatus||'open',msgs,unread:hasUnread};
+  }).sort((a,b)=>{
+   const ta=a.msgs.length?a.msgs[a.msgs.length-1].t:0;
+   const tb=b.msgs.length?b.msgs[b.msgs.length-1].t:0;
+   return tb-ta;
+  });
+  return send(res,200,{tickets});
+ }
+ if(p=='/api/support/reply'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  const b=await body(req);
+  const target=Object.values(db.users).find(u=>u.name===b.login||u.nick===b.login||String(u.uid)===String(b.login));
+  if(!target)return bad(res,'Пользователь не найден',404);
+  target.chat=target.chat||[];
+  target.chat.push({id:Date.now(),from:'adm',text:String(b.text||'').slice(0,1000),t:Date.now()});
+  target.supportStatus='in_progress';
+  if(target.chat.length>100)target.chat=target.chat.slice(-100);
+  save();
+  return send(res,200,{ok:true});
+ }
+ if(p=='/api/support/read'){
+  if(!n)return bad(res,'Войди',401);
+  const b=await body(req);
+  const target=Object.values(db.users).find(u=>u.name===b.login||u.nick===b.login||String(u.uid)===String(b.login));
+  if(target&&target.chat)target.chat.forEach(m=>{if(m.from==='u')m.read=true});
+  save();return send(res,200,{ok:true});
+ }
+ if(p=='/api/support/close'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  const b=await body(req);
+  const target=Object.values(db.users).find(u=>u.name===b.login||u.nick===b.login||String(u.uid)===String(b.login));
+  if(target)target.supportStatus='closed';
+  save();return send(res,200,{ok:true});
+ }
+ if(p=='/api/admin/stats'&&req.method==='GET'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  const now=Date.now(),day=86400000;
+  const users=Object.values(db.users);
+  const active=users.filter(u=>u.lastSeen&&now-u.lastSeen<day).length;
+  const paid=db.orders.filter(o=>o.status==='credited').reduce((t,o)=>t+(o.price||0),0);
+  const deps=db.ops.filter(o=>o.type==='dep'&&o.status==='done').length;
+  const wds=db.ops.filter(o=>o.type==='wd'&&o.status==='done').length;
+  const openTickets=users.filter(u=>u.chat&&u.chat.length&&u.supportStatus!=='closed').length;
+  const newUsers=users.filter(u=>u.reg&&now-u.reg<7*day).sort((a,b)=>b.reg-a.reg).slice(0,8).map(u=>({uid:u.uid,login:u.name||'',nick:u.nick||'',reg:u.reg}));
+  return send(res,200,{users:users.length,active,orders:db.orders.length,paid:paid.toFixed(2),deps,wds,tickets:openTickets,newUsers});
+ }
+ if(p=='/api/admin/action'&&req.method==='POST'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  const b=await body(req);
+  if(b.action==='set_cfg'){
+   const k=String(b.key||''),v=b.val;
+   const allowed=['minWd','uah','hideOn','heroSub','promo','botSec','botsOn'];
+   if(!allowed.includes(k))return bad(res,'Недопустимый ключ');
+   db.cfg[k]=v;save();return send(res,200,{ok:true});
+  }
+  if(b.action==='send_msg'){
+   const target=Object.values(db.users).find(u=>String(u.uid)===String(b.uid)||u.name===b.uid);
+   if(!target)return bad(res,'Пользователь не найден',404);
+   target.chat=target.chat||[];
+   target.chat.push({id:Date.now(),from:'adm',text:String(b.text||'').slice(0,1000),t:Date.now()});
+   if(target.chat.length>100)target.chat=target.chat.slice(-100);
+   save();return send(res,200,{ok:true});
+  }
+ }
  if(p=='/api/ai'){const b=await body(req);const out=await handleAiSupport(n,b.q);return send(res,200,out)}
  if(p=='/api/recent'){const C=db.orders.filter(o=>o.status=='credited'),paid=C.reduce((t,o)=>t+o.price,0);return send(res,200,{paid:+paid.toFixed(2),n:C.length,items:C.slice(-8).reverse().map(o=>({n:o.skin,img:o.img,p:o.price}))})}
  if(p=='/api/ping'){const v=(u.searchParams.get('v')||'').slice(0,40),now=Date.now();if(v)seen.set(v,now);for(const[a,t]of seen)if(now-t>9e4)seen.delete(a);return send(res,200,{n:fakeOnl,h:!!db.cfg.hideOn,botsOn:db.cfg.botsOn!==false,botSec:db.cfg.botSec||5})}
