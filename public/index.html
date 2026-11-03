@@ -377,6 +377,11 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
 .ai-log{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:9px}
 .ai-m{max-width:86%;padding:9px 12px;border-radius:13px;font-size:13px;line-height:1.4;word-break:break-word}
 .ai-m.b{background:var(--p2);border:1px solid var(--ln);align-self:flex-start;border-bottom-left-radius:4px}
+.rev-star{font-size:32px;color:#444;transition:color .12s,transform .1s;user-select:none;line-height:1}
+.rev-star:hover,.rev-star.hover{color:#f5a623;transform:scale(1.2)}
+.rev-star.on{color:#f5a623}
+textarea{width:100%;padding:10px 12px;background:var(--p2);border:1.5px solid var(--ln);border-radius:10px;color:var(--tx);font-size:14px;box-sizing:border-box;transition:border-color .2s}
+textarea:focus{outline:none;border-color:var(--ac)}
 .ai-m.u{background:var(--ac);color:#171003;font-weight:600;align-self:flex-end;border-bottom-right-radius:4px}
 .ai-quick{display:flex;gap:5px;overflow-x:auto;padding:6px 12px;border-top:1px solid #ffffff08;scrollbar-width:none}
 .ai-quick::-webkit-scrollbar{display:none}
@@ -690,43 +695,171 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
  <section id="v-profile" hidden style="padding:14px 0 50px"><div id="pt"></div><div id="pc"></div></section>
 
  <!-- АДМИН-ПАНЕЛЬ ВОРКЕРА -->
- <section id="v-admin" hidden style="padding:14px 0 50px">
-  <div class="row" style="margin-bottom:14px"><h2 style="margin:0">Воркер-панель <span class="gr">cs2pay</span></h2><span class="st-pill ok">Доступ разрешён</span></div>
-  <div class="pc">
-   <div class="box">
-    <div class="box-head"><h3>Поиск мамонта</h3></div>
-    <label>Введи ID или Логин пользователя</label>
-    <div style="display:flex;gap:8px"><input id="adm-uid" placeholder="Например: 12345 или login"><button class="btn" onclick="admSearch()">Найти</button></div>
-    <div class="err" id="adm-err"></div>
-   </div>
-   <div class="box" id="adm-panel-res" hidden>
-    <div class="box-head"><h3>Управление аккаунтом <span id="adm-m-uid" style="color:var(--ac)"></span></h3></div>
-    <div class="receipt" style="margin-top:0">
-     <div class="rc-row"><span>Текущий баланс:</span><b id="adm-m-bal" style="color:var(--ok)">0.00 USD</b></div>
-     <div class="rc-row"><span>Роль:</span><b id="adm-m-role" style="color:var(--tx)">user</b></div>
+ <section id="v-admin" hidden style="padding:14px 0 60px">
+
+  <!-- ШАПКА ПАНЕЛИ -->
+  <div class="row" style="margin-bottom:16px;flex-wrap:wrap;gap:10px">
+   <div><h2 style="margin:0">Воркер-панель <span class="gr">cs2pay</span></h2><span style="font-size:12px;color:var(--mt)">Управление · Поддержка · Аналитика</span></div>
+   <span class="st-pill ok" style="margin-left:auto">Доступ разрешён</span>
+  </div>
+
+  <!-- ТАБЫ ПАНЕЛИ -->
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px" id="adm-tabs">
+   <button class="btn sm adm-tab bl" data-tab="search" onclick="admShowTab('search')">🔍 Поиск</button>
+   <button class="btn sm adm-tab" data-tab="support" onclick="admShowTab('support')">💬 Тех поддержка <span id="sup-badge" style="display:none;background:#ef4444;color:#fff;border-radius:99px;padding:1px 7px;font-size:11px;font-weight:700;margin-left:4px">0</span></button>
+   <button class="btn sm adm-tab" data-tab="ops" onclick="admShowTab('ops')">📋 Заявки</button>
+   <button class="btn sm adm-tab" data-tab="stats" onclick="admShowTab('stats')">📊 Статистика</button>
+   <button class="btn sm adm-tab" data-tab="cfg" onclick="admShowTab('cfg')">⚙️ Настройки</button>
+  </div>
+
+  <!-- ТАБ: ПОИСК ЮЗЕРА -->
+  <div id="adm-tab-search" class="adm-tab-body">
+   <div class="pc">
+    <div class="box">
+     <div class="box-head"><h3>Поиск пользователя</h3></div>
+     <label>ID, Логин или никнейм</label>
+     <div style="display:flex;gap:8px"><input id="adm-uid" placeholder="Например: 12345 или login"><button class="btn" onclick="admSearch()">Найти</button></div>
+     <div class="err" id="adm-err"></div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
-     <div><label>Добавить баланс ($)</label><input id="adm-add-bal" type="number" placeholder="Сумма"><button class="btn bl" style="margin-top:6px" onclick="admAction('add_bal')">Пополнить</button></div>
-     <div><label>Списать баланс ($)</label><input id="adm-sub-bal" type="number" placeholder="Сумма"><button class="btn g bl" style="margin-top:6px" onclick="admAction('sub_bal')">Списать</button></div>
-    </div>
-    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--ln)">
-     <label style="margin-top:0">Роль аккаунта</label>
-     <div style="display:flex;gap:8px">
-      <select id="adm-role-sel" style="flex:1">
-       <option value="user">user — обычный</option>
-       <option value="moderator">moderator</option>
-       <option value="worker">worker — воркер</option>
-       <option value="admin">admin — полный доступ</option>
-      </select>
-      <button class="btn" onclick="admAction('set_role')">Выдать</button>
+    <div class="box" id="adm-panel-res" hidden>
+     <div class="box-head"><h3>Аккаунт <span id="adm-m-uid" style="color:var(--ac)"></span></h3></div>
+     <div class="receipt" style="margin-top:0">
+      <div class="rc-row"><span>Баланс:</span><b id="adm-m-bal" style="color:var(--ok)">0.00 USD</b></div>
+      <div class="rc-row"><span>Роль:</span><b id="adm-m-role">user</b></div>
+      <div class="rc-row"><span>VIP:</span><b id="adm-m-vip">—</b></div>
+      <div class="rc-row"><span>Сделок:</span><b id="adm-m-orders">0</b></div>
+      <div class="rc-row"><span>Выводов:</span><b id="adm-m-wds">0</b></div>
+      <div class="rc-row"><span>Заблокирован:</span><b id="adm-m-ban" style="color:var(--bad)">Нет</b></div>
      </div>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--ln)">
-     <button class="btn g bl" id="adm-ban-btn" onclick="admAction('ban')">Заблокировать</button>
-     <button class="btn g bl" onclick="admAction('unban')" style="color:var(--ok);border-color:#22c55e44">Разблокировать</button>
+     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+      <div><label>Добавить баланс ($)</label><input id="adm-add-bal" type="number" placeholder="Сумма"><button class="btn bl" style="margin-top:6px;width:100%" onclick="admAction('add_bal')">Пополнить</button></div>
+      <div><label>Списать баланс ($)</label><input id="adm-sub-bal" type="number" placeholder="Сумма"><button class="btn g bl" style="margin-top:6px;width:100%" onclick="admAction('sub_bal')">Списать</button></div>
+     </div>
+     <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--ln)">
+      <label style="margin-top:0">Роль аккаунта</label>
+      <div style="display:flex;gap:8px">
+       <select id="adm-role-sel" style="flex:1">
+        <option value="user">user — обычный</option>
+        <option value="moderator">moderator</option>
+        <option value="worker">worker — воркер</option>
+        <option value="admin">admin — полный доступ</option>
+       </select>
+       <button class="btn" onclick="admAction('set_role')">Выдать</button>
+      </div>
+     </div>
+     <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--ln)">
+      <label style="margin-top:0">Дать VIP</label>
+      <div style="display:flex;gap:8px">
+       <select id="adm-vip-sel" style="flex:1">
+        <option value="0">Без VIP</option>
+        <option value="1">VIP Bronze (30 дней)</option>
+        <option value="2">VIP Silver (30 дней)</option>
+        <option value="3">VIP Gold (30 дней)</option>
+       </select>
+       <button class="btn" onclick="admAction('set_vip')">Выдать</button>
+      </div>
+     </div>
+     <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--ln)">
+      <label style="margin-top:0">Написать в чат пользователю</label>
+      <div style="display:flex;gap:8px">
+       <input id="adm-chat-msg" placeholder="Текст сообщения...">
+       <button class="btn bl" onclick="admSendMsg()">Отправить</button>
+      </div>
+     </div>
+     <div style="display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--ln);flex-wrap:wrap">
+      <button class="btn g bl" id="adm-ban-btn" onclick="admAction('ban')">Заблокировать</button>
+      <button class="btn g bl" onclick="admAction('unban')" style="color:var(--ok);border-color:#22c55e44">Разблокировать</button>
+      <button class="btn g bl" onclick="admAction('ufd')" style="color:#a78bfa;border-color:#a78bfa44">Разблок. вывод</button>
+      <button class="btn g bl" onclick="admOpenChat(window._admLogin)" style="color:var(--ac);border-color:var(--ac)44">Открыть чат</button>
+     </div>
     </div>
    </div>
   </div>
+
+  <!-- ТАБ: ТЕХ ПОДДЕРЖКА -->
+  <div id="adm-tab-support" class="adm-tab-body" hidden>
+   <div style="display:grid;grid-template-columns:280px 1fr;gap:12px;min-height:500px" id="sup-layout">
+
+    <!-- Список тикетов -->
+    <div class="box" style="padding:0;overflow:hidden;display:flex;flex-direction:column">
+     <div style="padding:12px 14px;border-bottom:1px solid var(--ln);display:flex;align-items:center;gap:8px">
+      <b style="font-size:13.5px">Диалоги</b>
+      <button class="btn sm" style="margin-left:auto;font-size:11px;padding:3px 8px" onclick="admLoadTickets()">↻</button>
+     </div>
+     <div style="padding:8px;border-bottom:1px solid var(--ln);display:flex;gap:5px;flex-wrap:wrap">
+      <button class="btn sm adm-tf" data-f="open" onclick="admTicketFilter('open')" style="font-size:11px;padding:3px 8px">Открытые</button>
+      <button class="btn sm adm-tf" data-f="all" onclick="admTicketFilter('all')" style="font-size:11px;padding:3px 8px">Все</button>
+      <button class="btn sm adm-tf" data-f="closed" onclick="admTicketFilter('closed')" style="font-size:11px;padding:3px 8px">Закрытые</button>
+     </div>
+     <div id="sup-ticket-list" style="flex:1;overflow-y:auto;padding:6px"></div>
+    </div>
+
+    <!-- Окно чата -->
+    <div class="box" style="padding:0;overflow:hidden;display:flex;flex-direction:column">
+     <div id="sup-chat-header" style="padding:12px 16px;border-bottom:1px solid var(--ln);display:flex;align-items:center;gap:10px;min-height:54px">
+      <span style="color:var(--mt);font-size:13px">Выбери диалог слева</span>
+     </div>
+     <div id="sup-chat-log" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px">
+      <div style="margin:auto;color:var(--mt);font-size:13px;text-align:center">Выбери диалог для просмотра переписки</div>
+     </div>
+     <div id="sup-chat-inp" style="padding:10px 12px;border-top:1px solid var(--ln);display:flex;gap:8px">
+      <input id="sup-reply-inp" placeholder="Ответ оператора…" onkeydown="if(event.key==='Enter')supSend()" disabled>
+      <button class="btn bl sm" onclick="supSend()" id="sup-send-btn" disabled>→</button>
+      <button class="btn sm" onclick="supClose()" id="sup-close-btn" title="Закрыть тикет" style="color:var(--ok)">✓</button>
+     </div>
+    </div>
+
+   </div>
+   <!-- мобильный режим — тикеты в колонку -->
+   <style>@media(max-width:640px){#sup-layout{grid-template-columns:1fr;grid-template-rows:auto 1fr}#sup-chat-log{min-height:300px}}</style>
+  </div>
+
+  <!-- ТАБ: ЗАЯВКИ -->
+  <div id="adm-tab-ops" class="adm-tab-body" hidden>
+   <div class="box">
+    <div class="box-head" style="align-items:center;gap:0">
+     <h3 style="margin:0">Заявки</h3>
+     <div style="display:flex;gap:6px;margin-left:auto;flex-wrap:wrap">
+      <button class="btn sm adm-op-tab" data-op="wd" onclick="admTab('wd')">Вывод</button>
+      <button class="btn sm adm-op-tab" data-op="dep" onclick="admTab('dep')">Пополнения</button>
+      <button class="btn sm adm-op-tab" data-op="sell" onclick="admTab('sell')">Продажи</button>
+     </div>
+    </div>
+    <div id="adm-ops-list" style="margin-top:10px"><div style="color:var(--mt);font-size:13px;padding:12px 0">Выбери тип заявок выше</div></div>
+   </div>
+  </div>
+
+  <!-- ТАБ: СТАТИСТИКА -->
+  <div id="adm-tab-stats" class="adm-tab-body" hidden>
+   <div class="pc">
+    <div class="box">
+     <div class="box-head"><h3>Общая статистика</h3><button class="btn sm" onclick="admLoadStats()">↻ Обновить</button></div>
+     <div id="adm-stats-body" style="color:var(--mt);font-size:13px;padding:8px 0">Загрузка…</div>
+    </div>
+    <div class="box">
+     <div class="box-head"><h3>Последние регистрации</h3></div>
+     <div id="adm-new-users" style="color:var(--mt);font-size:13px;padding:8px 0">Загрузка…</div>
+    </div>
+   </div>
+  </div>
+
+  <!-- ТАБ: НАСТРОЙКИ -->
+  <div id="adm-tab-cfg" class="adm-tab-body" hidden>
+   <div class="pc">
+    <div class="box">
+     <div class="box-head"><h3>Настройки платформы</h3></div>
+     <div style="display:grid;gap:12px">
+      <div><label>Мин. сумма вывода ($)</label><div style="display:flex;gap:8px"><input id="cfg-min-wd" type="number" placeholder="5"><button class="btn" onclick="saveCfg('minWd','cfg-min-wd')">Сохранить</button></div></div>
+      <div><label>Курс UAH (за $1)</label><div style="display:flex;gap:8px"><input id="cfg-uah" type="number" placeholder="41.5"><button class="btn" onclick="saveCfg('uah','cfg-uah')">Сохранить</button></div></div>
+      <div><label>Скрыть онлайн-счётчик</label><div style="display:flex;gap:8px"><select id="cfg-hide-on"><option value="0">Показывать</option><option value="1">Скрывать</option></select><button class="btn" onclick="saveCfg('hideOn','cfg-hide-on')">Сохранить</button></div></div>
+      <div><label>Приветствие на главной</label><input id="cfg-hero-sub" placeholder="Выбери скины, укажи трейд-ссылку…"><button class="btn" style="margin-top:6px" onclick="saveCfg('heroSub','cfg-hero-sub')">Сохранить</button></div>
+      <div><label>Промокод (скидка %)</label><div style="display:flex;gap:8px"><input id="cfg-promo-code" placeholder="Промокод"><input id="cfg-promo-pct" type="number" placeholder="%" style="width:80px"><button class="btn" onclick="saveCfg('promo','cfg-promo-code')">Добавить</button></div></div>
+     </div>
+     <div class="err" id="cfg-err" style="margin-top:8px"></div>
+    </div>
+   </div>
+  </div>
+
  </section>
 </main>
 
@@ -990,13 +1123,39 @@ label{display:block;color:var(--mt);font-size:12.5px;font-weight:600;margin:12px
  </div>
 </div>
 
-<div class="ov" id="orev"><div class="md" style="max-width:380px">
-<div class="row" style="margin-bottom:8px"><h3 style="margin:0">Оставить отзыв о сделке</h3><button class="x" onclick="closeAll()">×</button></div>
-<p style="color:var(--mt);font-size:13px;margin:0 0 10px">Отзыв будет автоматически привязан к твоей последней покупке или продаже скина.</p>
-<label>Оценка сервиса</label><select id="rst"><option value="5">5 из 5 — Отлично</option><option value="4">4 из 5 — Хорошо</option></select>
-<label>Комментарий</label><input id="rtx" placeholder="все прийшло на моно дякую">
-<div class="err" id="rerr"></div>
-<button class="btn bl" style="margin-top:10px" id="rgo">Опубликовать в ленту</button></div></div>
+<div class="ov" id="orev"><div class="md" style="max-width:400px">
+ <div class="row" style="margin-bottom:10px"><h3 style="margin:0">Оставить отзыв</h3><button class="x" onclick="closeAll()">×</button></div>
+ <p style="color:var(--mt);font-size:12.5px;margin:0 0 14px">Отзыв виден всем. Привязывается к твоей последней сделке. Жёсткие слова — ок, бан — нет.</p>
+
+ <!-- Звёзды -->
+ <label style="margin-top:0">Оценка сервиса</label>
+ <div id="rev-stars" style="display:flex;gap:6px;margin-bottom:14px;cursor:pointer">
+  <span class="rev-star" data-v="1" onclick="setRevStar(1)" onmouseover="hoverRevStar(1)" onmouseout="hoverRevStar(0)">★</span>
+  <span class="rev-star" data-v="2" onclick="setRevStar(2)" onmouseover="hoverRevStar(2)" onmouseout="hoverRevStar(0)">★</span>
+  <span class="rev-star" data-v="3" onclick="setRevStar(3)" onmouseover="hoverRevStar(3)" onmouseout="hoverRevStar(0)">★</span>
+  <span class="rev-star" data-v="4" onclick="setRevStar(4)" onmouseover="hoverRevStar(4)" onmouseout="hoverRevStar(0)">★</span>
+  <span class="rev-star" data-v="5" onclick="setRevStar(5)" onmouseover="hoverRevStar(5)" onmouseout="hoverRevStar(0)">★</span>
+ </div>
+ <div id="rev-star-label" style="font-size:12px;color:var(--mt);margin-top:-10px;margin-bottom:12px">Выбери оценку</div>
+ <input type="hidden" id="rst" value="0">
+
+ <!-- Комментарий -->
+ <label>Комментарий <span style="color:var(--mt);font-weight:400">(обязательно, мин. 5 символов)</span></label>
+ <textarea id="rtx" rows="4" placeholder="все прийшло на моно дякую, топ сервіс, раджу всім!" style="resize:vertical;min-height:80px;font-family:inherit"></textarea>
+ <div style="text-align:right;font-size:11px;color:var(--mt);margin-top:3px"><span id="rtx-cnt">0</span> / 300</div>
+
+ <!-- Быстрые шаблоны -->
+ <div style="display:flex;flex-wrap:wrap;gap:5px;margin:8px 0 12px">
+  <button class="btn g sm" style="font-size:11px" onclick="setRevTpl('все прийшло миттєво, красавчики')">⚡ Миттєво</button>
+  <button class="btn g sm" style="font-size:11px" onclick="setRevTpl('топ сервіс, нарешті нормальний обмін без єбалова')">💯 Топ</button>
+  <button class="btn g sm" style="font-size:11px" onclick="setRevTpl('все чисто, гроші на моно за 5 хвилин, хуй знає що ви такі швидкі')">💳 Моно</button>
+  <button class="btn g sm" style="font-size:11px" onclick="setRevTpl('норм але могло бути швидше, але загалом заїбісь')">🤙 Норм</button>
+  <button class="btn g sm" style="font-size:11px" onclick="setRevTpl('три дні чекав, в кінці все ок, але нерви потріпали')">😤 Тупо</button>
+ </div>
+
+ <div class="err" id="rerr"></div>
+ <button class="btn bl" style="margin-top:8px;padding:12px;width:100%" id="rgo">Опубликовать в ленту</button>
+</div></div>
 
 <!-- МОДАЛКА АВТОРИЗАЦИИ / РЕГИСТРАЦИИ -->
 <div class="ov" id="ol"><div class="md" style="max-width:360px">
@@ -2140,23 +2299,38 @@ function getAvatarHtml(nick,customAv){
  return '<img class="lf-av" src="'+esc(url)+'" alt="" onerror="this.style.display=\'none\'">';
 }
 
-var ULTRA_SHORT=["прийшло","все чітко","+реп","дякую","норм","імба","бабки на карті","вивели швидко","спс","все гуд","топ","+rep","рекомендую","не скам","все чесно","гроші прийшли"];
+var ULTRA_SHORT=[
+ "прийшло","все чітко","+реп","дякую","норм","імба","бабки на карті","вивели швидко","спс","все гуд","топ","+rep","рекомендую","не скам","все чесно","гроші прийшли",
+ "пиздато","хуй знає як так швидко","заєбісь","найкраще","не проїбали","чотко","рілі топ","без єбалова","усе путьом","реально швидко","без дурні","всьо збс",
+ "ёбаный быстро","нихуя себе скорость","мега чётко","без базаров","пушка сервис","збс короче","оч понравилось","по красоте","жиза","кайф",
+ "все без обману","не кинули","чесні хлопці","дякую братан","красавчики","норм пацани","реп в плюс","дали добре","від душі","збс"
+];
 var CMB_A=[
  "все прийшло","гроші на карті","вивели за пару хвилин","бабки на месте","трейд приняли сразу","выплата прилетела моментально",
  "все чітко","все гуд","скин забрали быстро","оплата на месте","гроші капнули","виплатили без затримок","прийшло все до копійки",
  "деньги уже на балансе карты","обмен прилетел за секунду","вывели за 3 минуты","швидко вивели","все чесно","прайс реально норм",
  "лучший курс выкупа","не кинули, все четко","перевірив на дешевому скіні, платять","выручили когда срочно нужны были бабки",
  "слил ненужный дроп","продал скин который валялся в инвентаре","злив ширп, копійка на карті","вже втретє тут продаю",
- "быстро и без лишних вопросов","работают ровно","сервіс топ","найкраща скупка","все супер","бабки пришли быстрее чем я закрыл стим"
+ "быстро и без лишних вопросов","работают ровно","сервіс топ","найкраща скупка","все супер","бабки пришли быстрее чем я закрыл стим",
+ "нихуя себе как быстро вывели","хуй знає як вони так швидко","відвал башки який швидкий вивід","вообще без єбалова",
+ "слив дроп который пылился — деньги сразу","пиздато платять","без лайна і без затримок","збс реально збс",
+ "отписал в саппорт — ответили за минуту","сапорт топовий","менеджер пояснив за 30 сек всё","поддержка не сливается",
+ "четко сработали пацаны","красавчики не развели","продал уже раз 5 — ни разу не кинули","постоянный клиент теперь",
+ "вывел на крипту за 5 минут это вообще космос","usdt прилетел мгновенно","крипта пришла раньше чем я ожидал"
 ];
 var CMB_B=[
  "на моно","на приват24","на монобанк","на карту","на пумб","на кріптобота","на usdt","на крипту","в тг боті","без комісії",
  "курс вище ніж на інших сайтах","адмін в тг відповів за хвилину","підтримка реально допомагає","буду зливати ще","рекомендую всім",
  "кенту теж скинув ссилку","тепер тільки сюди","можна довіряти на 100%","ніде так швидко не виводили","без всяких приколів",
- "все прозоро і зрозуміло","сайт зручний не лагає","плюс реп","однозначно лайк","від душі","дякую велике","спс большое","респект"
+ "все прозоро і зрозуміло","сайт зручний не лагає","плюс реп","однозначно лайк","від душі","дякую велике","спс большое","респект",
+ "хуй знає як вони встигають так швидко","пиздатий сервіс чесно","без єбалова і лажі","збс короче без слів",
+ "це не скам перевірив особисто","не проїбали ані копійки","реально кращий курс ніж у конкурентів","жиза платять норм",
+ "поставив 5 зірок без вагань","не шкодую що скинув сюди","друзям порадив вже","кент здивувався що так швидко",
+ "минути 3 і гроші вже тут","швидше ніж очікував","без затримок і пояснень"
 ];
 var CMB_C=[
- "дякую","спс","+реп","+rep","топ","імба","раджу","рекомендую","красавцы","гуд","четко","супер","от души","работаем дальше","все ок","норм"
+ "дякую","спс","+реп","+rep","топ","імба","раджу","рекомендую","красавцы","гуд","четко","супер","от души","работаем дальше","все ок","норм",
+ "пиздато","збс","заєбісь","нормік","від душі братан","без лайна","реп в плюс","жиза","кайф","вогонь","огонь","масть","чотко","путьом"
 ];
 
 var BY_GUN={
@@ -2182,26 +2356,35 @@ var GEN_4=[
  "прийшло на моно, все ок але курс міг бути трошки вищий","бабки пришли но бот долго грузил инвентарь","норм сайт, виплатили через 10 хв",
  "все честно но в тг ответили через 5 минут только","гроші отримав, але прийшлось почекати обмін хвилин 7",
  "виплата прийшла, ставлю 4 бо трохи довго оновлювався баланс","все гуд але на карту йшло хвилин 12",
- "норм скуп, деньги пришли хоть и с небольшой задержкой","вивели все чесно, але ввечері черга на трейд"
+ "норм скуп, деньги пришли хоть и с небольшой задержкой","вивели все чесно, але ввечері черга на трейд",
+ "4 зірки — чекав трохи довше ніж хотілось, але вивели чесно","хуй з ним зі строком, головне що не кинули",
+ "чотири бо саппорт відповів не одразу, а так усе путьом","трохи нервував але в результаті все збс"
 ];
 
 var GEN_3=[
  "норм, но курс мог быть и получше","так собі, довго грузилось, але гроші отримав","середньо, чекав довше ніж думав",
  "пойде, хоча саппорт відповідає не дуже швидко","деньги пришли, но нервов потратил немало, жду когда пофиксят",
  "нормально, нічого особливого, але не кинули","3 бо довго висіла заявка в обробці, хоча в кінці все ок",
- "більш-менш, курс середній, вивід затягнувся","ну таке, спрацювало але зі скрипом"
+ "більш-менш, курс середній, вивід затягнувся","ну таке, спрацювало але зі скрипом",
+ "три звезды, курс мог быть нормальнее но ладно","блин, ждал 40 минут — это много, хотя не кинули","ну такое",
+ "три бо є кращі ціни на ринку але ці хоча б платять","могло бути і краще, але і гірше теж бувало"
 ];
 var GEN_2=[
  "бляха, ждал больше часа, думал все, кинули","саппорт реально не відповідав, бісило капець",
  "курс паршивий якщо чесно, і чекати довелось довго","деньги пришли но нервы потрепали знатно, бесит это все",
  "довго грузилось, нічого не розумів що відбувається","два бали бо заявка висіла вічність, блін",
- "норм тільки те що гроші хоч дійшли, а так бардак з очікуванням","курс занижують, досадно чесно кажучи"
+ "норм тільки те що гроші хоч дійшли, а так бардак з очікуванням","курс занижують, досадно чесно кажучи",
+ "2 зірки, реально довго і саппорт ніякий","блять 40 хв відповіді чекав це відстій","курс нижчий ніж обіцяли, неприємно",
+ "два бо заявка зависла і нихуя не відповідали хвилин 30","це якийсь піздець а не швидкий вивід"
 ];
 var GEN_1=[
  "это пиздец, ждал два часа и чуть не психанул","сука, саппорт вообще заснул, еле дождался ответа",
  "довбаний бот завис, ледь дочекався грошей","нервів спалив до хріна, хоча гроші в кінці прийшли",
  "капец довго, бісить реально, більше так не буду","заявка висіла годинами, це просто якийсь дурдом",
- "блять, думав кинули, насилу дочекався виплати","жах, а не сервіс, хоча бабки врешті впали на карту"
+ "блять, думав кинули, насилу дочекався виплати","жах, а не сервіс, хоча бабки врешті впали на карту",
+ "это просто пиздец какой-то, 2 часа ждал трейд","нахуя мне такой сервис где надо нервы тратить",
+ "одна зірка бо це просто капець скільки часу пішло","буду скаржитись скрізь де зможу, це неприйнятно",
+ "впервые такое дерьмо, саппорт молчал целый час","хуёво, не советую никому, нервы не железные"
 ];
 
 var FALLBACK_SVG="data:image/svg+xml;utf8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 36" fill="none"><path d="M6 18h36l6-5h10v6H46l-4 5H26l-3 7h-6l2-7H6v-6z" fill="#f2a93b" opacity="0.85"/></svg>');
@@ -2326,24 +2509,49 @@ function scheduleNextWave(){
  }
 }
 
+var _revStar=0;
+function setRevStar(v){
+ _revStar=v;
+ $("rst").value=v;
+ var labels=["Ужасно 😡","Плохо 😞","Нормально 😐","Хорошо 👍","Отлично 🔥"];
+ $("rev-star-label").textContent=labels[v-1]||"";
+ $("rev-star-label").style.color=v>=4?"#22c55e":v<=2?"#ef4444":"var(--ac)";
+ var stars=document.querySelectorAll(".rev-star");
+ stars.forEach(function(s,i){s.classList.toggle("on",i<v)});
+}
+function hoverRevStar(v){
+ var stars=document.querySelectorAll(".rev-star");
+ if(v===0){stars.forEach(function(s,i){s.classList.toggle("hover",false);s.classList.toggle("on",i<_revStar)});return}
+ stars.forEach(function(s,i){s.classList.toggle("hover",i<v)});
+}
+function setRevTpl(txt){
+ $("rtx").value=txt;
+ $("rtx-cnt").textContent=txt.length;
+}
+$("rtx").oninput=function(){
+ $("rtx-cnt").textContent=Math.min(300,this.value.length);
+ if(this.value.length>300)this.value=this.value.slice(0,300);
+};
 $("revBtn").onclick=function(){
  if(!S.me){openAuth("Войди в аккаунт, чтобы оставить отзыв");return}
- if(!S.me.orders||!S.me.orders.length){
-  toast("Оставить отзыв можно только после покупки или продажи скина",1);
-  sErr();
-  return;
- }
+ _revStar=5;
+ setRevStar(5);
+ $("rtx").value="";
+ $("rtx-cnt").textContent="0";
  $("rerr").textContent="";
  sOpen();$("orev").classList.add("s");
 };
 $("rgo").onclick=function(){
- var st=+($("rst").value||5);
+ var st=+$("rst").value;
  var tx=($("rtx").value||"").trim();
+ if(!st||st<1||st>5){$("rerr").textContent="Выбери оценку от 1 до 5 звёзд";sErr();return}
+ if(tx.length<5){$("rerr").textContent="Напиши хотя бы пару слов (мин. 5 символов)";sErr();return}
+ $("rerr").textContent="";
  api("/api/review",{stars:st,text:tx}).then(function(d){
   var r=d.rev;
   renderDealItem(r.nick,r.stars,r.skin,r.img,r.p,r.text,r.av);
   $("rtx").value="";
-  closeAll();sOk();confetti();toast("Спасибо! Твой отзыв опубликован");
+  closeAll();sOk();confetti();toast("Спасибо! Твой отзыв опубликован 🔥");
  }).catch(function(e){$("rerr").textContent=e.message;sErr()});
 };
 
