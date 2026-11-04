@@ -1805,106 +1805,122 @@ function admOpenChat(login){
  admShowTab("support");
  setTimeout(function(){admSelectTicket(login)},300);
 }
-var _supFilter="open",_supCur=null;
+var _supFilter="open",_supCur=null,_supTickets=[];
 function admLoadTickets(){
  var list=$("sup-ticket-list");
  if(!list)return;
  list.innerHTML='<div style="color:var(--mt);font-size:12px;padding:10px">Загрузка…</div>';
  api("/api/support/tickets").then(function(d){
   _supTickets=d.tickets||[];
-  renderTicketList();
+  _supRenderList();
   var unread=_supTickets.filter(function(t){return t.unread}).length;
   var badge=$("sup-badge");
-  if(badge){badge.style.display=unread?"inline":"none";badge.textContent=unread}
- }).catch(function(e){if(list)list.innerHTML='<div class="err">'+esc(e.message)+'</div>'});
+  if(badge){badge.style.display=unread?"inline":"none";badge.textContent=unread;}
+  // если был выбран тикет — перерисуем его
+  if(_supCur){var t=_supTickets.find(function(x){return x.login===_supCur});if(t)_supRenderChat(t);}
+ }).catch(function(e){if(list)list.innerHTML='<div class="err">'+esc(e.message)+'</div>';});
 }
-var _supTickets=[];
-function renderTicketList(){
+function _supRenderList(){
  var list=$("sup-ticket-list");if(!list)return;
  var filt=_supTickets.filter(function(t){
   if(_supFilter==="open")return t.status!=="closed";
   if(_supFilter==="closed")return t.status==="closed";
   return true;
  });
- if(!filt.length){list.innerHTML='<div style="color:var(--mt);font-size:12px;padding:10px">Нет диалогов</div>';return}
- list.innerHTML=filt.map(function(t){
+ if(!filt.length){list.innerHTML='<div style="color:var(--mt);font-size:12px;padding:10px">Нет диалогов</div>';return;}
+ var html='';
+ for(var i=0;i<filt.length;i++){
+  var t=filt[i];
   var last=t.msgs&&t.msgs.length?t.msgs[t.msgs.length-1]:null;
-  var preview=last?esc(last.text.slice(0,38))+(last.text.length>38?"…":""):"—";
-  var unreadDot=t.unread?'<span style="width:7px;height:7px;border-radius:50%;background:#ef4444;flex-shrink:0;display:inline-block"></span>':'';
-  var statusColor=t.status==="closed"?"#22c55e":t.status==="in_progress"?"#f59e0b":"#ef4444";
-  var isActive=_supCur===t.login;
-  return'<div class="sup-ticket-row'+(isActive?' active':'')+'" onclick="admSelectTicket(\'"+t.login+"\')" style="padding:10px 12px;border-bottom:1px solid var(--ln);cursor:pointer;background:'+(isActive?"var(--p2)":"transparent")+';transition:background .15s">'
-   +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">'+unreadDot
+  var preview=last?esc((last.text||'').slice(0,40)):'—';
+  var dot=t.unread?'<span style="width:7px;height:7px;border-radius:50%;background:#ef4444;flex-shrink:0;margin-top:3px;display:inline-block"></span>':'<span style="width:7px;flex-shrink:0"></span>';
+  var sc=t.status==="closed"?"#22c55e":t.status==="in_progress"?"#f59e0b":"#ef4444";
+  var sl=t.status==="closed"?"✓ закрыт":t.status==="in_progress"?"в работе":"открыт";
+  var active=_supCur===t.login;
+  html+='<div class="sup-ticket-row" data-login="'+esc(t.login)+'" style="padding:10px 12px;border-bottom:1px solid var(--ln);cursor:pointer;background:'+(active?"var(--p2)":"transparent")+';">'
+   +'<div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:2px">'+dot
    +'<b style="font-size:12.5px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(t.nick||t.login)+'</b>'
-   +'<span style="font-size:10px;color:'+statusColor+';font-weight:700">'+(t.status==="closed"?"✓ закрыт":t.status==="in_progress"?"в работе":"открыт")+'</span>'
-   +'</div>'
-   +'<div style="font-size:11px;color:var(--mt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+preview+'</div>'
+   +'<span style="font-size:10px;color:'+sc+';font-weight:700;white-space:nowrap">'+sl+'</span></div>'
+   +'<div style="font-size:11px;color:var(--mt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-left:13px">'+preview+'</div>'
    +'</div>';
- }).join("");
+ }
+ list.innerHTML=html;
+ // делегирование — один обработчик вместо inline onclick
+ list.onclick=function(e){
+  var row=e.target.closest('.sup-ticket-row');
+  if(row&&row.dataset.login)admSelectTicket(row.dataset.login);
+ };
 }
 function admTicketFilter(f){
  _supFilter=f;
- document.querySelectorAll(".adm-tf").forEach(function(b){b.classList.toggle("on",b.dataset.f===f);b.classList.toggle("bl",b.dataset.f===f)});
- renderTicketList();
+ document.querySelectorAll(".adm-tf").forEach(function(b){b.classList.toggle("on",b.dataset.f===f);b.classList.toggle("bl",b.dataset.f===f);});
+ _supRenderList();
 }
-function admSelectTicket(login){
- _supCur=login;
- renderTicketList();
- var t=_supTickets.find(function(x){return x.login===login});
+function _supRenderChat(t){
  var hdr=$("sup-chat-header");
  var log=$("sup-chat-log");
  var inp=$("sup-reply-inp");
  var sendBtn=$("sup-send-btn");
- var closeBtn=$("sup-close-btn");
- if(!t){if(hdr)hdr.innerHTML='<span style="color:var(--mt)">Диалог не найден</span>';return}
- if(hdr)hdr.innerHTML='<div style="width:32px;height:32px;border-radius:50%;background:var(--ac);display:grid;place-items:center;font-weight:800;font-size:13px;color:#0d1117;flex-shrink:0">'+esc((t.nick||t.login)[0].toUpperCase())+'</div>'
-  +'<div><b style="font-size:13.5px">'+esc(t.nick||t.login)+'</b><span style="display:block;font-size:11px;color:var(--mt)">#'+esc(t.uid||t.login)+' · '+esc(t.login)+'</span></div>'
+ if(hdr)hdr.innerHTML=
+  '<div style="width:32px;height:32px;border-radius:50%;background:var(--ac);display:grid;place-items:center;font-weight:800;font-size:14px;color:#0d1117;flex-shrink:0">'+esc((t.nick||t.login||'?')[0].toUpperCase())+'</div>'
+  +'<div style="min-width:0"><b style="font-size:13.5px">'+esc(t.nick||t.login)+'</b>'
+  +'<span style="display:block;font-size:11px;color:var(--mt)">#'+(t.uid||'—')+' · '+esc(t.login)+'</span></div>'
   +'<button class="btn sm" style="margin-left:auto;font-size:11px" onclick="admLoadTickets()">↻</button>';
  if(log){
   var msgs=t.msgs||[];
-  if(!msgs.length){log.innerHTML='<div style="margin:auto;color:var(--mt);font-size:13px">Сообщений нет</div>';
+  if(!msgs.length){
+   log.innerHTML='<div style="margin:auto;color:var(--mt);font-size:13px">Сообщений нет</div>';
   }else{
    log.innerHTML=msgs.map(function(m){
     var isAdm=m.from==="adm"||m.from==="b";
     var time=m.t?'<span style="font-size:10px;color:var(--mt);display:block;margin-top:2px">'+lfTimeAgo(m.t)+'</span>':'';
-    return'<div class="ai-m '+(isAdm?"b":"u")+'" style="max-width:85%">'+(isAdm?'<b style="font-size:10.5px;color:var(--ac);display:block;margin-bottom:2px">Оператор:</b>':'')+esc(m.text)+time+'</div>';
+    return'<div class="ai-m '+(isAdm?"b":"u")+'" style="max-width:85%">'
+     +(isAdm?'<b style="font-size:10.5px;color:var(--ac);display:block;margin-bottom:2px">Оператор:</b>':'')
+     +esc(m.text||'')+time+'</div>';
    }).join("");
    log.scrollTop=log.scrollHeight;
   }
  }
- if(inp){inp.disabled=t.status==="closed";inp.placeholder=t.status==="closed"?"Тикет закрыт":"Ответ оператора…"}
- if(sendBtn)sendBtn.disabled=t.status==="closed";
- // Mark read
+ var closed=t.status==="closed";
+ if(inp){inp.disabled=closed;inp.placeholder=closed?"Тикет закрыт":"Ответ оператора…";}
+ if(sendBtn)sendBtn.disabled=closed;
+}
+function admSelectTicket(login){
+ _supCur=login;
+ _supRenderList();
+ var t=_supTickets.find(function(x){return x.login===login});
+ var hdr=$("sup-chat-header");
+ if(!t){if(hdr)hdr.innerHTML='<span style="color:var(--mt)">Диалог не найден</span>';return;}
+ _supRenderChat(t);
  if(t.unread){
   api("/api/support/read",{login:login}).catch(function(){});
   t.unread=false;
-  var badge=$("sup-badge");
   var unread=_supTickets.filter(function(x){return x.unread}).length;
-  if(badge){badge.style.display=unread?"inline":"none";badge.textContent=unread}
+  var badge=$("sup-badge");
+  if(badge){badge.style.display=unread?"inline":"none";badge.textContent=unread;}
  }
 }
+// обратная совместимость со старым именем
+function renderTicketList(){_supRenderList();}
 function supSend(){
  var inp=$("sup-reply-inp");
  var msg=(inp&&inp.value||"").trim();
  if(!msg||!_supCur)return;
  inp.value="";
  api("/api/support/reply",{login:_supCur,text:msg}).then(function(){
-  // push msg locally
   var t=_supTickets.find(function(x){return x.login===_supCur});
-  if(t){t.msgs=t.msgs||[];t.msgs.push({from:"adm",text:msg,t:Date.now()})}
-  admSelectTicket(_supCur);
+  if(t){t.msgs=t.msgs||[];t.msgs.push({from:"adm",text:msg,t:Date.now()});}
+  _supRenderChat(t||{login:_supCur,msgs:[]});
   sOk();
- }).catch(function(e){toast(e.message,1)});
+ }).catch(function(e){toast(e.message,1);});
 }
 function supClose(){
  if(!_supCur)return;
  api("/api/support/close",{login:_supCur}).then(function(){
   var t=_supTickets.find(function(x){return x.login===_supCur});
-  if(t)t.status="closed";
-  admSelectTicket(_supCur);
-  renderTicketList();
+  if(t){t.status="closed";_supRenderChat(t);_supRenderList();}
   toast("Тикет закрыт ✓");
- }).catch(function(e){toast(e.message,1)});
+ }).catch(function(e){toast(e.message,1);});
 }
 function admLoadStats(){
  var el=$("adm-stats-grid")||$("adm-stats-body");
