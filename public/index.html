@@ -842,7 +842,7 @@ textarea:focus{outline:none;border-color:var(--ac)}
       <input id="adm-add-bal" type="number" placeholder="Сумма ($)" style="margin-bottom:8px">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
        <button class="op-btn-ok" onclick="admAction('add_bal')">+ Пополнить</button>
-       <button class="op-btn-no" onclick="admAction('sub_bal')" onclick="admAction('sub_bal')">− Списать</button>
+       <button class="op-btn-no" onclick="admAction('sub_bal')">− Списать</button>
       </div>
      </div>
      <div class="wp-card" style="margin:0;padding:14px">
@@ -1791,15 +1791,6 @@ function admShowTab(tab){
  if(tab==="ops"){admTab('wd');}
  if(tab==="ann")admLoadAnnouncements();
 }
-function admSendMsg(){
- var msg=$("adm-chat-msg").value.trim();
- if(!msg||!S.admCur){return}
- api("/api/admin/action",{uid:S.admCur,action:"send_msg",text:msg}).then(function(){
-  toast("Сообщение отправлено!");
-  $("adm-chat-msg").value="";
-  sOk();
- }).catch(function(e){toast(e.message,1)});
-}
 function admOpenChat(login){
  if(!login)return;
  admShowTab("support");
@@ -2046,7 +2037,7 @@ function admAction(act){
  }
  if(act==='set_role'&&$('adm-role-sel'))payload.role=$('adm-role-sel').value;
  if(act==='set_vip'&&$('adm-vip-sel'))payload.vip=+$('adm-vip-sel').value;
- if(act==='set_tag'){
+ if(act==='set_tag'||act==='remove_tag'){
   var tagSel=$('adm-tag-sel');
   payload.tag=tagSel?tagSel.value:'';
  }
