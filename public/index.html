@@ -2038,6 +2038,7 @@ function tagColor(t){
  return map[t]||'#94a3b8';
 }
 function admAction(act){
+ if(!S.admCur){toast('Сначала найди пользователя',1);return;}
  var payload={uid:S.admCur,action:act};
  if(act==='add_bal'||act==='sub_bal'){
   var v=+($('adm-add-bal')||{}).value||+($('adm-sub-bal')||{}).value;
