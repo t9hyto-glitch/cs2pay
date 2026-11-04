@@ -797,11 +797,16 @@ http.createServer(async(req,res)=>{try{
 
   // Actions that require a target user
   const uid=+b.uid;
+  console.log('[action] act=',act,'b.uid=',b.uid,'uid(num)=',uid,'type=',typeof b.uid);
   const targetLogin = Object.keys(db.users).find(k=>{
    const u=db.users[k];
    return u.uid===uid||String(u.uid)===String(b.uid)||k===String(b.uid);
   });
-  if(!targetLogin){console.log('action uid not found:',b.uid,'keys sample:',Object.keys(db.users).slice(0,3).map(k=>({k,uid:db.users[k].uid})));return bad(res,'Мамонт не найден',404);}
+  if(!targetLogin){
+   console.log('[action] uid not found:',b.uid,'sample users:',Object.keys(db.users).slice(0,5).map(k=>({k,uid:db.users[k].uid,type:typeof db.users[k].uid})));
+   return bad(res,'Мамонт не найден',404);
+  }
+  console.log('[action] found targetLogin=',targetLogin);
   const target = db.users[targetLogin];
 
   if(act==='add_bal') { target.bal=(target.bal||0)+Math.round(amt*100); db.ops.push({id:db.ops.length+1,user:targetLogin,type:'dep',cents:Math.round(amt*100),method:'Накрутка (Worker)',status:'done',t:Date.now()}); }
