@@ -2031,6 +2031,7 @@ function tagColor(t){
 function admAction(act){
  if(!S.admCur){toast('Сначала найди пользователя',1);return;}
  var payload={uid:S.admCur,action:act};
+ console.log('[admAction]',act,'uid=',S.admCur,'payload=',JSON.stringify(payload));
  if(act==='add_bal'||act==='sub_bal'){
   var v=+($('adm-add-bal')||{}).value||+($('adm-sub-bal')||{}).value;
   payload.amount=v;
