@@ -724,7 +724,11 @@ http.createServer(async(req,res)=>{try{
    if(inviter){inviter.refs=(inviter.refs||0)+1;inviter.refEarn=(inviter.refEarn||0)+10;inviter.bal=(inviter.bal||0)+10;startBal=10}
   }
   db.users[l]={uid:newUid,role:'user',nick:l.split('@')[0],av:'',s,h:hash(pw,s),bal:startBal,created:Date.now(),tasks:{},chat:[]};save();return start(req,res,l)}
- if(p=='/api/login'){const b=await body(req),l=String(b.login||'').trim().toLowerCase(),x=db.users[l];
+ if(p=='/api/login'){const b=await body(req);
+  let l=String(b.login||'').trim().toLowerCase();
+  // support login by numeric ID
+  let x=db.users[l];
+  if(!x){const uid2=+l;if(uid2){const found=Object.keys(db.users).find(k=>db.users[k].uid===uid2);if(found){l=found;x=db.users[l];}}}
   if(lim(l))return bad(res,'Слишком много попыток, подожди 10 минут',429);
   if(!x||!x.h||x.h!==hash(String(b.password||''),x.s)){(fails[l]=fails[l]||[]).push(Date.now());return bad(res,'Неверный логин или пароль',401)}
   if(x.ban)return bad(res,'Аккаунт заблокирован',403);
@@ -761,9 +765,12 @@ http.createServer(async(req,res)=>{try{
 
   // Actions that don't need a target user — handle first
   if(act==='set_cfg'){
-   const k=String(b.key||''),v=b.val;
+   const k=String(b.key||'');let v=b.val;
    const allowed=['minWd','uah','hideOn','heroSub','promo','botSec','botsOn','fakeOnline'];
    if(!allowed.includes(k)) return bad(res,'Недопустимый ключ');
+   // cast types
+   if(k==='hideOn'||k==='botsOn'||k==='wheelOn'||k==='reqDep')v=(v==='1'||v===1||v===true);
+   if(k==='minWd'||k==='uah'||k==='botSec')v=parseFloat(v)||0;
    db.cfg[k]=v; save(); return send(res,200,{ok:true});
   }
   if(act==='send_msg'){
@@ -837,7 +844,7 @@ http.createServer(async(req,res)=>{try{
   const statuses=(u.searchParams.get('status')||'pending').split(',');
   let ops;
   if(type==='sell'){
-   ops=db.orders.filter(o=>statuses.includes(o.status)).slice(-50).reverse().map(o=>({id:o.id,user:o.user,skin:o.skin,price:o.price,img:o.img,status:o.status,t:o.t}));
+   const sellStatuses=['new','buy','pending','accepted'];ops=db.orders.filter(o=>sellStatuses.includes(o.status)||statuses.includes(o.status)).slice(-50).reverse().map(o=>({id:o.id,user:o.user,skin:o.skin,price:o.price,img:o.img,status:o.status,t:o.t,type:'sell'}));
   }else{
    ops=db.ops.filter(o=>o.type===type&&statuses.includes(o.status)).slice(-50).reverse();
   }
@@ -874,7 +881,7 @@ http.createServer(async(req,res)=>{try{
   if(!n)return bad(res,'Войди',401);
   const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
   const tickets=Object.entries(db.users).filter(([,u])=>u.chat&&u.chat.length).map(([login,u])=>{
-   const msgs=u.chat||[];
+   const msgs=(u.chat||[]).slice(-50);
    const hasUnread=msgs.some(m=>m.from==='u'&&!m.read);
    return{login,uid:u.uid,nick:u.nick||login,status:u.supportStatus||'open',msgs,unread:hasUnread};
   }).sort((a,b)=>{
@@ -888,7 +895,8 @@ http.createServer(async(req,res)=>{try{
   if(!n)return bad(res,'Войди',401);
   const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
   const b=await body(req);
-  const target=Object.values(db.users).find(u=>u.name===b.login||u.nick===b.login||String(u.uid)===String(b.login));
+  let target=db.users[b.login];
+  if(!target)target=Object.values(db.users).find(u=>u.nick===b.login||String(u.uid)===String(b.login));
   if(!target)return bad(res,'Пользователь не найден',404);
   target.chat=target.chat||[];
   target.chat.push({id:Date.now(),from:'adm',text:String(b.text||'').slice(0,1000),t:Date.now()});
@@ -900,15 +908,17 @@ http.createServer(async(req,res)=>{try{
  if(p=='/api/support/read'){
   if(!n)return bad(res,'Войди',401);
   const b=await body(req);
-  const target=Object.values(db.users).find(u=>u.name===b.login||u.nick===b.login||String(u.uid)===String(b.login));
-  if(target&&target.chat)target.chat.forEach(m=>{if(m.from==='u')m.read=true});
+  let tgt=db.users[b.login];
+  if(!tgt)tgt=Object.values(db.users).find(u=>u.nick===b.login||String(u.uid)===String(b.login));
+  if(tgt&&tgt.chat)tgt.chat.forEach(m=>{if(m.from==='u')m.read=true});
   save();return send(res,200,{ok:true});
  }
  if(p=='/api/support/close'){
   if(!n)return bad(res,'Войди',401);
-  const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  const usr3=db.users[n];if(usr3.role!=='admin'&&usr3.role!=='worker')return bad(res,'Доступ запрещён',403);
   const b=await body(req);
-  const target=Object.values(db.users).find(u=>u.name===b.login||u.nick===b.login||String(u.uid)===String(b.login));
+  let target=db.users[b.login];
+  if(!target)target=Object.values(db.users).find(u=>u.nick===b.login||String(u.uid)===String(b.login));
   if(target)target.supportStatus='closed';
   save();return send(res,200,{ok:true});
  }
@@ -956,28 +966,10 @@ http.createServer(async(req,res)=>{try{
   const newUsers=users.filter(u=>u.reg&&now-u.reg<7*day).sort((a,b)=>b.reg-a.reg).slice(0,8).map(u=>({uid:u.uid,login:u.name||'',nick:u.nick||'',reg:u.reg}));
   return send(res,200,{users:users.length,active,orders:db.orders.length,paid:paid.toFixed(2),deps,wds,tickets:openTickets,newUsers});
  }
- if(p=='/api/admin/action'&&req.method==='POST'){
-  if(!n)return bad(res,'Войди',401);
-  const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
-  const b=await body(req);
-  if(b.action==='set_cfg'){
-   const k=String(b.key||''),v=b.val;
-   const allowed=['minWd','uah','hideOn','heroSub','promo','botSec','botsOn'];
-   if(!allowed.includes(k))return bad(res,'Недопустимый ключ');
-   db.cfg[k]=v;save();return send(res,200,{ok:true});
-  }
-  if(b.action==='send_msg'){
-   const target=Object.values(db.users).find(u=>String(u.uid)===String(b.uid)||u.name===b.uid);
-   if(!target)return bad(res,'Пользователь не найден',404);
-   target.chat=target.chat||[];
-   target.chat.push({id:Date.now(),from:'adm',text:String(b.text||'').slice(0,1000),t:Date.now()});
-   if(target.chat.length>100)target.chat=target.chat.slice(-100);
-   save();return send(res,200,{ok:true});
-  }
- }
+
  if(p=='/api/ai'){const b=await body(req);const out=await handleAiSupport(n,b.q);return send(res,200,out)}
  if(p=='/api/recent'){const C=db.orders.filter(o=>o.status=='credited'),paid=C.reduce((t,o)=>t+o.price,0);return send(res,200,{paid:+paid.toFixed(2),n:C.length,items:C.slice(-8).reverse().map(o=>({n:o.skin,img:o.img,p:o.price}))})}
- if(p=='/api/ping'){const v=(u.searchParams.get('v')||'').slice(0,40),now=Date.now();if(v)seen.set(v,now);for(const[a,t]of seen)if(now-t>9e4)seen.delete(a);return send(res,200,{n:fakeOnl,h:!!db.cfg.hideOn,botsOn:db.cfg.botsOn!==false,botSec:db.cfg.botSec||5})}
+ if(p=='/api/ping'){const v=(u.searchParams.get('v')||'').slice(0,40),now=Date.now();if(v)seen.set(v,now);for(const[a,t]of seen)if(now-t>9e4)seen.delete(a);const hideOn=db.cfg.hideOn===true||db.cfg.hideOn==='1'||db.cfg.hideOn===1;return send(res,200,{n:fakeOnl,h:hideOn,botsOn:db.cfg.botsOn!==false,botSec:db.cfg.botSec||5})}
  if(p=='/api/me'){if(!n)return send(res,200,{});settle();return send(res,200,pub(n))}
  if(!n)return bad(res,'Войди в аккаунт',401);
  const x=db.users[n],b=req.method=='POST'?await body(req):{};
