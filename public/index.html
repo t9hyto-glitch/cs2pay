@@ -2031,7 +2031,6 @@ function tagColor(t){
 function admAction(act){
  if(!S.admCur){toast('Сначала найди пользователя',1);return;}
  var payload={uid:S.admCur,action:act};
- console.log('[admAction]',act,'uid=',S.admCur,'payload=',JSON.stringify(payload));
  if(act==='add_bal'||act==='sub_bal'){
   var v=+($('adm-add-bal')||{}).value||+($('adm-sub-bal')||{}).value;
   payload.amount=v;
@@ -2488,12 +2487,13 @@ function prof(t){
   var dispNick=d.nick||d.name.split("@")[0];
   var vip=d.vip||{lvl:1,name:"BRONZE",b:0,next:20,vol:0};
   $("balc").textContent=mo(d.bal);
-  $("lg").innerHTML=(vip.lvl>1?SVG_CROWN+" ":"")+esc(dispNick)+" #"+d.uid;
+  var dispId=d.customId||d.uid;
+  $("lg").innerHTML=(vip.lvl>1?SVG_CROWN+" ":"")+esc(dispNick)+" #"+dispId;
   var T=[["overview","Обзор и VIP"],["wallet","Пополнение и Вывод"],["history","Мои сделки и выводы"],["settings","Настройки и Профиль"]];
   var ch=(dispNick||"U").slice(0,1).toUpperCase();
   var avBox=d.av?('<img class="ph-av" src="'+esc(d.av)+'" alt="">'):('<div class="ph-av">'+esc(ch)+'</div>');
 
-  var heroHtml='<div class="prof-hero"><div class="ph-left"><div class="ph-av-wrap" onclick="location.hash=\'#/profile/settings\'" title="Изменить аватарку и ник">'+avBox+'<div class="ph-av-edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div></div><div><div class="ph-name">'+(vip.lvl>1?SVG_CROWN+' ':'')+esc(dispNick)+' <span class="uid-badge" onclick="copyUid('+d.uid+')" title="Скопировать ID">ID: #'+d.uid+' <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></span></div>'+
+  var heroHtml='<div class="prof-hero"><div class="ph-left"><div class="ph-av-wrap" onclick="location.hash=\'#/profile/settings\'" title="Изменить аватарку и ник">'+avBox+'<div class="ph-av-edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div></div><div><div class="ph-name">'+(vip.lvl>1?SVG_CROWN+' ':'')+esc(dispNick)+' <span class="uid-badge" onclick="copyUid(\''+dispId+'\')" title="Скопировать ID">ID: #'+dispId+' <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></span></div>'+
    '<div class="ph-sub"><a href="#/vip" class="st-pill warn">'+SVG_CROWN+' Ранг: '+esc(vip.name)+' (+'+vip.b+'%)</a><span class="st-pill '+(d.tl?"ok":"warn")+'">'+(d.tl?"Трейд-ссылка подключена":"Трейд-ссылка не указана")+'</span><span class="st-pill '+(d.tfa?"ok":"warn")+'">'+(d.tfa?"2FA активна":"2FA выкл")+'</span></div></div></div>'+
    '<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn" href="#/profile/wallet">+ Пополнить / Вывести</a><a class="btn g" href="#/vip" style="border-color:#ffd16655;color:#ffd166">'+SVG_CROWN+' Повысить VIP</a></div></div>';
 
@@ -2551,7 +2551,7 @@ function prof(t){
   }
   else if(t=="settings"){
    $("pc").innerHTML='<div class="pc">'+
-   '<div class="box"><div class="box-head"><h3>Оформление профиля</h3><span class="st-pill ok">ID #'+d.uid+'</span></div>'+
+   '<div class="box"><div class="box-head"><h3>Оформление профиля</h3><span class="st-pill ok">ID #'+dispId+'</span></div>'+
     '<label style="margin-top:0">Отображаемый никнейм</label>'+
     '<input id="nk-inp" value="'+esc(dispNick)+'" maxlength="24" placeholder="Например: w1ndow">'+
     '<label>Аватарка профиля (выбери готовую, загрузи файл или вставь ссылку)</label>'+
@@ -2566,7 +2566,7 @@ function prof(t){
 
    '<div class="box"><div class="box-head"><h3>Двухэтапная защита (2FA)</h3><span class="st-pill '+(d.tfa?"ok":"warn")+'">'+(d.tfa?"Включена":"Отключена")+'</span></div>'+(d.tfa?'<p style="color:var(--ok);margin-top:0;font-size:13.5px">Твой аккаунт и вывод средств надёжно защищены кодом Google Authenticator.</p><label>Код из приложения</label><input id="dc" inputmode="numeric" maxlength="6">'+(d.google?"":'<label>Текущий пароль</label><input id="dp" type="password">')+'<div class="err" id="fe"></div><button class="btn g" onclick="f2(0)">Отключить 2FA</button>':'<p style="color:var(--mt);margin-top:0;font-size:13.5px">Подключи приложение Google Authenticator, чтобы защитить вход и вывод средств (+бонус на баланс во вкладке «Бонусы»).</p><div id="fa"><button class="btn" onclick="f2s()">Настроить 2FA защиту</button></div>')+'</div>'+
    (d.google?"":'<div class="box"><div class="box-head"><h3>Смена пароля</h3></div><label style="margin-top:0">Текущий пароль</label><input id="po" type="password"><label>Новый пароль (минимум 6 символов)</label><input id="pn" type="password"><div class="err" id="pe"></div><button class="btn" onclick="chp()">Обновить пароль</button></div>')+
-   '<div class="box"><div class="box-head"><h3>Сессия и документация</h3></div><div class="receipt" style="margin-top:0"><div class="rc-row"><span>Логин для входа:</span><b style="color:var(--tx)">'+esc(d.name)+'</b></div><div class="rc-row" style="margin:0"><span>Личный номер (ID):</span><b style="color:var(--ac);cursor:pointer" onclick="copyUid('+d.uid+')">#'+d.uid+' (скопировать)</b></div></div><button class="btn g bl" onclick="out()">Выйти из аккаунта</button></div></div>';
+   '<div class="box"><div class="box-head"><h3>Сессия и документация</h3></div><div class="receipt" style="margin-top:0"><div class="rc-row"><span>Логин для входа:</span><b style="color:var(--tx)">'+esc(d.name)+'</b></div><div class="rc-row" style="margin:0"><span>Личный номер (ID):</span><b style="color:var(--ac);cursor:pointer" onclick="copyUid(\''+dispId+'\')">#'+dispId+' (скопировать)</b></div></div><button class="btn g bl" onclick="out()">Выйти из аккаунта</button></div></div>';
   }
   else{
    var recentL=buildHistoryList(d).slice(0,5);
