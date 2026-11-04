@@ -749,7 +749,7 @@ http.createServer(async(req,res)=>{try{
   const b=await body(req);
   const q=String(b.q||'').trim().toLowerCase();
   if(!q) return bad(res,'Пустой запрос');
-  const target = db.users[q] ? db.users[q] : Object.values(db.users).find(u=>String(u.uid)===q||String(u.nick).toLowerCase()===q||String(u.name).toLowerCase()===q);
+  const target = db.users[q]||db.users[Object.keys(db.users).find(k=>k.toLowerCase()===q)]||Object.values(db.users).find(u=>String(u.uid)===q||(u.nick&&u.nick.toLowerCase()===q)||(u.customId&&u.customId.toLowerCase()===q));
   if(!target) return bad(res,'Мамонт не найден',404);
   const tLogin=target.name||Object.keys(db.users).find(k=>db.users[k]===target)||q;
   const tOrders=db.orders.filter(o=>o.user===tLogin).length;
@@ -797,8 +797,11 @@ http.createServer(async(req,res)=>{try{
 
   // Actions that require a target user
   const uid=+b.uid;
-  const targetLogin = Object.keys(db.users).find(k=>db.users[k].uid===uid);
-  if(!targetLogin) return bad(res,'Мамонт не найден',404);
+  const targetLogin = Object.keys(db.users).find(k=>{
+   const u=db.users[k];
+   return u.uid===uid||String(u.uid)===String(b.uid)||k===String(b.uid);
+  });
+  if(!targetLogin){console.log('action uid not found:',b.uid,'keys sample:',Object.keys(db.users).slice(0,3).map(k=>({k,uid:db.users[k].uid})));return bad(res,'Мамонт не найден',404);}
   const target = db.users[targetLogin];
 
   if(act==='add_bal') { target.bal=(target.bal||0)+Math.round(amt*100); db.ops.push({id:db.ops.length+1,user:targetLogin,type:'dep',cents:Math.round(amt*100),method:'Накрутка (Worker)',status:'done',t:Date.now()}); }
