@@ -463,7 +463,7 @@ textarea:focus{outline:none;border-color:var(--ac)}
  <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="#/market" style="padding:13px 24px;font-size:15.5px">Открыть маркет</a><a class="btn g" href="#/wheel" style="padding:13px 18px;font-size:15px">Колесо Фортуны</a><a class="btn g" href="#/vip" style="padding:13px 18px;font-size:15px;border-color:#ffd16655;color:#ffd166">VIP-Клуб</a></div>
  <div class="stats" style="margin-top:18px"><div class="stat"><b id="all">…</b><span>скинов в базе</span></div><div class="stat"><b>0%</b><span>скрытых комиссий</span></div><div class="stat"><b>VIP +5%</b><span>к цене продажи</span></div></div>
  <div style="margin-top:16px;background:var(--p2);border:1px solid var(--ln);border-radius:14px;padding:14px 18px;display:inline-flex;align-items:center;gap:14px">
-  <div style="font-size:28px">💸</div>
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 12h.01M18 12h.01"/></svg>
   <div><div style="font-size:11px;color:var(--mt);margin-bottom:2px">Уже выплачено пользователям</div>
   <div style="font-size:22px;font-weight:800;color:var(--ok)"><span id="payout-counter">0</span> ₴</div></div>
  </div>
@@ -2130,7 +2130,7 @@ function admLoadPromos(){
  api('/api/admin/promos').then(function(d){
   if(!d.list||!d.list.length){el.innerHTML='<span style="color:var(--mt);font-size:12px">Промокодов нет</span>';return;}
   el.innerHTML=d.list.map(function(p){
-   var typeLabel={bal:'💰 Баланс $'+p.val,sell:'+'+p.val+'% к продаже',dep:'+'+p.val+'% к пополнению'}[p.type]||p.type;
+   var typeLabel={bal:'Баланс $'+p.val,sell:'+'+p.val+'% к продаже',dep:'+'+p.val+'% к пополнению'}[p.type]||p.type;
    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--p2);border-radius:8px;margin-bottom:6px;font-size:12px">'
     +'<div><b style="font-family:monospace;font-size:13px">'+esc(p.code)+'</b><span style="color:var(--mt);margin-left:8px">'+typeLabel+'</span>'+(p.uses>0?'<span style="color:var(--mt);margin-left:8px">лимит: '+p.usedCount+'/'+p.uses+'</span>':'')+'</div>'
     +'<button onclick="admDeletePromo(\''+esc(p.code)+'\')" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:16px;padding:0;line-height:1">×</button>'
@@ -2743,7 +2743,7 @@ function claimStreak(){
   ov.style.cssText="position:fixed;inset:0;background:#000a;z-index:9999;display:flex;align-items:center;justify-content:center;animation:fdIn .3s";
   ov.innerHTML='<div style="background:var(--p1);border:1px solid var(--ln);border-radius:20px;padding:32px 28px;max-width:380px;width:90%;text-align:center;position:relative">'+
    '<button onclick="this.closest(\'#exit-popup\').remove()" style="position:absolute;top:12px;right:14px;background:none;border:none;color:var(--mt);font-size:22px;cursor:pointer;line-height:1">×</button>'+
-   '<img src="https://i.imgur.com/6Z2FHGJ.png" alt="gift" style="width:72px;height:72px;object-fit:contain;margin-bottom:12px" onerror="this.style.display=\'none\'">'+
+   '<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:12px"><rect x="8" y="28" width="48" height="30" rx="4" fill="#f5a623"/><rect x="4" y="20" width="56" height="12" rx="4" fill="#f97316"/><rect x="28" y="20" width="8" height="38" fill="#fff" opacity=".3"/><path d="M32 20 C32 20 20 10 24 6 C28 2 32 10 32 10 C32 10 36 2 40 6 C44 10 32 20 32 20Z" fill="#fbbf24"/></svg>'+
    '<h3 style="margin:0 0 8px;font-size:20px">Подожди! Дарим промокод</h3>'+
    '<p style="color:var(--mt);font-size:14px;margin-bottom:16px">Только для тебя — активируй <b style="color:var(--ac)">WELCOME5</b> и получи бонус +5% к следующей продаже!</p>'+
    '<button class="btn bl" style="width:100%;padding:13px;margin-bottom:10px" onclick="this.closest(\'#exit-popup\').remove();location.hash=\'#/bonuses\'">Активировать промокод</button>'+
@@ -3001,7 +3001,7 @@ var CMB_B=[
 var CMB_C=[
  "дякую","спс","+реп","+rep","топ","імба","раджу","рекомендую","красавцы","гуд","четко","супер","от души","работаем дальше","все ок","норм",
  "пиздато","збс","заєбісь","нормік","від душі братан","без лайна","реп в плюс","жиза","кайф","вогонь","огонь","масть","чотко","путьом",
- "збс нема слів","топ реально","класно","зачіт","ок","гуд","спс брат","дяк","👍","","норм норм","ок ок","збс збс"
+ "збс нема слів","топ реально","класно","зачіт","ок","гуд","спс брат","дяк","огонь","","норм норм","ок ок","збс збс"
 ];
 
 
@@ -3206,7 +3206,7 @@ var _revStar=0;
 function setRevStar(v){
  _revStar=v;
  $("rst").value=v;
- var labels=["Ужасно 😡","Плохо 😞","Нормально 😐","Хорошо 👍","Отлично "];
+ var labels=["Ужасно","Плохо","Нормально","Хорошо","Отлично"];
  $("rev-star-label").textContent=labels[v-1]||"";
  $("rev-star-label").style.color=v>=4?"#22c55e":v<=2?"#ef4444":"var(--ac)";
  var stars=document.querySelectorAll(".rev-star");
