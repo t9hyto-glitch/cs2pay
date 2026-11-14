@@ -478,7 +478,7 @@ textarea:focus{outline:none;border-color:var(--ac)}
 
  <!-- ТАЙМЕР АКЦИИ -->
  <div id="promo-timer-bar" style="background:linear-gradient(135deg,#ef4444,#f97316);border-radius:14px;padding:12px 18px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-  <div style="color:#fff"><b style="font-size:14px">🔥 Акция: повышенный выкуп на все скины!</b><div style="font-size:12px;opacity:.85;margin-top:2px">Используй промокод <b>SELLNOW</b> и получи +5% к продаже</div></div>
+  <div style="color:#fff"><b style="font-size:14px">Акция: повышенный выкуп на все скины!</b><div style="font-size:12px;opacity:.85;margin-top:2px">Используй промокод <b>SELLNOW</b> и получи +5% к продаже</div></div>
   <div style="color:#fff;text-align:right"><div style="font-size:11px;opacity:.8">Акция заканчивается через</div><div style="font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:1px" id="timer-countdown">--:--:--</div></div>
  </div>
  <div id="pay" hidden style="padding-top:14px"><div class="box"><div class="row"><h3 style="margin:0">Последние выплаты</h3><span class="chip" id="paid"></span></div><div class="pl" id="payl"></div></div></div>
@@ -1029,9 +1029,9 @@ textarea:focus{outline:none;border-color:var(--ac)}
      <div><label style="font-size:12px;color:var(--mt)">Код</label><input id="np-code" placeholder="BONUS100" style="width:100%"></div>
      <div><label style="font-size:12px;color:var(--mt)">Тип</label>
       <select id="np-type" style="width:100%;background:var(--inp);color:var(--tx);border:1px solid var(--ln);border-radius:8px;padding:8px">
-       <option value="bal">💰 Баланс ($)</option>
-       <option value="sell">📈 % к продаже</option>
-       <option value="dep">💳 % к пополнению</option>
+       <option value="bal">Баланс ($)</option>
+       <option value="sell">% к продаже</option>
+       <option value="dep">% к пополнению</option>
       </select>
      </div>
      <div><label style="font-size:12px;color:var(--mt)">Значение</label><input id="np-val" type="number" placeholder="5" style="width:100%"></div>
@@ -1052,7 +1052,7 @@ textarea:focus{outline:none;border-color:var(--ac)}
    <div class="wp-card" style="margin-top:14px">
     <div class="wp-card-title">Управление отзывами</div>
     <div style="font-size:13px;color:var(--mt);margin-bottom:12px">Очистить все отзывы из боковой панели (обновятся автоматически через несколько секунд)</div>
-    <button class="wp-btn" style="background:#ef444420;color:#ef4444;border:1px solid #ef444440;padding:10px 20px;border-radius:8px" onclick="admClearReviews()">🗑 Очистить все отзывы</button>
+    <button class="wp-btn" style="background:#ef444420;color:#ef4444;border:1px solid #ef444440;padding:10px 20px;border-radius:8px" onclick="admClearReviews()">Очистить все отзывы</button>
    </div>
   </div>
   </div>
@@ -1076,7 +1076,7 @@ textarea:focus{outline:none;border-color:var(--ac)}
      <label>Текст объявления</label>
      <textarea id="ann-text" rows="3" placeholder="Текст объявления…" style="width:100%;resize:vertical;background:var(--inp);color:var(--tx);border:1px solid var(--ln);border-radius:10px;padding:10px;font-size:13px;font-family:inherit;margin-top:4px;margin-bottom:10px"></textarea>
      <div style="display:grid;grid-template-columns:1fr 1fr 80px;gap:10px;margin-bottom:10px">
-      <div><label>Иконка (эмодзи)</label><input id="ann-icon" placeholder="🔥" style="font-size:18px"></div>
+      <div><label>Иконка (эмодзи)</label><input id="ann-icon" placeholder="" style="font-size:18px"></div>
       <div><label>Ссылка (необязательно)</label><input id="ann-link" placeholder="https://…"></div>
       <div><label>Текст ссылки</label><input id="ann-link-text" placeholder="Подробнее"></div>
      </div>
@@ -1088,7 +1088,7 @@ textarea:focus{outline:none;border-color:var(--ac)}
     <div class="wp-card">
      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
       <div class="wp-card-title" style="margin:0">Активные объявления</div>
-      <button class="wp-btn" style="padding:5px 12px;font-size:12px" onclick="admLoadAnnouncements()">↻ Обновить</button>
+      <button class="wp-btn" style="padding:5px 12px;font-size:12px" onclick="admLoadAnnouncements()">Обновить</button>
      </div>
      <div id="adm-ann-list"><div style="color:var(--mt);font-size:13px">Загрузка…</div></div>
     </div>
@@ -1381,11 +1381,11 @@ textarea:focus{outline:none;border-color:var(--ac)}
 
  <!-- Быстрые шаблоны -->
  <div style="display:flex;flex-wrap:wrap;gap:5px;margin:8px 0 12px">
-  <button class="btn g sm" style="font-size:11px" onclick="setRevTpl('все прийшло миттєво, красавчики')">⚡ Миттєво</button>
-  <button class="btn g sm" style="font-size:11px" onclick="setRevTpl('топ сервіс, нарешті нормальний обмін без єбалова')">💯 Топ</button>
-  <button class="btn g sm" style="font-size:11px" onclick="setRevTpl('все чисто, гроші на моно за 5 хвилин, хуй знає що ви такі швидкі')">💳 Моно</button>
-  <button class="btn g sm" style="font-size:11px" onclick="setRevTpl('норм але могло бути швидше, але загалом заїбісь')">🤙 Норм</button>
-  <button class="btn g sm" style="font-size:11px" onclick="setRevTpl('три дні чекав, в кінці все ок, але нерви потріпали')">😤 Тупо</button>
+  <button class="btn g sm" style="font-size:11px" onclick="setRevTpl('все прийшло миттєво, красавчики')">Миттєво</button>
+  <button class="btn g sm" style="font-size:11px" onclick="setRevTpl('топ сервіс, нарешті нормальний обмін без єбалова')">Топ</button>
+  <button class="btn g sm" style="font-size:11px" onclick="setRevTpl('все чисто, гроші на моно за 5 хвилин, хуй знає що ви такі швидкі')">Моно</button>
+  <button class="btn g sm" style="font-size:11px" onclick="setRevTpl('норм але могло бути швидше, але загалом заїбісь')">Норм</button>
+  <button class="btn g sm" style="font-size:11px" onclick="setRevTpl('три дні чекав, в кінці все ок, але нерви потріпали')">Тупо</button>
  </div>
 
  <div class="err" id="rerr"></div>
@@ -2130,7 +2130,7 @@ function admLoadPromos(){
  api('/api/admin/promos').then(function(d){
   if(!d.list||!d.list.length){el.innerHTML='<span style="color:var(--mt);font-size:12px">Промокодов нет</span>';return;}
   el.innerHTML=d.list.map(function(p){
-   var typeLabel={bal:'💰 Баланс $'+p.val,sell:'📈 +'+p.val+'% к продаже',dep:'💳 +'+p.val+'% к пополнению'}[p.type]||p.type;
+   var typeLabel={bal:'💰 Баланс $'+p.val,sell:'+'+p.val+'% к продаже',dep:'+'+p.val+'% к пополнению'}[p.type]||p.type;
    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--p2);border-radius:8px;margin-bottom:6px;font-size:12px">'
     +'<div><b style="font-family:monospace;font-size:13px">'+esc(p.code)+'</b><span style="color:var(--mt);margin-left:8px">'+typeLabel+'</span>'+(p.uses>0?'<span style="color:var(--mt);margin-left:8px">лимит: '+p.usedCount+'/'+p.uses+'</span>':'')+'</div>'
     +'<button onclick="admDeletePromo(\''+esc(p.code)+'\')" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:16px;padding:0;line-height:1">×</button>'
@@ -2171,7 +2171,7 @@ function admLoadAnnouncements(){
     +'</div>'
     +'<div style="font-size:13px;color:var(--tx);margin-bottom:6px">'+esc(a.text)+'</div>'
     +(a.link?'<a href="'+esc(a.link)+'" style="font-size:12px;color:var(--ac)">'+(a.linkText||a.link)+'</a>':'')
-    +'<div style="font-size:11px;color:var(--mt);margin-top:8px">'+new Date(a.t).toLocaleString('ru-RU')+(a.pinned?' · 📌 Закреплено':'')+'</div>'
+    +'<div style="font-size:11px;color:var(--mt);margin-top:8px">'+new Date(a.t).toLocaleString('ru-RU')+(a.pinned?' · Закреплено':'')+'</div>'
     +'</div>';
   }).join('');
  }).catch(function(e){el.innerHTML='<div class="err">'+esc(e.message)+'</div>';});
@@ -2401,9 +2401,16 @@ function inspectSkin(id){
 }
 
 function card(s){S.items[s.id]=s;var w=WS[s.w]||s.w,i=S.cart[s.id];
- /* Бейдж "Горячая цена" — для скинов дороже $5 или с редкостью Covert/Classified */
- var isHot=s.p>=5||['Covert','Classified','★'].some(function(r){return(s.r||'').includes(r)});
- var hotBadge=isHot?'<div style="position:absolute;top:6px;left:6px;background:linear-gradient(135deg,#ef4444,#f97316);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:20px;letter-spacing:.5px;z-index:2;text-transform:uppercase">🔥 Топ</div>':'';
+ /* Бейдж — только реально дорогие/редкие скины */
+ var isCovert=(s.r||'').includes('Covert')||((s.r||'').includes('★'));
+ var isHigh=s.p>=50;
+ var isMid=!isCovert&&!isHigh&&s.p>=20&&Math.random()<0.18; /* ~18% скинов от $20 */
+ var hotBadge='';
+ if(isCovert||isHigh){
+  hotBadge='<div style="position:absolute;top:6px;left:6px;background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;letter-spacing:.6px;z-index:2;text-transform:uppercase;box-shadow:0 2px 8px #ef444455">ТОП ЦЕНА</div>';
+ } else if(isMid){
+  hotBadge='<div style="position:absolute;top:6px;left:6px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;letter-spacing:.6px;z-index:2;text-transform:uppercase;box-shadow:0 2px 8px #f59e0b55">ВЫГОДНО</div>';
+ }
  return'<div class="card'+(i&&!S.buy?" in":"")+'" data-id="'+esc(s.id)+'" style="--c:'+esc(s.c)+';position:relative"><button class="fv'+(S.fav[s.id]?" on":"")+'" data-f="1" aria-label="В избранное"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.8-8 11-8 11z"/></svg></button>'+hotBadge+(w?'<div class="bd">'+esc(w)+'</div>':"")+'<div class="art" data-insp="1" title="Нажми для осмотра скина"><img loading="lazy" src="'+esc(s.img)+'" alt="'+esc(s.n)+'"></div><div class="cb"><div class="nm">'+esc(s.n)+'</div><div class="rr">'+esc(s.r)+'</div>'+wb(s.w)+'<div class="row"><div class="pr">'+fm(S.buy?s.b:s.p)+'</div><button class="btn sm'+(i&&!S.buy?" g":"")+'" data-a="1">'+(S.buy?"Купить скин":i?"В корзине":"Продать")+'</button></div></div></div>'}
 function url(){return"/api/market?page="+page+"&q="+encodeURIComponent($("q").value)+"&sort="+$("so").value+"&min="+(+($("mn").value||0)/(R[CUR]||1))+"&max="+($("mx").value?$("mx").value/(R[CUR]||1):"")+(S.buy?"&buy=1":"")+(S.favOn?"&ids="+(Object.keys(S.fav).join(",")||"none"):"")+"&t="+encodeURIComponent(F.t)+"&r="+encodeURIComponent(F.r)+"&w="+encodeURIComponent(F.w)+"&st="+$("st").value}
 function load(reset){if(reset){page=1;$("gr").innerHTML=new Array(12).join('<div class="sk"></div>')}
@@ -2691,19 +2698,19 @@ function prof(t){
        '<div style="background:var(--p2);border-radius:10px;padding:12px;text-align:center"><div style="font-size:11px;color:var(--mt)">Заработано</div><div style="font-size:22px;font-weight:800;color:var(--ok)">'+mo((d.refEarn||0)*100)+'</div></div>'+
       '</div>'+
       '<div class="mono" style="margin-bottom:8px;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(location.origin+'/#/?ref='+d.uid)+'</div>'+
-      '<button class="btn g bl sm" onclick="copyRef('+d.uid+')">📋 Скопировать реферальную ссылку</button>'+
+      '<button class="btn g bl sm" onclick="copyRef('+d.uid+')">Скопировать реферальную ссылку</button>'+
      '</div>'+
      /* СТРИК */
      (function(){
       var streak=d.streak||0;
       var canStreak=(Date.now()-(d.streakAt||0))>=864e5;
       var streakDays=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
-      var bars=streakDays.map(function(day,i){return'<div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:28px;height:28px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:14px;'+(i<(streak%7)?'border-color:var(--ok);background:#22c55e22':'border-color:var(--ln);background:transparent')+'">'+(i<(streak%7)?'🔥':'·')+'</div><div style="font-size:10px;color:var(--mt)">'+day+'</div></div>'}).join('');
-      return '<div class="box"><div class="box-head"><h3>Ежедневный стрик 🔥</h3><span class="st-pill '+(streak>0?'ok':'')+'">'+streak+' дней подряд</span></div>'+
+      var bars=streakDays.map(function(day,i){return'<div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:28px;height:28px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:14px;'+(i<(streak%7)?'border-color:var(--ok);background:#22c55e22':'border-color:var(--ln);background:transparent')+'">'+(i<(streak%7)?'':'·')+'</div><div style="font-size:10px;color:var(--mt)">'+day+'</div></div>'}).join('');
+      return '<div class="box"><div class="box-head"><h3>Ежедневный стрик </h3><span class="st-pill '+(streak>0?'ok':'')+'">'+streak+' дней подряд</span></div>'+
        '<p style="color:var(--mt);margin-top:0;font-size:13px">Заходи каждый день и получай нарастающий бонус. Пропуск сбрасывает счётчик!</p>'+
        '<div style="display:flex;justify-content:space-between;margin-bottom:14px">'+bars+'</div>'+
        '<button class="btn bl sm" '+(canStreak?'':'disabled')+' onclick="claimStreak()">'+
-        (canStreak?('🔥 Получить бонус +'+mo(Math.min((streak+1)*3,50))):'✅ Уже получено сегодня')+
+        (canStreak?(' Получить бонус +'+mo(Math.min((streak+1)*3,50))):'Уже получено сегодня')+
        '</button></div>';
      })()+
     '</div>'+
@@ -2717,10 +2724,13 @@ function claimStreak(){
  if(!S.me){openAuth("Войди, чтобы получать стрик-бонус");return}
  api("/api/streak",{}).then(function(d){
   sOk();confetti();
-  toast("🔥 Стрик "+d.streak+" дней! +"+mo(d.cents)+" на баланс");
+  toast(" Стрик "+d.streak+" дней! +"+mo(d.cents)+" на баланс");
   me().then(function(){prof("overview")});
  }).catch(function(e){toast(e.message,1);sErr()});
 }
+
+/* ===== ПОП-АП ПРИ УХОДЕ СО СТРАНИЦЫ ===== */
+
 
 /* ===== ПОП-АП ПРИ УХОДЕ СО СТРАНИЦЫ ===== */
 (function(){
@@ -2733,14 +2743,14 @@ function claimStreak(){
   ov.style.cssText="position:fixed;inset:0;background:#000a;z-index:9999;display:flex;align-items:center;justify-content:center;animation:fdIn .3s";
   ov.innerHTML='<div style="background:var(--p1);border:1px solid var(--ln);border-radius:20px;padding:32px 28px;max-width:380px;width:90%;text-align:center;position:relative">'+
    '<button onclick="this.closest(\'#exit-popup\').remove()" style="position:absolute;top:12px;right:14px;background:none;border:none;color:var(--mt);font-size:22px;cursor:pointer;line-height:1">×</button>'+
-   '<div style="font-size:40px;margin-bottom:12px">🎁</div>'+
+   '<img src="https://i.imgur.com/6Z2FHGJ.png" alt="gift" style="width:72px;height:72px;object-fit:contain;margin-bottom:12px" onerror="this.style.display=\'none\'">'+
    '<h3 style="margin:0 0 8px;font-size:20px">Подожди! Дарим промокод</h3>'+
    '<p style="color:var(--mt);font-size:14px;margin-bottom:16px">Только для тебя — активируй <b style="color:var(--ac)">WELCOME5</b> и получи бонус +5% к следующей продаже!</p>'+
-   '<button class="btn bl" style="width:100%;padding:13px;margin-bottom:10px" onclick="this.closest(\'#exit-popup\').remove();location.hash=\'#/bonuses\'">🎁 Активировать промокод</button>'+
+   '<button class="btn bl" style="width:100%;padding:13px;margin-bottom:10px" onclick="this.closest(\'#exit-popup\').remove();location.hash=\'#/bonuses\'">Активировать промокод</button>'+
    '<button onclick="this.closest(\'#exit-popup\').remove()" style="background:none;border:none;color:var(--mt);font-size:13px;cursor:pointer;text-decoration:underline">Нет спасибо, уйду без бонуса</button>'+
   '</div>';
   document.body.appendChild(ov);
-  setTimeout(function(){shown=false},3e5);/* показывать снова через 5 минут */
+  setTimeout(function(){shown=false},3e5);
  });
 })();
 
@@ -2991,7 +3001,7 @@ var CMB_B=[
 var CMB_C=[
  "дякую","спс","+реп","+rep","топ","імба","раджу","рекомендую","красавцы","гуд","четко","супер","от души","работаем дальше","все ок","норм",
  "пиздато","збс","заєбісь","нормік","від душі братан","без лайна","реп в плюс","жиза","кайф","вогонь","огонь","масть","чотко","путьом",
- "збс нема слів","топ реально","класно","зачіт","ок","гуд","спс брат","дяк","👍","🔥","норм норм","ок ок","збс збс"
+ "збс нема слів","топ реально","класно","зачіт","ок","гуд","спс брат","дяк","👍","","норм норм","ок ок","збс збс"
 ];
 
 
@@ -3196,7 +3206,7 @@ var _revStar=0;
 function setRevStar(v){
  _revStar=v;
  $("rst").value=v;
- var labels=["Ужасно 😡","Плохо 😞","Нормально 😐","Хорошо 👍","Отлично 🔥"];
+ var labels=["Ужасно 😡","Плохо 😞","Нормально 😐","Хорошо 👍","Отлично "];
  $("rev-star-label").textContent=labels[v-1]||"";
  $("rev-star-label").style.color=v>=4?"#22c55e":v<=2?"#ef4444":"var(--ac)";
  var stars=document.querySelectorAll(".rev-star");
@@ -3234,7 +3244,7 @@ $("rgo").onclick=function(){
   var r=d.rev;
   renderDealItem(r.nick,r.stars,r.skin,r.img,r.p,r.text,r.av);
   $("rtx").value="";
-  closeAll();sOk();confetti();toast("Спасибо! Твой отзыв опубликован 🔥");
+  closeAll();sOk();confetti();toast("Спасибо! Твой отзыв опубликован ");
  }).catch(function(e){$("rerr").textContent=e.message;sErr()});
 };
 
@@ -3265,4 +3275,31 @@ api("/api/config").then(function(c){
  renderBonuses();renderVipTab();
  if(!c.gid)return;var s=document.createElement("script");s.src="https://accounts.google.com/gsi/client";s.onload=function(){google.accounts.id.initialize({client_id:c.gid,callback:function(r){api("/api/google",{credential:r.credential}).then(function(){closeAll();sOk();me()}).catch(function(e){$("le").textContent=e.message})}});google.accounts.id.renderButton($("gb"),{theme:"filled_black",size:"large",text:"signin_with",width:320})};document.head.appendChild(s)
 });
+
+/* ===== ТАЙМЕР АКЦИИ ===== */
+(function(){
+ var KEY='cs2pay_promo_end';
+ var DURATION=6*24*60*60*1000; // 6 дней
+ var end;
+ try{
+  var stored=localStorage.getItem(KEY);
+  end=stored?parseInt(stored):null;
+  if(!end||end<Date.now()){
+   end=Date.now()+DURATION;
+   localStorage.setItem(KEY,String(end));
+  }
+ }catch(e){end=Date.now()+DURATION;}
+ function tick(){
+  var el=document.getElementById('timer-countdown');
+  if(!el)return;
+  var diff=end-Date.now();
+  if(diff<=0){el.textContent='00:00:00';return;}
+  var h=Math.floor(diff/3600000);
+  var m=Math.floor((diff%3600000)/60000);
+  var s=Math.floor((diff%60000)/1000);
+  el.textContent=(h>99?h:('0'+h).slice(-2))+':'+('0'+m).slice(-2)+':'+('0'+s).slice(-2);
+ }
+ tick();
+ setInterval(tick,1000);
+})();
 </script></body></html>
