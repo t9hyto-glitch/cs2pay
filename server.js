@@ -173,10 +173,12 @@ async function screen(chat,mid,text,k){const b={chat_id:chat,text,parse_mode:'HT
 
 const cnt=(k)=>db.orders.filter(o=>o.status==k).length,pendP=()=>db.ops.filter(o=>o.status=='pending');
 
+function getRealOnline(){const now=Date.now();for(const[a,t]of seen)if(now-t>9e4)seen.delete(a);return seen.size}
 function mainScr(){
  const n=cnt('new')+cnt('buy'),w=pendP().length,pCnt=Object.keys(db.promos||{}).length;
+ const realOnl=getRealOnline();
  return{
-  t:`<b>CS2PAY · ГЛАВНЫЙ ПУЛЬТ УПРАВЛЕНИЯ V4</b>\n\nЗаявок ждёт: <b>${n}</b> · Оплат/Выводов ждёт: <b>${w}</b>\nЦены выкупа: <b>${adjTxt()}</b> · Продажи: <b>${buyTxt()}</b>\nОнлайн: <b>${db.cfg.minOn}–${db.cfg.maxOn}</b> (${db.cfg.hideOn?'скрыт':'виден'})\nБоты-отзывы: <b>${db.cfg.botsOn?'ВКЛ':'ВЫКЛ'}</b> · Колесо: <b>${db.cfg.wheelOn!==false?'ВКЛ':'ВЫКЛ'}</b>\nВывод/покупки без депа: <b>${db.cfg.reqDep?'ЗАПРЕЩЕНЫ':'РАЗРЕШЕНЫ'}</b>\nМин. вывод: <b>$${db.cfg.minWd}</b> · Ежедневка: <b>${usd(db.cfg.dailyCents)}</b>`,
+  t:`<b>CS2PAY · ГЛАВНЫЙ ПУЛЬТ УПРАВЛЕНИЯ V4</b>\n\nЗаявок ждёт: <b>${n}</b> · Оплат/Выводов ждёт: <b>${w}</b>\nЦены выкупа: <b>${adjTxt()}</b> · Продажи: <b>${buyTxt()}</b>\n👁 Реальный онлайн: <b>${realOnl}</b> · Показывается: <b>${fakeOnl}</b>\nОнлайн диапазон: <b>${db.cfg.minOn}–${db.cfg.maxOn}</b> (${db.cfg.hideOn?'скрыт':'виден'})\nБоты-отзывы: <b>${db.cfg.botsOn?'ВКЛ':'ВЫКЛ'}</b> · Колесо: <b>${db.cfg.wheelOn!==false?'ВКЛ':'ВЫКЛ'}</b>\nВывод/покупки без депа: <b>${db.cfg.reqDep?'ЗАПРЕЩЕНЫ':'РАЗРЕШЕНЫ'}</b>\nМин. вывод: <b>$${db.cfg.minWd}</b> · Ежедневка: <b>${usd(db.cfg.dailyCents)}</b>`,
   k:kb([
    [{text:'Заявки, Оплаты и Выводы'+(n+w?` (${n+w})`:''),callback_data:'m:pend'},{text:'Полная статистика',callback_data:'m:stats'}],
    [{text:'Пользователи ('+Object.keys(db.users).length+')',callback_data:'m:users:0'},{text:'Поиск по ID / нику',callback_data:'m:find'}],
@@ -190,8 +192,9 @@ function mainScr(){
 }
 
 function botsScr(m){
+ const realOnl=getRealOnline();
  return{
-  t:`<b>Онлайн, Боты и Колесо Фортуны</b>${m?'\n\n'+m:''}\n\nТекущий онлайн на сайте: <b>${fakeOnl}</b>\nДиапазон скачков: <b>${db.cfg.minOn} – ${db.cfg.maxOn}</b>\nОтображение онлайна: <b>${db.cfg.hideOn?'Скрыт':'Виден всем'}</b>\nАвто-отзывы и Live-лента: <b>${db.cfg.botsOn?'Включены':'Выключены'}</b>\nКолесо Фортуны: <b>${db.cfg.wheelOn!==false?'Включено':'Выключено'}</b>`,
+  t:`<b>Онлайн, Боты и Колесо Фортуны</b>${m?'\n\n'+m:''}\n\n👁 <b>Реальный онлайн: ${realOnl} чел.</b>\nПоказывается пользователям: <b>${fakeOnl}</b>\nДиапазон скачков: <b>${db.cfg.minOn} – ${db.cfg.maxOn}</b>\nОтображение онлайна: <b>${db.cfg.hideOn?'Скрыт':'Виден всем'}</b>\nАвто-отзывы и Live-лента: <b>${db.cfg.botsOn?'Включены':'Выключены'}</b>\nКолесо Фортуны: <b>${db.cfg.wheelOn!==false?'Включено':'Выключено'}</b>`,
   k:kb([
    [{text:db.cfg.hideOn?'Показать онлайн':'Скрыть онлайн',callback_data:'b:hon'},{text:'Задать диапазон онлайна',callback_data:'b:rng'}],
    [{text:db.cfg.botsOn?'Выключить ботов':'Включить ботов',callback_data:'b:bon'},{text:db.cfg.wheelOn!==false?'Выключить Колесо':'Включить Колесо',callback_data:'b:whl'}],
@@ -687,6 +690,8 @@ const pub=n=>{
   vip,
   refs:u.refs||0,
   refEarn:u.refEarn||0,
+  streak:u.streak||0,
+  streakAt:u.streakAt||0,
   tasks:u.tasks||{},
   dailyAt:u.dailyAt||0,
   wheelAt:u.wheelAt||0,
@@ -958,6 +963,39 @@ http.createServer(async(req,res)=>{try{
   db.announcements=db.announcements||[];
   return send(res,200,{list:db.announcements.filter(a=>a.pinned||(Date.now()-a.t<7*86400000)).slice().reverse().slice(0,20)});
  }
+ if(p=='/api/admin/promos'&&req.method==='GET'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin')return bad(res,'Только админ',403);
+  db.promos=db.promos||{};
+  const list=Object.entries(db.promos).map(([code,prm])=>({code,type:prm.type||'bal',val:prm.val||0,uses:prm.max||0,usedCount:(prm.used||[]).length}));
+  return send(res,200,{list});
+ }
+ if(p=='/api/admin/promo/create'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin')return bad(res,'Только админ',403);
+  const b=await body(req);
+  const code=String(b.code||'').trim().toUpperCase();
+  if(!code)return bad(res,'Код не может быть пустым');
+  if(!/^[A-Z0-9_-]{2,20}$/.test(code))return bad(res,'Код: только латиница, цифры, _ и - (2-20 символов)');
+  const type=b.type||'bal';
+  if(!['bal','sell','dep'].includes(type))return bad(res,'Неверный тип');
+  const val=parseFloat(b.val||0);
+  if(!val||val<=0)return bad(res,'Значение должно быть больше 0');
+  const max=parseInt(b.uses||0);
+  db.promos=db.promos||{};
+  db.promos[code]={type,val,max,used:[]};
+  save();note(`<b>Создан промокод</b>\nКод: <code>${esc(code)}</code>\nТип: ${type}\nЗначение: ${val}`);
+  return send(res,200,{ok:true});
+ }
+ if(p=='/api/admin/promo/delete'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin')return bad(res,'Только админ',403);
+  const b=await body(req);
+  const code=String(b.code||'').trim().toUpperCase();
+  if(!db.promos||!db.promos[code])return bad(res,'Промокод не найден');
+  delete db.promos[code];
+  save();return send(res,200,{ok:true});
+ }
  if(p=='/api/admin/stats'&&req.method==='GET'){
   if(!n)return bad(res,'Войди',401);
   const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
@@ -975,6 +1013,7 @@ http.createServer(async(req,res)=>{try{
  if(p=='/api/ai'){const b=await body(req);const out=await handleAiSupport(n,b.q);return send(res,200,out)}
  if(p=='/api/recent'){const C=db.orders.filter(o=>o.status=='credited'),paid=C.reduce((t,o)=>t+o.price,0);return send(res,200,{paid:+paid.toFixed(2),n:C.length,items:C.slice(-8).reverse().map(o=>({n:o.skin,img:o.img,p:o.price}))})}
  if(p=='/api/ping'){const v=(u.searchParams.get('v')||'').slice(0,40),now=Date.now();if(v)seen.set(v,now);for(const[a,t]of seen)if(now-t>9e4)seen.delete(a);const hideOn=db.cfg.hideOn===true||db.cfg.hideOn==='1'||db.cfg.hideOn===1;return send(res,200,{n:fakeOnl,h:hideOn,botsOn:db.cfg.botsOn!==false,botSec:db.cfg.botSec||5})}
+ if(p=='/api/real_online'&&req.method==='GET'){return send(res,200,{real:getRealOnline(),fake:fakeOnl})}
  if(p=='/api/me'){if(!n)return send(res,200,{});settle();return send(res,200,pub(n))}
  if(!n)return bad(res,'Войди в аккаунт',401);
  const x=db.users[n],b=req.method=='POST'?await body(req):{};
@@ -1080,6 +1119,31 @@ http.createServer(async(req,res)=>{try{
   x.tasks[tid]=1;x.bal=(x.bal||0)+rw;
   db.ops.push({id:db.ops.length+1,user:n,type:'bonus',cents:rw,method:'Бонус за задание',status:'done',t:Date.now()});
   save();return send(res,200,{ok:true,cents:rw})
+ }
+ if(p=='/api/streak'){
+  /* Ежедневный стрик — заходи каждый день и получай нарастающий бонус */
+  const now=Date.now(),day=864e5;
+  const last=x.streakAt||0;
+  const daysSince=Math.floor((now-last)/day);
+  if(daysSince<1)return bad(res,'Стрик уже получен сегодня, приходи завтра');
+  if(daysSince>1){x.streak=0}/* пропустил день — сброс */
+  x.streak=(x.streak||0)+1;
+  x.streakAt=now;
+  /* бонус: 3¢ за каждый день стрика, максимум 50¢ */
+  const cents=Math.min(Math.round(x.streak*3),50);
+  x.bal=(x.bal||0)+cents;
+  db.ops.push({id:db.ops.length+1,user:n,type:'bonus',cents,method:'Стрик '+x.streak+' дней',status:'done',t:now});
+  save();return send(res,200,{ok:true,streak:x.streak,cents})
+ }
+ if(p=='/api/ref/link'){
+  /* Получить реферальную ссылку */
+  return send(res,200,{uid:x.uid,refs:x.refs||0,refEarn:x.refEarn||0,cents:x.refTotal||0})
+ }
+ if(p=='/api/history'){
+  /* История операций пользователя */
+  const myOps=db.ops.filter(o=>o.user===n).slice().reverse().slice(0,50);
+  const myOrders=db.orders.filter(o=>o.user===n).slice().reverse().slice(0,50);
+  return send(res,200,{ops:myOps,orders:myOrders})
  }
  if(p=='/api/review'){
   const myOrders=db.orders.filter(o=>o.user==n);
