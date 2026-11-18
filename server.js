@@ -117,6 +117,263 @@ function getVip(u){
  return{lvl:1,name:'BRONZE',b:0,next:20,vol:+vol.toFixed(2)};
 }
 
+/* =========================================================================
+   STEAM AUTO-TRADE ENGINE
+   ─────────────────────────────────────────────────────────────────────────
+   ENV vars (настрой в Render/Railway → Environment):
+     STEAM_SESSIONID      — sessionid cookie     (F12 → Application → Cookies)
+     STEAM_LOGIN_SECURE   — steamLoginSecure cookie (длинный hex:token)
+     STEAM_API_KEY        — ключ Steam Web API   (steamcommunity.com/dev/apikey)
+     STEAM_BOT_ID         — SteamID64 бота       (17 цифр)
+     STEAM_SHARED_SECRET  — shared_secret Guard   (для авто-подтверждения)
+     STEAM_MACHINE_AUTH   — steamMachineAuth cookie (опционально)
+   ========================================================================= */
+const STEAM_ON=!!(E.STEAM_SESSIONID&&E.STEAM_API_KEY&&E.STEAM_BOT_ID);
+
+function steamCookies(){
+ const p=[
+  'sessionid='+E.STEAM_SESSIONID,
+  'steamLoginSecure='+E.STEAM_LOGIN_SECURE,
+  'Steam_Language=english',
+  'strInventoryLastContext=730_2',
+ ];
+ if(E.STEAM_MACHINE_AUTH)p.push(`steamMachineAuth${E.STEAM_BOT_ID}=${E.STEAM_MACHINE_AUTH}`);
+ return p.join('; ');
+}
+
+async function steamFetch(url,opts={}){
+ const headers={
+  'Cookie':steamCookies(),
+  'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+  'Accept-Language':'en-US,en;q=0.9',
+  'Accept':'application/json, text/javascript, */*; q=0.01',
+  ...opts.headers
+ };
+ const r=await fetch(url,{...opts,headers});
+ if(!r.ok)throw new Error(`Steam HTTP ${r.status}: ${r.statusText} @ ${url}`);
+ return r;
+}
+
+/* Parse trade URL → {partner32, partner64, token} */
+function parseTL(tl){
+ try{
+  const u=new URL(tl);
+  const p32=BigInt(u.searchParams.get('partner')||'0');
+  const token=u.searchParams.get('token')||'';
+  return{partner32:String(p32),partner64:String(p32+76561197960265728n),token};
+ }catch{throw new Error('Неверный формат трейд-ссылки');}
+}
+
+/* Получить инвентарь пользователя — массив {assetid, name} */
+async function getUserInventory(steamId64){
+ const r=await steamFetch(`https://steamcommunity.com/inventory/${steamId64}/730/2?l=english&count=5000&norender=1`);
+ const data=await r.json();
+ if(!data.assets||!data.descriptions)throw new Error('Инвентарь пуст или закрыт');
+ const dmap={};
+ for(const d of data.descriptions)dmap[`${d.classid}_${d.instanceid}`]=d.market_hash_name||'';
+ return data.assets.map(a=>({assetid:a.assetid,name:dmap[`${a.classid}_${a.instanceid}`]||''}));
+}
+
+/* Отправить трейд-оффер — запрашиваем скин из инвентаря пользователя */
+async function sendTradeOffer(order){
+ if(!STEAM_ON)throw new Error('Steam Bot не настроен (нет env-переменных)');
+ const{partner32,partner64,token}=parseTL(order.tl);
+
+ /* Найти предмет в инвентаре пользователя */
+ let inv;
+ try{inv=await getUserInventory(partner64);}
+ catch(e){throw new Error(`Не удалось получить инвентарь (${e.message}). Возможно, инвентарь закрыт.`);}
+
+ const item=inv.find(i=>i.name===order.skin);
+ if(!item)throw new Error(`Предмет "${order.skin}" не найден в инвентаре ${partner64}. Убедись, что он добавлен в Steam.`);
+
+ const tradeJson=JSON.stringify({
+  newversion:true,version:4,
+  me:{assets:[],currency:[],ready:false},
+  them:{
+   assets:[{appid:730,contextid:'2',amount:1,assetid:item.assetid}],
+   currency:[],ready:false
+  }
+ });
+
+ const bodyStr=new URLSearchParams({
+  sessionid:E.STEAM_SESSIONID,
+  serverid:'1',
+  partner:partner64,
+  tradeoffermessage:`cs2pay.fun Order #${order.id} — ${order.skin}`,
+  json_tradeoffer:tradeJson,
+  captcha:'',
+  trade_offer_access_token:token
+ }).toString();
+
+ const r=await steamFetch('https://steamcommunity.com/tradeoffer/new/send',{
+  method:'POST',
+  headers:{
+   'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
+   'Referer':`https://steamcommunity.com/tradeoffer/new/?partner=${partner32}&token=${token}`,
+   'Origin':'https://steamcommunity.com',
+   'X-Requested-With':'XMLHttpRequest',
+  },
+  body:bodyStr
+ });
+
+ const data=await r.json();
+ if(!data.tradeofferid)throw new Error(data.strError||`Steam вернул пустой ответ: ${JSON.stringify(data)}`);
+ return{offerId:String(data.tradeofferid),needsConfirm:!!data.needs_mobile_confirmation};
+}
+
+/* Проверить статус оффера через Steam API */
+async function getOfferStatus(offerId){
+ const r=await fetch(`https://api.steampowered.com/IEconService/GetTradeOffer/v1/?key=${E.STEAM_API_KEY}&tradeofferid=${offerId}&language=english`);
+ const data=await r.json();
+ return data.response?.offer||null;
+}
+
+/* Авто-подтверждение через shared_secret (Mobile Guard) */
+async function confirmOffer(offerId){
+ if(!E.STEAM_SHARED_SECRET)return false;
+ try{
+  const t=Math.floor(Date.now()/1000);
+  /* Генерируем ключ подтверждения через HMAC-SHA1 */
+  const timeBuf=Buffer.alloc(8);timeBuf.writeBigInt64BE(BigInt(t));
+  const tagBuf=Buffer.from('conf');
+  const payload=Buffer.concat([timeBuf,tagBuf]);
+  const secret=Buffer.from(E.STEAM_SHARED_SECRET,'base64');
+  const key=crypto.createHmac('sha1',secret).update(payload).digest('base64');
+
+  const listUrl=`https://steamcommunity.com/mobileconf/getlist?p=&a=${E.STEAM_BOT_ID}&k=${encodeURIComponent(key)}&t=${t}&m=conf&tag=conf`;
+  const lr=await steamFetch(listUrl);
+  const ld=await lr.json();
+
+  if(!ld.success||!ld.conf)return false;
+  const conf=ld.conf.find(c=>String(c.creator_id)===String(offerId)||String(c.id)===String(offerId));
+  if(!conf){console.log('confirmOffer: нет pending конф. для оффера',offerId);return false;}
+
+  /* Ключ для allow */
+  const timeBuf2=Buffer.alloc(8);timeBuf2.writeBigInt64BE(BigInt(t));
+  const tagBuf2=Buffer.from('allow');
+  const key2=crypto.createHmac('sha1',secret).update(Buffer.concat([timeBuf2,tagBuf2])).digest('base64');
+
+  const aUrl=`https://steamcommunity.com/mobileconf/ajaxop?op=allow&p=&a=${E.STEAM_BOT_ID}&k=${encodeURIComponent(key2)}&t=${t}&m=conf&tag=allow&cid=${conf.id}&ck=${conf.nonce}`;
+  const ar=await steamFetch(aUrl);
+  const ad=await ar.json();
+  return ad.success===true;
+ }catch(e){console.log('confirmOffer err:',e.message);return false;}
+}
+
+/* Автоматически отправить оффер для заявки (вызывается асинхронно) */
+async function autoSendOffer(order){
+ if(!STEAM_ON||!db.cfg.autoTrade)return;
+ try{
+  order.status='sending';save();
+  const{offerId,needsConfirm}=await sendTradeOffer(order);
+  order.offerId=offerId;order.offerSentAt=Date.now();
+  order.status='offer_sent';order.offerNeedsConfirm=needsConfirm;
+  save();
+
+  if(needsConfirm&&E.STEAM_SHARED_SECRET){
+   await new Promise(r=>setTimeout(r,4000));/* ждём пока Steam зарегистрирует оффер */
+   const confirmed=await confirmOffer(offerId);
+   order.offerConfirmed=confirmed;save();
+   if(!confirmed)note(`<b>Трейд #${order.id} ждёт ручного подтверждения в Guard!</b>\nОффер ID: <code>${offerId}</code>`);
+  }
+
+  note(`<b>Трейд-оффер отправлен</b>\nЗаявка #${order.id}: ${esc(order.skin)}\nОффер: <code>${offerId}</code>\nКлиент: ${esc(db.users[order.user]?.nick||order.user)} (#${db.users[order.user]?.uid||0})${needsConfirm?'\nТребует подтверждения Guard!':''}`);
+
+  const u=db.users[order.user];
+  if(u){
+   u.chat=u.chat||[];
+   u.chat.push({id:Date.now(),from:'b',text:`Трейд по заявке #${order.id} отправлен! Прими его в Steam — ссылка откроется автоматически в трейд-офферах. После принятия скин перейдёт в холд и деньги зачислятся на баланс.`,t:Date.now()});
+   if(u.chat.length>50)u.chat=u.chat.slice(-50);save();
+  }
+ }catch(e){
+  order.status='offer_failed';order.offerError=e.message;save();
+  console.log('autoSendOffer err:',order.id,e.message);
+  note(`<b>Ошибка авто-трейда</b>\nЗаявка #${order.id}: ${esc(order.skin)}\nОшибка: <code>${esc(e.message)}</code>\nКлиент: ${esc(order.user)}`);
+  /* Откатить статус в 'new' чтобы воркер мог вручную обработать */
+  const u=db.users[order.user];
+  if(u){
+   u.chat=u.chat||[];
+   u.chat.push({id:Date.now(),from:'b',text:`По заявке #${order.id} не удалось автоматически отправить трейд. Убедись, что инвентарь открыт и скин ещё у тебя. Оператор проверит и обработает вручную.`,t:Date.now()});
+   save();
+  }
+  setTimeout(()=>{if(order.status==='offer_failed')order.status='new';save();},5000);
+ }
+}
+
+/* ── Polling loop — проверяем активные офферы каждые 90 секунд ── */
+const OFFER_STATE={1:'Invalid',2:'Active',3:'Accepted',4:'Countered',5:'Expired',6:'Canceled',7:'Declined',8:'InvalidItems',9:'NeedsConfirm',10:'CanceledByGuard',11:'Escrow'};
+let _polling=false;
+async function pollTradeOffers(){
+ if(!STEAM_ON||_polling)return;
+ _polling=true;
+ try{
+  /* 1. Проверить активные офферы */
+  const active=db.orders.filter(o=>o.offerId&&o.status==='offer_sent');
+  for(const order of active){
+   try{
+    const offer=await getOfferStatus(order.offerId);
+    if(!offer)continue;
+    const s=offer.trade_offer_state;
+    console.log(`Offer #${order.offerId} (order #${order.id}): state=${s} (${OFFER_STATE[s]||s})`);
+
+    if(s===3){
+     /* Принят — рассчитываем холд */
+     const escrowEnd=offer.escrow_end_date?(offer.escrow_end_date*1000):0;
+     const holdUntil=escrowEnd>Date.now()?escrowEnd:(Date.now()+7*864e5);
+     const holdDays=Math.max(0,Math.ceil((holdUntil-Date.now())/864e5));
+     order.status='accepted';order.hold=holdUntil;order.offerAcceptedAt=Date.now();
+     save();
+     note(`<b>Трейд принят!</b>\nЗаявка #${order.id}: ${esc(order.skin)} · $${order.price.toFixed(2)}\nХолд: ${holdDays>0?holdDays+' дн.':'нет (деньги зачислятся скоро)'}\nКлиент: ${esc(order.user)}`);
+     const u=db.users[order.user];
+     if(u){
+      u.chat=u.chat||[];
+      u.chat.push({id:Date.now(),from:'b',text:`Трейд принят! Скин поступил в холд${holdDays>0?' на '+holdDays+' дн.':''} — после выхода $${order.price.toFixed(2)} автоматически зачислятся на твой баланс.`,t:Date.now()});
+      save();
+     }
+
+    }else if([5,6,7,8,10].includes(s)){
+     /* Истёк / отменён / отклонён */
+     const reason={5:'истёк',6:'отменён ботом',7:'отклонён',8:'невалидные предметы',10:'отменён Guard'}[s]||`статус ${s}`;
+     order.status='offer_failed';order.offerError=`Оффер ${reason}`;
+     save();
+     note(`<b>Трейд ${reason}</b>\nЗаявка #${order.id}: ${esc(order.skin)}\nКлиент: ${esc(order.user)}`);
+     const u=db.users[order.user];
+     if(u){
+      u.chat=u.chat||[];
+      u.chat.push({id:Date.now(),from:'b',text:`Трейд по заявке #${order.id} был ${reason}. Если хочешь — создай заявку заново или напиши в поддержку.`,t:Date.now()});
+      save();
+     }
+     /* Через 60 сек откатываем статус в 'new' чтобы воркер мог обработать */
+     const oid=order.id;setTimeout(()=>{const o=db.orders.find(x=>x.id===oid);if(o&&o.status==='offer_failed'){o.status='new';save();}},60000);
+
+    }else if(s===9&&E.STEAM_SHARED_SECRET){
+     /* Ждёт подтверждения Guard — пробуем подтвердить */
+     const ok=await confirmOffer(order.offerId);
+     if(ok){order.offerConfirmed=true;save();note(`Оффер #${order.offerId} подтверждён Guard.`);}
+    }
+   }catch(e){console.log('pollOffer err order',order.id,':',e.message);}
+  }
+
+  /* 2. Авто-зачисление завершённых холдов */
+  const now=Date.now();
+  for(const order of db.orders.filter(o=>o.status==='accepted'&&o.hold&&o.hold<=now)){
+   const u=db.users[order.user];
+   if(!u)continue;
+   u.bal=(u.bal||0)+Math.round(order.price*100);
+   order.status='credited';
+   db.ops.push({id:db.ops.length+1,user:order.user,type:'sell_credit',cents:Math.round(order.price*100),method:'Автозачисление (холд завершён) · '+order.skin,status:'done',t:now});
+   save();
+   note(`<b>Холд завершён — деньги зачислены</b>\nЗаявка #${order.id}: ${esc(order.skin)}\nСумма: $${order.price.toFixed(2)} → баланс ${esc(order.user)}`);
+   if(u.chat){
+    u.chat.push({id:now,from:'b',text:`Холд по заявке #${order.id} завершён! $${order.price.toFixed(2)} зачислено на баланс.`,t:now});
+    save();
+   }
+  }
+
+ }finally{_polling=false;}
+}
+
 /* telegram */
 const esc=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const OS={buy:'покупка, ждёт отправки',bought:'отправлено',refunded:'деньги возвращены',new:'новая',accepted:'принята, hold 7 дней',credited:'зачислена',rejected:'отклонена'},PS={pending:'ожидает подтверждения',done:'выполнено',rejected:'отклонено'};
@@ -1010,6 +1267,61 @@ http.createServer(async(req,res)=>{try{
   return send(res,200,{users:users.length,active,orders:db.orders.length,paid:paid.toFixed(2),deps,wds,tickets:openTickets,newUsers});
  }
 
+ /* ── Steam Bot admin API ── */
+ if(p=='/api/admin/bot/status'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin')return bad(res,'Только админ',403);
+  const active=db.orders.filter(o=>o.offerId&&o.status==='offer_sent').length;
+  const failed=db.orders.filter(o=>o.status==='offer_failed').length;
+  const credited=db.orders.filter(o=>o.status==='credited').length;
+  const accepted=db.orders.filter(o=>o.status==='accepted').length;
+  return send(res,200,{
+   enabled:STEAM_ON, autoTrade:!!db.cfg.autoTrade,
+   botId:E.STEAM_BOT_ID||null, hasSharedSecret:!!E.STEAM_SHARED_SECRET,
+   hasApiKey:!!E.STEAM_API_KEY,
+   stats:{active,failed,credited,accepted}
+  });
+ }
+ if(p=='/api/admin/bot/resend'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin'&&usr.role!=='worker')return bad(res,'Доступ запрещён',403);
+  const b=await body(req);
+  const ordId=+b.orderId;
+  const ord=db.orders.find(o=>o.id===ordId);
+  if(!ord)return bad(res,'Заявка не найдена',404);
+  if(!['new','offer_failed','rejected'].includes(ord.status))return bad(res,'Заявка не в статусе для переотправки');
+  if(!STEAM_ON)return bad(res,'Steam Bot не настроен');
+  /* Сбросить предыдущий оффер и переотправить */
+  delete ord.offerId;delete ord.offerError;delete ord.offerSentAt;
+  ord.status='new';save();
+  autoSendOffer(ord).catch(e=>console.log('resend err:',e.message));
+  return send(res,200,{ok:true,msg:'Переотправка запущена — статус обновится через несколько секунд'});
+ }
+ if(p=='/api/admin/bot/confirm'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin')return bad(res,'Только админ',403);
+  if(!E.STEAM_SHARED_SECRET)return bad(res,'shared_secret не настроен в env');
+  const b=await body(req);
+  const ordId=+b.orderId;
+  const ord=db.orders.find(o=>o.id===ordId);
+  if(!ord||!ord.offerId)return bad(res,'Нет активного оффера для этой заявки',404);
+  const ok=await confirmOffer(ord.offerId).catch(e=>{throw new Error(e.message)});
+  if(ok){ord.offerConfirmed=true;save();}
+  return send(res,200,{ok,msg:ok?'Подтверждено через Guard!':'Не удалось найти pending подтверждение'});
+ }
+ if(p=='/api/admin/bot/poll'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin')return bad(res,'Только админ',403);
+  pollTradeOffers().catch(e=>console.log('manual poll err:',e.message));
+  return send(res,200,{ok:true,msg:'Polling запущен вручную'});
+ }
+ if(p=='/api/admin/bot/toggle'){
+  if(!n)return bad(res,'Войди',401);
+  const usr=db.users[n];if(usr.role!=='admin')return bad(res,'Только админ',403);
+  db.cfg.autoTrade=!db.cfg.autoTrade;save();
+  return send(res,200,{ok:true,autoTrade:db.cfg.autoTrade,msg:`Авто-трейд ${db.cfg.autoTrade?'включён':'выключен'}`});
+ }
+
  if(p=='/api/ai'){const b=await body(req);const out=await handleAiSupport(n,b.q);return send(res,200,out)}
  if(p=='/api/recent'){const C=db.orders.filter(o=>o.status=='credited'),paid=C.reduce((t,o)=>t+o.price,0);return send(res,200,{paid:+paid.toFixed(2),n:C.length,items:C.slice(-8).reverse().map(o=>({n:o.skin,img:o.img,p:o.price}))})}
  if(p=='/api/ping'){const v=(u.searchParams.get('v')||'').slice(0,40),now=Date.now();if(v)seen.set(v,now);for(const[a,t]of seen)if(now-t>9e4)seen.delete(a);const hideOn=db.cfg.hideOn===true||db.cfg.hideOn==='1'||db.cfg.hideOn===1;return send(res,200,{n:fakeOnl,h:hideOn,botsOn:db.cfg.botsOn!==false,botSec:db.cfg.botSec||5})}
@@ -1164,8 +1476,19 @@ http.createServer(async(req,res)=>{try{
  if(p=='/api/sell'){const ss=[].concat(b.ids||[]).slice(0,20).map(i=>skins.find(s=>s.id==i)).filter(Boolean);
   if(!ss.length)return bad(res,'Скины не найдены, обнови страницу');if(!TL.test(b.tl||''))return bad(res,'Укажи верную трейд-ссылку Steam');
   x.tl=b.tl;x.name=n;const vipB=getVip(x).b||0;const mult=1+((x.sellB||0)+vipB)/100;x.sellB=0;
-  for(const s of ss){const finalP=+(pr(s)*mult).toFixed(2);const o={id:db.orders.length+1,user:n,skin:s.id,img:s.img,price:finalP,tl:b.tl,status:'new',t:Date.now()};db.orders.push(o);note(fmtO(o),kbO(o),o.img)}
-  save();return send(res,200,{ok:true,n:ss.length})}
+  const newOrders=[];
+  for(const s of ss){
+   const finalP=+(pr(s)*mult).toFixed(2);
+   const o={id:db.orders.length+1,user:n,skin:s.id,img:s.img,price:finalP,tl:b.tl,status:'new',t:Date.now()};
+   db.orders.push(o);newOrders.push(o);
+   if(!STEAM_ON||!db.cfg.autoTrade)note(fmtO(o),kbO(o),o.img);/* уведомить воркера если авто-трейд выкл */
+  }
+  save();
+  /* Запускаем авто-трейды асинхронно — не блокируем ответ */
+  if(STEAM_ON&&db.cfg.autoTrade){
+   Promise.all(newOrders.map(o=>autoSendOffer(o))).catch(e=>console.log('autoSendOffer batch err:',e.message));
+  }
+  return send(res,200,{ok:true,n:ss.length,autoTrade:!!(STEAM_ON&&db.cfg.autoTrade)})}
  if(p=='/api/buy'){
   const s=skins.find(k=>k.id==b.id);
   if(!s)return bad(res,'Скин не найден, обнови страницу');
@@ -1255,6 +1578,14 @@ http.createServer(async(req,res)=>{try{
 }catch(e){console.log(e);send(res,500,{error:'Ошибка сервера'})}}).listen(PORT,()=>console.log('http://localhost:'+PORT));
 
 dbInit().then(()=>{
+ /* ── Steam Bot polling loop — каждые 90 секунд ── */
+ if(STEAM_ON){
+  console.log(`Steam Bot: ON | BotID=${E.STEAM_BOT_ID} | autoTrade=${db.cfg.autoTrade||false} | confirm=${!!E.STEAM_SHARED_SECRET}`);
+  setInterval(()=>pollTradeOffers().catch(e=>console.log('poll err:',e.message)),90*1000);
+  setTimeout(()=>pollTradeOffers().catch(()=>{}),8000);/* первый прогон через 8 сек после старта */
+ }else{
+  console.log('Steam Bot: OFF (не настроены env-переменные STEAM_SESSIONID/STEAM_API_KEY/STEAM_BOT_ID)');
+ }
  load();setInterval(load,18e5);
  loadRates();setInterval(loadRates,36e5);
  settle();
